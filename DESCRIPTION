@@ -15,4 +15,8 @@ Imports:
     rlang,
     rvest,
     stringr,
-    stats
+    stats,
+    limma,
+    edgeR,
+    dplyr,
+    ggplot2
