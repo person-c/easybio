@@ -8,6 +8,7 @@
 #' @param ap_name adjusted p value.
 #'
 #' @return ggplot2 object
+#' @export
 #' @examples
 #' # plot_valcano(data, logFC, 1, adj.P.Val)
 #'
