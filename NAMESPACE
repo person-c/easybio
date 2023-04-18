@@ -2,4 +2,5 @@
 
 export(analysis_limma)
 export(download_geo)
+export(plot_valcano)
 importFrom(utils,download.file)
