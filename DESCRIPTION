@@ -16,7 +16,27 @@ Imports:
     rvest,
     stringr,
     stats,
-    limma,
-    edgeR,
     dplyr,
-    ggplot2
+    ggplot2,
+    glue,
+    magrittr,
+    data.table,
+    forcats,
+    tibble,
+    clusterProfiler
+Collate: 
+    'analysis.R'
+    'download.R'
+    'plot.R'
+    'Reductor.R'
+    'tidy.R'
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Suggests: 
+    edgeR,
+    fgsea,
+    limma,
+    survival,
+    survminer,
+    VennDiagram

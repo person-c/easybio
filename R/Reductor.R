@@ -1,9 +1,34 @@
-Transformer <- R6::R6Class("Transformer", # nolint
+#' @title Reductor Class
+#'
+#' @description
+#' This is the abstract base class for reduction task including PCA,
+#' UMAP and t-SNE.
+#'
+#' @export
+#' @examples
+#' # reductor <- Reductor$new('tsne')
+#' # tune_fit <- reductor$tune(data,
+#' # perplexity = c(30, 40, 50, 60),
+#' # n_iter = c(1000, 2000, 2500))
+#' # reductor$plot(tune_fit)
+Reductor <- R6::R6Class("Reductor",
+
   public = list(
+    #' @field method
+    #'  which method you choose to do the reduction
     method = NA,
+
+    #' @description
+    #' construct a new instance to do the reduction
+    #' @param method the method you want to do the reduction
     initialize = function(method) {
       self$method <- method
     },
+
+    #' @description a wrapper for auto-tuning for the reduction
+    #' @param input the data you want to do the reduction
+    #' @param ... the args space
+    #' @param workers number of cores used to do parellel computation
     tune = function(input, ..., workers = detectCores() - 4) {
       force(input)
       arg_space <- data.table::CJ(...) |> asplit(1)
@@ -29,14 +54,19 @@ Transformer <- R6::R6Class("Transformer", # nolint
       return(results)
     }
   ),
+
   active = list(
+    #' @field reduction a function used to execute the reduction
     reduction = function() {
       private[[self$method]]
     },
+
+    #' @field plot a function used to plot the reduction results
     plot = function() {
       private[[paste0("plot_", self$method)]] #
     }
   ),
+
   private = list(
     pca = function(data, ...) {
       pc <- stats::prcomp(data,
@@ -44,6 +74,7 @@ Transformer <- R6::R6Class("Transformer", # nolint
             scale. = TRUE,
             ...)
     },
+
     plot_pca = function(pc, group) {
       g <- ggbiplot::ggbiplot(pc,
               obs.scale = 1,
@@ -57,9 +88,11 @@ Transformer <- R6::R6Class("Transformer", # nolint
                     legend.position = "top")
       print(g)
     },
+
     tsne = function(data, ...) {
       tsne_fit <- Rtsne::Rtsne(data, ...)
     },
+
     plot_tsne = function(tsne, group) {
       if (!is.list(tsne[[1]])) {
         data <- purrr::map(list(tsne$Y, group), as.data.frame)
@@ -98,9 +131,11 @@ Transformer <- R6::R6Class("Transformer", # nolint
               })
         }
     },
+
     umap = function(data, ...) {
       umap::umap(data, ...)
     },
+
     plot_umap = function(umap, group) {
 
       if (!is.list(umap[[1]])) {

@@ -112,3 +112,4 @@ if (method == "mean") {
   return(list(exprMatrix = exp, metaData = pd))
 }
 }
+
