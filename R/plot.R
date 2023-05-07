@@ -27,6 +27,7 @@ mytheme <-
 #' @param ... additional arguments
 #'
 #' @return ggplot2 object
+#' @export 
 #' @examples
 #' # plot_valcano(data, logFC, 1, adj.P.Val)
 #'
@@ -74,6 +75,7 @@ plot.limma <- function(data, fd_name, fd_hold, ap_name, ...) {
 #' @param ... additional arguments
 #'
 #' @return ggplot2 object
+#' @export 
 #' @examples
 #' # plot_surv(fit, data, 'y')
 plot.surv <- function(fit, data, time, ...) {
@@ -123,6 +125,7 @@ plot.surv <- function(fit, data, time, ...) {
 #' @param ... additional arguments
 #'
 #' @return figure
+#' @export 
 #' @examples
 #' # plot_gsea()
 plot.gsea <- function(pathways, rank, ...) {
@@ -182,7 +185,7 @@ plot.go <- function(go_result, ...) {
 #' @importFrom magrittr `%>%`
 #'
 #' @return figure
-
+#' @export 
 #' @examples
 #' # plot_gorich()
 plot.kegg <- function(kegg_result, ...) {
