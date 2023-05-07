@@ -71,7 +71,6 @@ design <- stats::model.matrix(~0 + group_list)
 colnames(design) <- gsub("group_list", "", colnames(design))
 rownames(design) <- colnames(data)
 
-# contrast matrix
 contrast_matrix <- limma::makeContrasts(
   paste0(c("treat", "control"), collapse = "-"), levels = design)
 
@@ -96,6 +95,7 @@ if (data_type == "RNA-Seq") {
   class(result) <- c("limma", class(result))
 
   result
+
 }
 
 if (data_type == "array") {
@@ -111,6 +111,7 @@ if (data_type == "array") {
       contrast = contrast_matrix, diff_input = data)
   class(result) <- c("limma", class(result))
   result
+
 }
 }
 

@@ -31,6 +31,7 @@ mytheme <-
 #' # plot_valcano(data, logFC, 1, adj.P.Val)
 #'
 plot.limma <- function(data, fd_name, fd_hold, ap_name, ...) {
+
   data <- data[["diff"]]
 
   data <- with(data, {
@@ -182,10 +183,11 @@ plot.go <- function(go_result, ...) {
 #' @importFrom magrittr `%>%`
 #'
 #' @return figure
-
 #' @examples
 #' # plot_gorich()
 plot.kegg <- function(kegg_result, ...) {
+
+
 
   kegg_result <- kegg_result@result
   kegg_result <- data.table::setDT(kegg_result)
