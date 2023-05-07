@@ -31,6 +31,7 @@ mytheme <-
 #' # plot_valcano(data, logFC, 1, adj.P.Val)
 #'
 plot.limma <- function(data, fd_name, fd_hold, ap_name, ...) {
+
   data <- data[["diff"]]
 
   data <- with(data, {
@@ -78,6 +79,7 @@ plot.limma <- function(data, fd_name, fd_hold, ap_name, ...) {
 #' # plot_surv(fit, data, 'y')
 plot.surv <- function(fit, data, time, ...) {
 
+
   force(fit)
   force(data)
   force(time)
@@ -121,11 +123,13 @@ plot.surv <- function(fit, data, time, ...) {
 #' @param pathways gsea results
 #' @param rank gene vector
 #' @param ... additional arguments
+
 #'
 #' @return figure
 #' @examples
 #' # plot_gsea()
 plot.gsea <- function(pathways, rank, ...) {
+
   fgsea::plotEnrichment(pathways, rank) +
   ggplot2::labs(title = "Programmed Cell Death")
 }
@@ -134,8 +138,8 @@ plot.gsea <- function(pathways, rank, ...) {
 #'
 #' used to plot GO rich colplot
 #'
-#' @param go_result go rich result
-#' @param ... additional arguments
+#' @param go_result go 
+#' @param ... additional 
 #' @importFrom magrittr `%>%`
 #'
 #' @return figure
@@ -182,10 +186,10 @@ plot.go <- function(go_result, ...) {
 #' @importFrom magrittr `%>%`
 #'
 #' @return figure
-
 #' @examples
 #' # plot_gorich()
 plot.kegg <- function(kegg_result, ...) {
+
 
   kegg_result <- kegg_result@result
   kegg_result <- data.table::setDT(kegg_result)
