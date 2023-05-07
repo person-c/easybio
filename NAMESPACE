@@ -5,6 +5,7 @@ S3method(plot,gsea)
 S3method(plot,kegg)
 S3method(plot,limma)
 S3method(plot,surv)
+
 export(Reductor)
 export(analysis)
 export(download_geo)

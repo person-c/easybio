@@ -32,6 +32,7 @@ mytheme <-
 #' # plot_valcano(data, logFC, 1, adj.P.Val)
 #'
 plot.limma <- function(data, fd_name, fd_hold, ap_name, ...) {
+
   data <- data[["diff"]]
 
   data <- with(data, {
