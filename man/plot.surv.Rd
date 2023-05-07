@@ -3,8 +3,8 @@
 \name{plot.surv}
 \alias{plot.surv}
 \title{plot survival curve}
-\usage
-\method{plot}{surv}(fit, data, time, 
+\usage{
+\method{plot}{surv}(fit, data, time, ...)
 }
 \arguments{
 \item{fit}{surv fit result.}

@@ -3,8 +3,8 @@
 \name{plot.limma}
 \alias{plot.limma}
 \title{plot valcano}
-\usage
-\method{plot}{limma}(data, fd_name, fd_hold, ap_name, 
+\usage{
+\method{plot}{limma}(data, fd_name, fd_hold, ap_name, ...)
 }
 \arguments{
 \item{data}{differential results.}
