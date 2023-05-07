@@ -39,5 +39,5 @@ Suggests:
     limma,
     survival,
     survminer,
-    VennDiagram
-
+    VennDiagram,
+    viridis

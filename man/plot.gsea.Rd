@@ -3,13 +3,15 @@
 \name{plot.gsea}
 \alias{plot.gsea}
 \title{plot gsea plot}
-\usage{
-\method{plot}{gsea}(pathways, rank)
+\usage
+\method{plot}{gsea}(pathways, rank, 
 }
 \arguments{
 \item{pathways}{gsea results}
 
 \item{rank}{gene vector}
+
+\item{...}{additional arguments}
 }
 \value{
 figure

@@ -4,10 +4,12 @@
 \alias{plot.kegg}
 \title{plot kegg rich plot}
 \usage{
-\method{plot}{kegg}(kegg_result)
+\method{plot}{kegg}(kegg_result, ...)
 }
 \arguments{
 \item{kegg_result}{kegg result}
+
+\item{...}{additional arguments}
 }
 \value{
 figure
