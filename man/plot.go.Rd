@@ -4,10 +4,12 @@
 \alias{plot.go}
 \title{plot go_rich plot}
 \usage{
-\method{plot}{go}(go_result)
+\method{plot}{go}(go_result, ...)
 }
 \arguments{
 \item{go_result}{go rich result}
+
+\item{...}{additional arguments}
 }
 \value{
 figure
