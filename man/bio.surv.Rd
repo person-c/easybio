@@ -4,12 +4,14 @@
 \alias{bio.surv}
 \title{use surv to do survival analysis}
 \usage{
-\method{bio}{surv}(data, form)
+\method{bio}{surv}(object, form, ...)
 }
 \arguments{
-\item{data}{survival data}
+\item{object}{survival data}
 
 \item{form}{survival form}
+
+\item{...}{additional parameters}
 }
 \value{
 list
@@ -18,5 +20,7 @@ list
 survival analysis
 }
 \examples{
-# ADD_EXAMPLES_HERE
+library(survival)
+y <- analysis(lung, 'surv', Surv(time, status) ~ sex)
+plot(y, time = 'y')
 }

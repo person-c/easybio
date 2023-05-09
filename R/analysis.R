@@ -35,19 +35,21 @@ bio <- function(object, ...) {
 #'
 #' do differential analysis accroding to smaple names
 #'
-#' @param data expression matrix
+#' @param object expression matrix
 #' @param group_key key to distinguish group
 #' @param data_type RNA-seq or array.
 #' @param ... aditional arguments
 #'
 #' @return list containing differential analysis and data
 #' @examples
-#' # ADD_EXAMPLES_HERE
-bio.limma <- function(data, group_key, data_type, ...) {
+#' data(expr)
+#' y <- analysis(expr, 'limma', 'cc', 'array')
+#' plot(y)
+bio.limma <- function(object, group_key, data_type, ...) {
 
 # array data check
 if (data_type == "array") {
-  data_max <-  summary(data)[6, ] |>
+  data_max <-  summary(object)[6, ] |>
   as.character() |>
   strsplit(split = ":") |>
   purrr::map_chr(~ `[`(.x, 2)) |>
@@ -59,11 +61,11 @@ if (purrr::some(data_max, ~ .x > 100)) {
 }
 
 # group accroding to regex match
-print(colnames(data))
+print(colnames(object))
 group_list <- ifelse(
-  grepl(group_key, colnames(data)) == TRUE, "control", "treat")
+  grepl(group_key, colnames(object)) == TRUE, "control", "treat")
 
-data <- data[, c(which(group_list == "control"), which(group_list == "treat"))]
+data <- object[, c(which(group_list == "control"), which(group_list == "treat"))]
 group_list <- sort(group_list)
 
 # design matrix
@@ -119,31 +121,37 @@ if (data_type == "array") {
 #'
 #' GO(Gene ontology) enrichment analysis
 #'
-#' @param .gene gene name used to do the enrichment analysis
+#' @param object gene name used to do the enrichment analysis
 #' @param .universe the background gene set list
 #' @param .org_db the species information database
 #' @param from_type original gene name type
 #' @param to_type modified gene name type
 #' @param ... additional arguments
 #'
-#' @importFrom clusterProfiler enrichGO
 #'
 #' @return list
 #' @examples
-#' # ADD_EXAMPLES_HERE
-bio.go <- function(.gene, .universe = NULL,
+#' data(gene_vector)
+#' library(org.Hs.eg.db)
+#' y <- analysis(gene_vector, 'go',
+#' .org_db = org.Hs.eg.db,
+#' from_type = 'SYMBOL',
+#' to_type = 'ENSEMBL',
+#' ont = 'ALL')
+#' plot(y)
+bio.go <- function(object, .universe = NULL,
   .org_db, from_type, to_type, ...) {
 
   dot_lists <- list(...) # nolint
 
   if (is.null(.universe)) {
     target_gene <- clusterProfiler::bitr(
-      .gene, from_type, to_type, .org_db, drop = TRUE)
+      object, from_type, to_type, .org_db, drop = TRUE)
 
     arg_lists <- list(gene = target_gene[[2]],
     OrgDb = .org_db, keyType = to_type)
   } else {
-    target_gene <- lapply(list(.gene, .universe),
+    target_gene <- lapply(list(object, .universe),
     function(x) {
       clusterProfiler::bitr(x, from_type, to_type, .org_db, drop = TRUE)
     })
@@ -153,9 +161,11 @@ bio.go <- function(.gene, .universe = NULL,
     OrgDb = .org_db, keyType = to_type)
   }
 
-  result <- do.call("enrichGO", args = c(dot_lists, arg_lists))
-  class(result) <- "go"
+  args <- c(dot_lists, arg_lists)
+  expr <- rlang::expr(clusterProfiler::enrichGO(!!!args))
 
+  result <- eval(expr)
+  class(result) <- "go"
   return(result)
 }
 
@@ -165,30 +175,32 @@ bio.go <- function(.gene, .universe = NULL,
 #'
 #' kegg(Gene ontology) enrichment analysis
 #'
-#' @param .gene gene name used to do the enrichment analysis
+#' @param object gene name used to do the enrichment analysis
 #' @param .universe the background gene set list
 #' @param .org_db the species information database
 #' @param from_type original gene name type
 #' @param to_type modified gene name type
 #' @param ... additional arguments
 #'
-#' @importFrom clusterProfiler enrichKEGG
-#'
 #' @return list
 #' @examples
-#' # ADD_EXAMPLES_HERE
-bio.kegg <- function(.gene, .universe = NULL,
+#' library(org.Hs.eg.db)
+#' data(kegg)
+#'  y <- analysis(object = kegg, type = 'kegg', .org_db = org.Hs.eg.db,
+#'    from_type = 'SYMBOL',
+#'    to_type = 'ENTREZID')
+bio.kegg <- function(object, .universe = NULL,
   .org_db, from_type, to_type, ...) {
 
   dot_lists <- list(...)
 
   if (is.null(.universe)) {
     target_gene <- clusterProfiler::bitr(
-      .gene, from_type, to_type, .org_db, drop = TRUE)
+      object, from_type, to_type, .org_db, drop = TRUE)
 
     arg_lists <- list(gene = target_gene[[2]])
   } else {
-    target_gene <- lapply(list(.gene, .universe),
+    target_gene <- lapply(list(object, .universe),
     function(x) {
       clusterProfiler::bitr(x, from_type, to_type, .org_db, drop = TRUE)
     })
@@ -197,9 +209,11 @@ bio.kegg <- function(.gene, .universe = NULL,
     universe = target_gene[[2]][[2]])
   }
 
-  result <- do.call("enrichKEGG", args = c(dot_lists, arg_lists))
-  class(result) <- "kegg"
+  args <- c(dot_lists, arg_lists)
+  expr <- rlang::expr(clusterProfiler::enrichKEGG(!!!args))
 
+  result <- eval(expr)
+  class(result) <- "kegg"
   return(result)
 }
 
@@ -210,20 +224,28 @@ bio.kegg <- function(.gene, .universe = NULL,
 #' more on here
 #' \url{https://www.bioconductor.org/packages/
 #' devel/bioc/vignettes/fgsea/inst/doc/fgsea-tutorial.html}
+#' @param object ranked gene list according to the logFC
 #' @param  pathways list containing pathways and its associated genes
-#' @param ranks ranked gene list according to the logFC
+#' @param ... additional arguments
 #'
 #' @return list
 #' @examples
-#' # ADD_EXAMPLES_HERE
-bio.gsea <- function(pathways, ranks) {
+#' library(fgsea)
+#' data(examplePathways)
+#' data(exampleRanks)
+#' set.seed(42)
+#' y <- analysis(exampleRanks, 'gsea', examplePathways)
+#' plot(y, name = "5991130_Programmed_Cell_Death")
+bio.gsea <- function(object, pathways, ...) {
   result <- fgsea::fgsea(pathways = pathways,
-    stats = ranks,
+    stats = object,
     eps  = 0.0,
     minSize  = 15,
     maxSize  = 500)
 
   class(result) <- "gsea"
+  result$ranks <- object
+  result$pathways <- pathways
   return(result)
 }
 
@@ -231,18 +253,23 @@ bio.gsea <- function(pathways, ranks) {
 #' use surv to do survival analysis
 #'
 #' survival analysis
-#' @param  data survival data
+#' @param  object survival data
 #' @param form survival form
+#' @param ... additional parameters
 #'
 #' @return list
 #' @examples
-#' # ADD_EXAMPLES_HERE
-bio.surv <- function(data, form) {
-  force(data)
+#' library(survival)
+#' y <- analysis(lung, 'surv', Surv(time, status) ~ sex)
+#' plot(y, time = 'y')
+bio.surv <- function(object, form, ...) {
+  force(object)
   arg <- rlang::enexpr(form)
 
-  fit <- rlang::expr(survival::survfit(!!arg, data))
-  result <- eval(fit)
-  class(result) <- "surv"
+  fit <- rlang::expr(survival::survfit(!!arg, object))
+  fit <- eval(fit)
+
+  result <- list(fit = fit, data = object)
+  class(result) <- 'surv'
   return(result)
 }

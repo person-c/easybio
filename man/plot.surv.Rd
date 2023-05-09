@@ -4,12 +4,10 @@
 \alias{plot.surv}
 \title{plot survival curve}
 \usage{
-\method{plot}{surv}(fit, data, time, ...)
+\method{plot}{surv}(x, time = "y", ...)
 }
 \arguments{
-\item{fit}{surv fit result.}
-
-\item{data}{fit data.}
+\item{x}{surv result}
 
 \item{time}{month or year.}
 

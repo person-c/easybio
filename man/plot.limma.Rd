@@ -4,10 +4,10 @@
 \alias{plot.limma}
 \title{plot valcano}
 \usage{
-\method{plot}{limma}(data, fd_name, fd_hold, ap_name, ...)
+\method{plot}{limma}(x, fd_name, fd_hold, ap_name, ...)
 }
 \arguments{
-\item{data}{differential results.}
+\item{x}{differential results.}
 
 \item{fd_name}{fold change name.}
 
