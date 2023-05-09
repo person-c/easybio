@@ -4,10 +4,10 @@
 \alias{bio.limma}
 \title{use limma to do differential analysis}
 \usage{
-\method{bio}{limma}(data, group_key, data_type, ...)
+\method{bio}{limma}(object, group_key, data_type, ...)
 }
 \arguments{
-\item{data}{expression matrix}
+\item{object}{expression matrix}
 
 \item{group_key}{key to distinguish group}
 
@@ -22,5 +22,7 @@ list containing differential analysis and data
 do differential analysis accroding to smaple names
 }
 \examples{
-# ADD_EXAMPLES_HERE
+data(expr)
+y <- analysis(expr, 'limma', 'cc', 'array')
+plot(y)
 }

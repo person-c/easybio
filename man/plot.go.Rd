@@ -4,19 +4,19 @@
 \alias{plot.go}
 \title{plot go_rich plot}
 \usage{
-\method{plot}{go}(go_result, ...)
+\method{plot}{go}(x, ...)
 }
 \arguments{
-\item{go_result}{go rich result}
+\item{x}{go rich result}
 
 \item{...}{additional arguments}
 }
 \value{
-figure
+ggplot2 object
 }
 \description{
 used to plot GO rich colplot
 }
 \examples{
-# plot_gorich()
+# no example
 }

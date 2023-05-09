@@ -4,10 +4,10 @@
 \alias{bio.kegg}
 \title{use clusterProfiler}
 \usage{
-\method{bio}{kegg}(.gene, .universe = NULL, .org_db, from_type, to_type, ...)
+\method{bio}{kegg}(object, .universe = NULL, .org_db, from_type, to_type, ...)
 }
 \arguments{
-\item{.gene}{gene name used to do the enrichment analysis}
+\item{object}{gene name used to do the enrichment analysis}
 
 \item{.universe}{the background gene set list}
 
@@ -26,5 +26,9 @@ list
 kegg(Gene ontology) enrichment analysis
 }
 \examples{
-# ADD_EXAMPLES_HERE
+library(org.Hs.eg.db)
+data(kegg)
+ y <- analysis(object = kegg, type = 'kegg', .org_db = org.Hs.eg.db,
+   from_type = 'SYMBOL',
+   to_type = 'ENTREZID')
 }

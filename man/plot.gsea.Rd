@@ -4,17 +4,17 @@
 \alias{plot.gsea}
 \title{plot gsea plot}
 \usage{
-\method{plot}{gsea}(pathways, rank, ...)
+\method{plot}{gsea}(x, name, ...)
 }
 \arguments{
-\item{pathways}{gsea results}
+\item{x}{gsea results}
 
-\item{rank}{gene vector}
+\item{name}{pathway name}
 
 \item{...}{additional arguments}
 }
 \value{
-figure
+ggplot2 object
 }
 \description{
 used to gsea

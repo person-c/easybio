@@ -4,12 +4,14 @@
 \alias{bio.gsea}
 \title{use fgsea to do gsea enrich analysis}
 \usage{
-\method{bio}{gsea}(pathways, ranks)
+\method{bio}{gsea}(object, pathways, ...)
 }
 \arguments{
+\item{object}{ranked gene list according to the logFC}
+
 \item{pathways}{list containing pathways and its associated genes}
 
-\item{ranks}{ranked gene list according to the logFC}
+\item{...}{additional arguments}
 }
 \value{
 list
@@ -21,5 +23,10 @@ more on here
 devel/bioc/vignettes/fgsea/inst/doc/fgsea-tutorial.html}
 }
 \examples{
-# ADD_EXAMPLES_HERE
+library(fgsea)
+data(examplePathways)
+data(exampleRanks)
+set.seed(42)
+y <- analysis(exampleRanks, 'gsea', examplePathways)
+plot(y, name = "5991130_Programmed_Cell_Death")
 }

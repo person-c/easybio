@@ -4,15 +4,15 @@
 \alias{plot.kegg}
 \title{plot kegg rich plot}
 \usage{
-\method{plot}{kegg}(kegg_result, ...)
+\method{plot}{kegg}(x, ...)
 }
 \arguments{
-\item{kegg_result}{kegg result}
+\item{x}{kegg result}
 
 \item{...}{additional arguments}
 }
 \value{
-figure
+ggplot2 object
 }
 \description{
 used to plot kegg rich colplot
