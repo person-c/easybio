@@ -24,6 +24,7 @@ ggplot2 object
 used to plot valcano
 }
 \examples{
-# plot_valcano(data, logFC, 1, adj.P.Val)
-
+data(expr)
+y <- analysis(expr, "limma", "cc", "array")
+plot(y)
 }

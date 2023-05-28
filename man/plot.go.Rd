@@ -18,5 +18,13 @@ ggplot2 object
 used to plot GO rich colplot
 }
 \examples{
-# no example
+data(gene_vector)
+library(org.Hs.eg.db)
+y <- analysis(gene_vector, "go",
+  .org_db = org.Hs.eg.db,
+  from_type = "SYMBOL",
+  to_type = "ENSEMBL",
+  ont = "ALL"
+)
+plot(y)
 }

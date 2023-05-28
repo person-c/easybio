@@ -18,5 +18,11 @@ ggplot2 object
 used to plot kegg rich colplot
 }
 \examples{
-# plot_gorich()
+library(org.Hs.eg.db)
+data(kegg)
+y <- analysis(
+  object = kegg, type = "kegg", .org_db = org.Hs.eg.db,
+  from_type = "SYMBOL",
+  to_type = "ENTREZID"
+)
 }
