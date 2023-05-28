@@ -21,8 +21,5 @@ list containing differential analysis and data
 \description{
 do differential analysis accroding to smaple names
 }
-\examples{
-data(expr)
-y <- analysis(expr, 'limma', 'cc', 'array')
-plot(y)
-}
+
+

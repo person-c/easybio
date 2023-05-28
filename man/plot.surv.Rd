@@ -20,5 +20,7 @@ ggplot2 object
 used to plot survival curve
 }
 \examples{
-# plot_surv(fit, data, 'y')
+library(survival)
+y <- analysis(lung, "surv", Surv(time, status) ~ sex)
+plot(y, time = "y")
 }

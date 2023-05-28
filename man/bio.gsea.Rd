@@ -22,11 +22,4 @@ more on here
 \url{https://www.bioconductor.org/packages/
 devel/bioc/vignettes/fgsea/inst/doc/fgsea-tutorial.html}
 }
-\examples{
-library(fgsea)
-data(examplePathways)
-data(exampleRanks)
-set.seed(42)
-y <- analysis(exampleRanks, 'gsea', examplePathways)
-plot(y, name = "5991130_Programmed_Cell_Death")
-}
+

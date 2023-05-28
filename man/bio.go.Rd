@@ -4,7 +4,15 @@
 \alias{bio.go}
 \title{use clusterProfiler}
 \usage{
-\method{bio}{go}(object, .universe = NULL, .org_db, from_type, to_type, ...)
+\method{bio}{go}(
+  object,
+  .universe = NULL,
+  .org_db = org.Hs.eg.db,
+  from_type = "SYMBOL",
+  to_type = "ENSEMBL",
+  ont = "ALL",
+  ...
+)
 }
 \arguments{
 \item{object}{gene name used to do the enrichment analysis}
@@ -17,6 +25,8 @@
 
 \item{to_type}{modified gene name type}
 
+\item{ont}{kind of GO type}
+
 \item{...}{additional arguments}
 }
 \value{
@@ -25,13 +35,4 @@ list
 \description{
 GO(Gene ontology) enrichment analysis
 }
-\examples{
-data(gene_vector)
-library(org.Hs.eg.db)
-y <- analysis(gene_vector, 'go',
-.org_db = org.Hs.eg.db,
-from_type = 'SYMBOL',
-to_type = 'ENSEMBL',
-ont = 'ALL')
-plot(y)
-}
+
