@@ -54,6 +54,7 @@ bio.limma <- function(object, group_key, data_type, ...) {
     }
   }
 
+
   # group accroding to regex match
   print(colnames(object))
   group_list <- ifelse(
@@ -153,6 +154,7 @@ bio.go <- function(
       keyType = to_type,
       ont = ont
     )
+
   }
 
   args <- c(dot_lists, arg_lists)
@@ -224,6 +226,7 @@ bio.gsea <- function(object, pathways, ...) {
     maxSize = 500
   )
 
+
   class(result) <- "gsea"
   result$ranks <- object
   result$pathways <- pathways
@@ -248,6 +251,7 @@ bio.surv <- function(object, form, ...) {
 
   result <- list(fit = fit, data = object)
   class(result) <- "surv"
+
   return(result)
 }
 

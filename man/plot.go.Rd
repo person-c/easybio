@@ -27,4 +27,4 @@ y <- analysis(gene_vector, "go",
   ont = "ALL"
 )
 plot(y)
-}
+
