@@ -4,10 +4,12 @@
 \alias{plot.go}
 \title{plot go_rich plot}
 \usage{
-\method{plot}{go}(x, ...)
+\method{plot}{go}(x, n = 8, ...)
 }
 \arguments{
 \item{x}{go rich result}
+
+\item{n}{number of pathways you want to show}
 
 \item{...}{additional arguments}
 }
@@ -21,10 +23,10 @@ used to plot GO rich colplot
 data(gene_vector)
 library(org.Hs.eg.db)
 y <- analysis(gene_vector, "go",
-  .org_db = org.Hs.eg.db,
-  from_type = "SYMBOL",
-  to_type = "ENSEMBL",
+  db = org.Hs.eg.db,
+  from = "SYMBOL",
+  to = "ENSEMBL",
   ont = "ALL"
 )
 plot(y)
-
+}

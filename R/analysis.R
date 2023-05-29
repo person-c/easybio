@@ -1,16 +1,13 @@
-#' a wrapper function to bio generic function
+#' A wrapper function to bio generic function
 #'
-#' assign a task(class) to the data to execute task assignment
-#' to bio generic function
+#' Assign a task(class) to the data to execute task assignment.
 #'
-#' @param object data used to analysis
-#' @param type task you want to execute
-#' @param ... additional arguments
+#' @param object data.
+#' @param type task you want to execute.
+#' @param ... additional arguments.
 #'
-#' @return depending on the certain task
+#' @return Depending on the certain task.
 #' @export
-#' @examples
-#' # ADD_EXAMPLES_HERE
 analysis <- function(object, type, ...) {
   class(object) <- c(type, class(object))
   bio(object, ...)
@@ -30,55 +27,32 @@ bio <- function(object, ...) {
   UseMethod("bio")
 }
 
-#' use limma to do differential analysis
+#' Use limma to do differential analysis
 #'
-#' do differential analysis accroding to smaple names
+#' limma is a R package used to do differential analysis for RNAseq and Array data.
 #'
-#' @param object expression matrix
-#' @param group_key key to distinguish group
-#' @param data_type RNA-seq or array.
-#' @param ... aditional arguments
+#' @param object A numeric data.frame with rownames.
+#' @param pattern Regex pattern to divide the data into two groups.
+#' @param data_type rnaSeq or array.
+#' @param ... aditional arguments.
 #'
 #' @return list containing differential analysis and data
-bio.limma <- function(object, group_key, data_type, ...) {
-  # array data check
-  if (data_type == "array") {
-    data_max <- summary(object)[6, ] |>
-      as.character() |>
-      strsplit(split = ":") |>
-      purrr::map_chr(~ `[`(.x, 2)) |>
-      as.numeric()
+bio.limma <- function(object, pattern, data_type, ...) {
+  index_control <- grep(pattern, colnames(object))
+  index_treat <- grep(pattern, colnames(object), invert = TRUE)
+  data <- object[, c(index_control, index_treat)]
+  group <- rep(c("control", "treat"), c(length(index_control), length(index_treat)))
 
-    if (purrr::some(data_max, ~ .x > 100)) {
-      warning("You'd better do log transformation before diff-analysis")
-    }
-  }
-
-
-  # group accroding to regex match
-  print(colnames(object))
-  group_list <- ifelse(
-    grepl(group_key, colnames(object)) == TRUE, "control", "treat"
-  )
-
-  data <- object[, c(which(group_list == "control"), which(group_list == "treat"))]
-  group_list <- sort(group_list)
-
-  # design matrix
-  design <- stats::model.matrix(~ 0 + group_list)
-  colnames(design) <- gsub("group_list", "", colnames(design))
+  design <- stats::model.matrix(~ 0 + group)
+  colnames(design) <- gsub("group", "", colnames(design))
   rownames(design) <- colnames(data)
-  contrast_matrix <- limma::makeContrasts(
-    paste0(c("treat", "control"), collapse = "-"),
-    levels = design
-  )
+  contrast_matrix <- limma::makeContrasts(paste0(c("treat", "control"), collapse = "-"), levels = design)
 
-  # RNA-Seq diff
 
-  if (data_type == "RNA-Seq") {
+  if (data_type == "rnaSeq") {
     data <- edgeR::DGEList(data)
 
-    keep_exprs <- edgeR::filterByExpr(data, group = group_list)
+    keep_exprs <- edgeR::filterByExpr(data, group)
     data <- data[keep_exprs, , keep.lib.sizes = FALSE]
     data <- edgeR::calcNormFactors(data, method = "TMM")
 
@@ -89,72 +63,61 @@ bio.limma <- function(object, group_key, data_type, ...) {
     limma::plotSA(efit, main = "Final model: Mean-variance trend")
 
     result <- limma::topTable(efit, coef = 1, n = Inf)
-    result <- list(
-      diff = result, design_matrix = design,
-      contrast = contrast_matrix, diff_input = data
-    )
+    result <- list(diff = result, design_matrix = design, contrast = contrast_matrix)
     class(result) <- c("limma", class(result))
 
-    result
+    return(result)
   }
 
   if (data_type == "array") {
-    fit <- limma::lmFit(
-      limma::normalizeBetweenArrays(data, method = "cyclicloess"), design
-    )
+    col_max <- sapply(X = object, FUN = max)
+    if (any(col_max > 25)) warning("You'd better do log transformation before diff-analysis")
 
+    fit <- limma::lmFit(limma::normalizeBetweenArrays(data, method = "cyclicloess"), design)
     fit2 <- limma::contrasts.fit(fit, contrast_matrix)
-    efit <- limma::eBayes(fit2) ## default no trend
-
+    efit <- limma::eBayes(fit2)
     result <- limma::topTable(efit, coef = 1, n = Inf)
 
-    result <- list(
-      diff = result, design_matrix = design,
-      contrast = contrast_matrix, diff_input = data
-    )
+    result <- list(diff = result, design_matrix = design, contrast = contrast_matrix)
+
     class(result) <- c("limma", class(result))
-    result
+    return(result)
   }
 }
 
-
-
-#' use clusterProfiler
+#' ClusterProfiler.
 #'
-#' GO(Gene ontology) enrichment analysis
+#' GO(Gene ontology) enrichment analysis.
 #'
-#' @param object gene name used to do the enrichment analysis
-#' @param .universe the background gene set list
-#' @param .org_db the species information database
-#' @param from_type original gene name type
-#' @param to_type modified gene name type
-#' @param  ont kind of GO type
+#' @param object A gene vector used to do the enrichment analysis.
+#' @param background Background gene set.
+#' @param db The species information database.
+#' @param from Original gene name type.
+#' @param to Modified gene name type.
 #' @param ... additional arguments
 #'
 #' @return list
 bio.go <- function(
-    object, .universe = NULL,
-    .org_db = org.Hs.eg.db, from_type = "SYMBOL", to_type = "ENSEMBL", ont = "ALL", ...) {
+    object, background = NULL,
+    db = org.Hs.eg.db, from = "SYMBOL", to = "ENSEMBL", ...) {
   dot_lists <- list(...)
-  if (is.null(.universe)) {
-    target_gene <- clusterProfiler::bitr(object, from_type, to_type, .org_db, drop = TRUE)
-    arg_lists <- list(gene = target_gene[[2]], OrgDb = .org_db, keyType = to_type)
+  if (is.null(background)) {
+    gene <- clusterProfiler::bitr(object, from, to, db, drop = TRUE)
+    arg_lists <- list(gene = gene[[2]], OrgDb = db, keyType = to)
   } else {
-    target_gene <- lapply(
-      list(object, .universe),
+    gene <- lapply(
+      list(object, background),
       function(x) {
-        clusterProfiler::bitr(x, from_type, to_type, .org_db, drop = TRUE)
+        clusterProfiler::bitr(x, from, to, db, drop = TRUE)
       }
     )
 
     arg_lists <- list(
-      gene = target_gene[[1]][[2]],
-      universe = target_gene[[2]][[2]],
-      OrgDb = .org_db,
-      keyType = to_type,
-      ont = ont
+      gene = gene[[1]][[2]],
+      backgroud = gene[[2]][[2]],
+      OrgDb = db,
+      keyType = to
     )
-
   }
 
   args <- c(dot_lists, arg_lists)
@@ -172,29 +135,29 @@ bio.go <- function(
 #' kegg(Gene ontology) enrichment analysis
 #'
 #' @param object gene name used to do the enrichment analysis
-#' @param .universe the background gene set list
-#' @param .org_db the species information database
-#' @param from_type original gene name type
-#' @param to_type modified gene name type
+#' @param backgroud the background gene set list
+#' @param db the species information database
+#' @param from original gene name type
+#' @param to modified gene name type
 #' @param ... additional arguments
 #'
 #' @return list
 bio.kegg <- function(
-    object, .universe = NULL,
-    .org_db = org.Hs.eg.db, from_type = "SYMBOL", to_type = "ENTREZID", ...) {
+    object, backgroud = NULL,
+    db = org.Hs.eg.db, from = "SYMBOL", to = "ENTREZID", ...) {
   dot_lists <- list(...)
-  if (is.null(.universe)) {
-    target_gene <- clusterProfiler::bitr(object, from_type, to_type, .org_db, drop = TRUE)
-    arg_lists <- list(gene = target_gene[[2]])
+  if (is.null(backgroud)) {
+    gene <- clusterProfiler::bitr(object, from, to, db, drop = TRUE)
+    arg_lists <- list(gene = gene[[2]])
   } else {
-    target_gene <- lapply(
-      list(object, .universe),
+    gene <- lapply(
+      list(object, backgroud),
       function(x) {
-        clusterProfiler::bitr(x, from_type, to_type, .org_db, drop = TRUE)
+        clusterProfiler::bitr(x, from, to, db, drop = TRUE)
       }
     )
 
-    arg_lists <- list(gene = target_gene[[1]][[2]], universe = target_gene[[2]][[2]])
+    arg_lists <- list(gene = gene[[1]][[2]], backgroud = gene[[2]][[2]])
   }
 
   args <- c(dot_lists, arg_lists)
@@ -206,30 +169,27 @@ bio.kegg <- function(
 }
 
 
-#' use fgsea to do gsea enrich analysis
+#' Use fgsea to do gsea enrich analysis
 #'
-#' gsea analysis
+#' GSEA
 #' more on here
 #' \url{https://www.bioconductor.org/packages/
 #' devel/bioc/vignettes/fgsea/inst/doc/fgsea-tutorial.html}
-#' @param object ranked gene list according to the logFC
-#' @param  pathways list containing pathways and its associated genes
+#' @param object Ranked gene vector according to the logFC.
+#' @param  pathways List containing pathways and its associated genes.
 #' @param ... additional arguments
 #'
-#' @return list
+#' @return List
 bio.gsea <- function(object, pathways, ...) {
-  result <- fgsea::fgsea(
+  fgseaRes <- fgsea::fgsea(
     pathways = pathways,
     stats = object,
-    eps = 0.0,
     minSize = 15,
     maxSize = 500
   )
 
-
+  result <- list(fgseaRes, ranks = object, pathways = pathways)
   class(result) <- "gsea"
-  result$ranks <- object
-  result$pathways <- pathways
   return(result)
 }
 
@@ -243,14 +203,12 @@ bio.gsea <- function(object, pathways, ...) {
 #'
 #' @return list
 bio.surv <- function(object, form, ...) {
-  force(object)
   arg <- rlang::enexpr(form)
-
   fit <- rlang::expr(survival::survfit(!!arg, object))
   fit <- eval(fit)
 
   result <- list(fit = fit, data = object)
-  class(result) <- "surv"
+  class(result) <- c("surv", class(result))
 
   return(result)
 }
@@ -264,9 +222,7 @@ bio.surv <- function(object, form, ...) {
 #'
 #' @return list
 bio.cox <- function(object, form, ...) {
-  force(object)
   arg <- rlang::enexpr(form)
-
   fit <- rlang::expr(survival::coxph(!!arg, object))
   fit <- eval(fit)
 

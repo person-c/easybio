@@ -4,7 +4,7 @@
 \alias{download_geo}
 \title{download GEO data}
 \usage{
-download_geo(geo, dir, method = "max", filter_regex = NULL)
+download_geo(geo, dir = ".", method = "max", filter_regex = NULL)
 }
 \arguments{
 \item{geo}{GSE ID.}
@@ -20,9 +20,8 @@ to download.}
 a list containing expression matrix and metadata.
 }
 \description{
-A function to download GEO data and convert it to a standard expression
-if existed; It will try to download the supplementary tabular data if no
-expression data checked.
+A function to download GEO data and convert it to a standard expression if existed;
+It will try to download the supplementary tabular data if no expression data is checked.
 }
 \examples{
 # ADD_EXAMPLES_HERE

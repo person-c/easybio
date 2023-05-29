@@ -2,24 +2,20 @@
 % Please edit documentation in R/analysis.R
 \name{analysis}
 \alias{analysis}
-\title{a wrapper function to bio generic function}
+\title{A wrapper function to bio generic function}
 \usage{
 analysis(object, type, ...)
 }
 \arguments{
-\item{object}{data used to analysis}
+\item{object}{data.}
 
-\item{type}{task you want to execute}
+\item{type}{task you want to execute.}
 
-\item{...}{additional arguments}
+\item{...}{additional arguments.}
 }
 \value{
-depending on the certain task
+Depending on the certain task.
 }
 \description{
-assign a task(class) to the data to execute task assignment
-to bio generic function
-}
-\examples{
-# ADD_EXAMPLES_HERE
+Assign a task(class) to the data to execute task assignment.
 }

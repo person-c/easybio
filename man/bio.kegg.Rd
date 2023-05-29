@@ -6,23 +6,23 @@
 \usage{
 \method{bio}{kegg}(
   object,
-  .universe = NULL,
-  .org_db = org.Hs.eg.db,
-  from_type = "SYMBOL",
-  to_type = "ENTREZID",
+  backgroud = NULL,
+  db = org.Hs.eg.db,
+  from = "SYMBOL",
+  to = "ENTREZID",
   ...
 )
 }
 \arguments{
 \item{object}{gene name used to do the enrichment analysis}
 
-\item{.universe}{the background gene set list}
+\item{backgroud}{the background gene set list}
 
-\item{.org_db}{the species information database}
+\item{db}{the species information database}
 
-\item{from_type}{original gene name type}
+\item{from}{original gene name type}
 
-\item{to_type}{modified gene name type}
+\item{to}{modified gene name type}
 
 \item{...}{additional arguments}
 }

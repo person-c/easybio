@@ -2,12 +2,14 @@
 % Please edit documentation in R/plot.R
 \name{plot.kegg}
 \alias{plot.kegg}
-\title{plot kegg rich plot}
+\title{Plot kegg rich plot}
 \usage{
-\method{plot}{kegg}(x, ...)
+\method{plot}{kegg}(x, n = 8, ...)
 }
 \arguments{
 \item{x}{kegg result}
+
+\item{n}{number of pathways you want to show}
 
 \item{...}{additional arguments}
 }
@@ -15,14 +17,14 @@
 ggplot2 object
 }
 \description{
-used to plot kegg rich colplot
+used to plot kegg rich colplot for kegg task.
 }
 \examples{
 library(org.Hs.eg.db)
 data(kegg)
 y <- analysis(
-  object = kegg, type = "kegg", .org_db = org.Hs.eg.db,
-  from_type = "SYMBOL",
-  to_type = "ENTREZID"
+  object = kegg, type = "kegg", db = org.Hs.eg.db,
+  from = "SYMBOL",
+  to = "ENTREZID"
 )
 }

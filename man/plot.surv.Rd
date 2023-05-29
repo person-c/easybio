@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.surv}
 \alias{plot.surv}
-\title{plot survival curve}
+\title{Plot survival curve}
 \usage{
 \method{plot}{surv}(x, time = "y", ...)
 }
@@ -17,7 +17,7 @@
 ggplot2 object
 }
 \description{
-used to plot survival curve
+Used to plot survival curve for surv task.
 }
 \examples{
 library(survival)

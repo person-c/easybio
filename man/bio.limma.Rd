@@ -2,24 +2,22 @@
 % Please edit documentation in R/analysis.R
 \name{bio.limma}
 \alias{bio.limma}
-\title{use limma to do differential analysis}
+\title{Use limma to do differential analysis}
 \usage{
-\method{bio}{limma}(object, group_key, data_type, ...)
+\method{bio}{limma}(object, pattern, data_type, ...)
 }
 \arguments{
-\item{object}{expression matrix}
+\item{object}{A numeric data.frame with rownames.}
 
-\item{group_key}{key to distinguish group}
+\item{pattern}{Regex pattern to divide the data into two groups.}
 
-\item{data_type}{RNA-seq or array.}
+\item{data_type}{rnaSeq or array.}
 
-\item{...}{aditional arguments}
+\item{...}{aditional arguments.}
 }
 \value{
 list containing differential analysis and data
 }
 \description{
-do differential analysis accroding to smaple names
+limma is a R package used to do differential analysis for RNAseq and Array data.
 }
-
-

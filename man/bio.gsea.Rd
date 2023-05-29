@@ -2,24 +2,23 @@
 % Please edit documentation in R/analysis.R
 \name{bio.gsea}
 \alias{bio.gsea}
-\title{use fgsea to do gsea enrich analysis}
+\title{Use fgsea to do gsea enrich analysis}
 \usage{
 \method{bio}{gsea}(object, pathways, ...)
 }
 \arguments{
-\item{object}{ranked gene list according to the logFC}
+\item{object}{Ranked gene vector according to the logFC.}
 
-\item{pathways}{list containing pathways and its associated genes}
+\item{pathways}{List containing pathways and its associated genes.}
 
 \item{...}{additional arguments}
 }
 \value{
-list
+List
 }
 \description{
-gsea analysis
+GSEA
 more on here
 \url{https://www.bioconductor.org/packages/
 devel/bioc/vignettes/fgsea/inst/doc/fgsea-tutorial.html}
 }
-

@@ -2,30 +2,27 @@
 % Please edit documentation in R/analysis.R
 \name{bio.go}
 \alias{bio.go}
-\title{use clusterProfiler}
+\title{ClusterProfiler.}
 \usage{
 \method{bio}{go}(
   object,
-  .universe = NULL,
-  .org_db = org.Hs.eg.db,
-  from_type = "SYMBOL",
-  to_type = "ENSEMBL",
-  ont = "ALL",
+  background = NULL,
+  db = org.Hs.eg.db,
+  from = "SYMBOL",
+  to = "ENSEMBL",
   ...
 )
 }
 \arguments{
-\item{object}{gene name used to do the enrichment analysis}
+\item{object}{A gene vector used to do the enrichment analysis.}
 
-\item{.universe}{the background gene set list}
+\item{background}{Background gene set.}
 
-\item{.org_db}{the species information database}
+\item{db}{The species information database.}
 
-\item{from_type}{original gene name type}
+\item{from}{Original gene name type.}
 
-\item{to_type}{modified gene name type}
-
-\item{ont}{kind of GO type}
+\item{to}{Modified gene name type.}
 
 \item{...}{additional arguments}
 }
@@ -33,6 +30,5 @@
 list
 }
 \description{
-GO(Gene ontology) enrichment analysis
+GO(Gene ontology) enrichment analysis.
 }
-

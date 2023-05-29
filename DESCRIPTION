@@ -9,21 +9,20 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
-    purrr,
-    rlang,
-    ggplot2
+    data.table
 Collate: 
     'analysis.R'
     'download.R'
     'plot.R'
     'Reductor.R'
-    'tidy.R'
     'data.R'
-    'art.R'
 Depends: 
     R (>= 2.10)
 LazyData: true
 Suggests: 
+    rlang,
+    purrr,
+    ggplot2,
     clusterProfiler,
     edgeR,
     fgsea,
@@ -31,7 +30,9 @@ Suggests:
     limma,
     org.Hs.eg.db,
     rvest,
-    stringr,
+    stats,
     survival,
     survminer,
-    VennDiagram
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

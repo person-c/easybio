@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.limma}
 \alias{plot.limma}
-\title{plot valcano}
+\title{Plot valcano}
 \usage{
 \method{plot}{limma}(x, fd_name, fd_hold, ap_name, ...)
 }
@@ -21,7 +21,7 @@
 ggplot2 object
 }
 \description{
-used to plot valcano
+Used to plot valcano for limma analysis.
 }
 \examples{
 data(expr)

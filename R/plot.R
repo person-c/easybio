@@ -1,24 +1,6 @@
-mytheme <-
-  ggplot2::theme_minimal() +
-  ggplot2::theme(
-    axis.text = ggplot2::element_text(size = 13, color = "black"),
-    axis.title = ggplot2::element_text(size = 13),
-    axis.title.x = ggplot2::element_blank(),
-    axis.ticks.y = ggplot2::element_line(linewidth = 1),
-    axis.ticks.length = ggplot2::unit(3, "mm"),
-    panel.grid = ggplot2::element_blank(),
-    panel.border = ggplot2::element_rect(fill = "transparent"),
-    legend.direction = "horizontal",
-    legend.position = "top",
-    legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 10),
-    plot.margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 10, unit = "pt")
-  )
-
-
-#' plot valcano
+#' Plot valcano
 #'
-#' used to plot valcano
+#' Used to plot valcano for limma analysis.
 #'
 #' @param x differential results.
 #' @param fd_name fold change name.
@@ -27,23 +9,24 @@ mytheme <-
 #' @param ... additional arguments
 #'
 #' @return ggplot2 object
+#' @importFrom data.table `:=`
 #' @export
 #' @examples
 #' data(expr)
 #' y <- analysis(expr, "limma", "cc", "array")
 #' plot(y)
 plot.limma <- function(x, fd_name, fd_hold, ap_name, ...) {
-  data <- x[["diff"]]
+  data <- x$diff
 
-  data <- with(data, {
-    exp <- ifelse(logFC > 1 & adj.P.Val < 0.05,
-      "Up", ifelse(logFC < -1 & adj.P.Val < 0.05, "Down", "Unchanged")
-    )
-    data.frame(data, exp)
-  })
+  lfun <- function(x, y) {
+    ifelse(x > 1 & y < 0.05, "Up", ifelse(x < -1 & y < 0.05, "Down", "Unchanged"))
+  }
+
+  data <- data.table::setDT(data)
+  data[, exp := list(val = lfun(logFC, adj.P.Val))]
 
   ggplot2::ggplot(data, ggplot2::aes(logFC, -log(adj.P.Val, 10))) +
-    ggplot2::geom_point(ggplot2::aes(color = exp), size = 1.2) + # nolint
+    ggplot2::geom_point(ggplot2::aes(color = exp), size = 1.2) +
     ggplot2::xlab(expression("log"[2] * "FC")) +
     ggplot2::ylab(expression("-log"[10] * "adj.P.Val")) +
     ggplot2::scale_color_manual(values = c("green", "grey", "red")) +
@@ -66,9 +49,9 @@ plot.limma <- function(x, fd_name, fd_hold, ap_name, ...) {
 }
 
 
-#' plot survival curve
+#' Plot survival curve
 #'
-#' used to plot survival curve
+#' Used to plot survival curve for surv task.
 #'
 #' @param x surv result
 #' @param time month or year.
@@ -141,6 +124,7 @@ plot.gsea <- function(x, name, ...) {
 #' used to plot GO rich colplot
 #'
 #' @param x go rich result
+#' @param n number of pathways you want to show
 #' @param ... additional arguments
 #'
 #' @return ggplot2 object
@@ -149,38 +133,53 @@ plot.gsea <- function(x, name, ...) {
 #' data(gene_vector)
 #' library(org.Hs.eg.db)
 #' y <- analysis(gene_vector, "go",
-#'   .org_db = org.Hs.eg.db,
-#'   from_type = "SYMBOL",
-#'   to_type = "ENSEMBL",
+#'   db = org.Hs.eg.db,
+#'   from = "SYMBOL",
+#'   to = "ENSEMBL",
 #'   ont = "ALL"
 #' )
 #' plot(y)
-plot.go <- function(x, ...) {
+plot.go <- function(x, n = 8, ...) {
   x <- x@result
-  x <- by(x, INDICES = x$ONTOLOGY, FUN = function(x) head(x, n = 8))
-  x <- rlang::exec("rbind", !!!x)
-  x <- transform(x, Description = factor(Description, levels = Description))
+  x <- data.table::setDT(x)
 
-  ggplot2::ggplot(
-    x,
-    ggplot2::aes(
-      x = Description,
-      y = -log10(p.adjust),
-      fill = ONTOLOGY
+  if ("ONTOLOGY" %in% colnames(x)) {
+    x <- x[, head(.SD, n), keyby = ONTOLOGY]
+    p <- ggplot2::ggplot(
+      x,
+      ggplot2::aes(
+        x = Description,
+        y = -log10(p.adjust),
+        fill = ONTOLOGY
+      )
+    ) +
+      ggplot2::facet_wrap(~ONTOLOGY, scales = "free_x", nrow = 1)
+  } else {
+    x <- x[, head(.SD, n)]
+    p <- ggplot2::ggplot(
+      x,
+      ggplot2::aes(
+        x = Description,
+        y = -log10(p.adjust),
+        fill = "constant"
+      )
     )
-  ) +
-    ggplot2::facet_wrap(~ONTOLOGY, scales = "free_x", nrow = 1) +
+  }
+
+  x[, Description := list(val = factor(Description, levels = Description))]
+
+  p <- p +
     ggplot2::geom_col(width = 1, ggplot2::aes(colour = "black")) +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(0)) +
     ggplot2::scale_color_manual(values = "black") +
     ggplot2::labs(y = "-log10(p.adjust)") +
-    mytheme +
     ggplot2::theme(
       aspect.ratio = 15 / 10,
-      axis.title.y = ggplot2::element_text(size = 8),
+      axis.title.y = ggplot2::element_text(size = 14),
       axis.text.x = ggplot2::element_text(
-        size = 8, angle = 90, hjust = 1, vjust = .5
+        size = 14, angle = 90, hjust = 1, vjust = .5
       ),
+      panel.background = ggplot2::element_blank(),
       axis.title.x = ggplot2::element_blank(),
       axis.ticks.length = ggplot2::unit(2, "mm"),
       axis.ticks.x = ggplot2::element_line(linewidth = .5),
@@ -190,11 +189,12 @@ plot.go <- function(x, ...) {
 
 
 
-#' plot kegg rich plot
+#' Plot kegg rich plot
 #'
-#' used to plot kegg rich colplot
+#' used to plot kegg rich colplot for kegg task.
 #'
 #' @param x kegg result
+#' @param n number of pathways you want to show
 #' @param ... additional arguments
 #'
 #' @return ggplot2 object
@@ -203,14 +203,15 @@ plot.go <- function(x, ...) {
 #' library(org.Hs.eg.db)
 #' data(kegg)
 #' y <- analysis(
-#'   object = kegg, type = "kegg", .org_db = org.Hs.eg.db,
-#'   from_type = "SYMBOL",
-#'   to_type = "ENTREZID"
+#'   object = kegg, type = "kegg", db = org.Hs.eg.db,
+#'   from = "SYMBOL",
+#'   to = "ENTREZID"
 #' )
-plot.kegg <- function(x, ...) {
+plot.kegg <- function(x, n = 8, ...) {
   x <- x@result
-  x <- head(subset(x, p.adjust < 0.05), n = 8)
-  x <- transform(x, Description = factor(Description, levels = Description))
+  x <- data.table::setDT(x)
+  x <- x[, head(.SD, n)][order(GeneRatio)]
+  x[, Description := list(val = factor(Description, levels = Description))]
 
   ggplot2::ggplot(
     x,
