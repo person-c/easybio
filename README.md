@@ -23,7 +23,7 @@ y <- download_geo("GSE119186", dir = ".")
 
 ``` r
 data(expr) # differential analysis
-y <- analysis(object = expr, ta = "limma", pattern = "cc", data_type = "array")
+y <- analysis(object = expr, task = "limma", pattern = "cc", data_type = "array")
 plot(y) # S3 method for all analysis
 ```
 
@@ -32,7 +32,7 @@ plot(y) # S3 method for all analysis
 ``` r
 # GO
 library(org.Hs.eg.db)
-z <- analysis(object = gene_vector, ta = "go")
+z <- analysis(object = gene_vector, task = "go")
 plot(z)
 ```
 

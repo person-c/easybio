@@ -41,14 +41,14 @@ y <- download_geo("GSE119186", dir = ".")
 所有`analysis`返回的结果都可以直接调用`plot`函数查看结果。
 ```{r}
 data(expr) # differential analysis
-y <- analysis(object = expr, ta = "limma", pattern = "cc", data_type = "array")
+y <- analysis(object = expr, task = "limma", pattern = "cc", data_type = "array")
 plot(y) # S3 method for all analysis
 ```
 
 ```{r, fig.height=10}
 # GO
 library(org.Hs.eg.db)
-z <- analysis(object = gene_vector, ta = "go")
+z <- analysis(object = gene_vector, task = "go")
 plot(z)
 ```
 
