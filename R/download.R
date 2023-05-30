@@ -16,7 +16,7 @@
 #' # ADD_EXAMPLES_HERE
 download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
-  exp <- eset[[1]]@assayData$exprs
+  exp <- as.data.frame(eset[[1]]@assayData$exprs)
   pd <- eset[[1]]@phenoData@data
 
   if (length(exp) == 0L) {
