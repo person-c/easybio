@@ -4,12 +4,12 @@
 \alias{analysis}
 \title{A wrapper function to bio generic function}
 \usage{
-analysis(object, type, ...)
+analysis(object, task, ...)
 }
 \arguments{
 \item{object}{data.}
 
-\item{type}{task you want to execute.}
+\item{task}{task you want to execute.}
 
 \item{...}{additional arguments.}
 }

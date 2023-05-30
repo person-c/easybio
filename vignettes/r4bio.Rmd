@@ -10,7 +10,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
@@ -19,26 +21,46 @@ library(easybio)
 ```
 
 
-```{css}
-h1 {font-style: italic}
-h2 {font-style: italic}
-body {font-size: 20px;
-font-family: "Times New Roman", Times, serif;}
-
-a {font-style: italic}
-
-```
-
-
-You can use cross reference for tables, figures, and expressions. @fig-cor shows the cor plot of mtcars dataset. If you want to cross-reference, those elements should have labels, because references dependent on these label environments, and the figure should have a caption(`fig.cap`)
-
-## Correlation plot
+## Download and process GEO data
 
 ```{r}
-#| label: fig-cor
-#| fig-cap: "Temperature and ozone level."
-#| warning: false
-
-
-plot(mtcars)
+# y <- download_geo('GSE119186', dir = '.')
+# return a list with annotated gene expression data.table object and metadata
 ```
+
+# A wrapper function for all analysis
+```{r}
+data(expr) # differential analysis
+y <- analysis(object = expr, task = "limma", pattern = "cc", data_type = "array")
+plot(y) # S3 method for all analysis
+
+# GO
+library(org.Hs.eg.db)
+z <- analysis(object = gene_vector, task = "go")
+plot(z)
+```
+
+# A R6 object for dimension reduction
+
+```{r}
+library(palmerpenguins)
+
+x <-
+  penguins |>
+  tidyr::drop_na()
+
+y <- x$species
+x <- x |>
+  dplyr::select(where(is.numeric)) |>
+  dplyr::select(-year)
+x <- scale(x)
+# show the results of different arguments
+happy <- Reductor$new("tsne")
+set.seed(20230530)
+tune_fit <- happy$tune(x,
+  perplexity = c(30, 40, 50, 60),
+  n_iter = c(1000, 2000, 2500)
+)
+happy$plot(tune_fit, y)
+```
+

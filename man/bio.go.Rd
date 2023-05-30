@@ -20,9 +20,9 @@
 
 \item{db}{The species information database.}
 
-\item{from}{Original gene name type.}
+\item{from}{Original gene name task.}
 
-\item{to}{Modified gene name type.}
+\item{to}{Modified gene name task.}
 
 \item{...}{additional arguments}
 }

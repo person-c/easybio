@@ -42,7 +42,7 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
     gene_symbol <- purrr::map_chr(gene_symbol, ~ `[`(.x, 2))
     ids <- data.frame(probe_id = gpl[[1]], symbol = gene_symbol)
     ids <- stats::na.omit(ids)
-  } else if (purrr::some(colnames(gpl), ~ grepl(x = .x, pattern = "symbol", ignore.case = TRUE))) {
+  } else if (any(grepl(x = .x, pattern = "symbol", ignore.case = TRUE))) {
     ids <- gpl[, c(1, grep(colnames(gpl), pattern = "symbol", ignore.case = TRUE))]
     ids <- stats::na.omit(ids)
     names(ids) <- c("probe_id", "symbol")

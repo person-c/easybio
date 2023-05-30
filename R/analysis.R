@@ -3,13 +3,13 @@
 #' Assign a task(class) to the data to execute task assignment.
 #'
 #' @param object data.
-#' @param type task you want to execute.
+#' @param task task you want to execute.
 #' @param ... additional arguments.
 #'
 #' @return Depending on the certain task.
 #' @export
-analysis <- function(object, type, ...) {
-  class(object) <- c(type, class(object))
+analysis <- function(object, task, ...) {
+  class(object) <- c(task, class(object))
   bio(object, ...)
 }
 
@@ -92,8 +92,8 @@ bio.limma <- function(object, pattern, data_type, ...) {
 #' @param object A gene vector used to do the enrichment analysis.
 #' @param background Background gene set.
 #' @param db The species information database.
-#' @param from Original gene name type.
-#' @param to Modified gene name type.
+#' @param from Original gene name task.
+#' @param to Modified gene name task.
 #' @param ... additional arguments
 #'
 #' @return list
@@ -116,7 +116,7 @@ bio.go <- function(
       gene = gene[[1]][[2]],
       backgroud = gene[[2]][[2]],
       OrgDb = db,
-      keyType = to
+      keytype = to
     )
   }
 
@@ -137,8 +137,8 @@ bio.go <- function(
 #' @param object gene name used to do the enrichment analysis
 #' @param backgroud the background gene set list
 #' @param db the species information database
-#' @param from original gene name type
-#' @param to modified gene name type
+#' @param from original gene name task
+#' @param to modified gene name task
 #' @param ... additional arguments
 #'
 #' @return list

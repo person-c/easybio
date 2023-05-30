@@ -25,12 +25,13 @@ Reductor <- R6::R6Class("Reductor",
     },
 
     #' @description a wrapper for auto-tuning for the reduction
+    #' @importFrom data.table CJ
     #' @param input the data you want to do the reduction
     #' @param ... the args space
     #' @param workers number of cores used to do parellel computation
-    tune = function(input, ..., workers = detectCores() - 4) {
+    tune = function(input, ..., workers = parallel::detectCores() - 4) {
       force(input)
-      arg_space <- data.table::CJ(...) |> asplit(1)
+      arg_space <- CJ(...) |> asplit(1)
 
       future::plan(future::multisession, workers = workers)
 

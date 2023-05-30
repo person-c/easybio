@@ -61,7 +61,7 @@ construct a new instance to do the reduction
 \subsection{Method \code{tune()}}{
 a wrapper for auto-tuning for the reduction
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Reductor$tune(input, ..., workers = detectCores() - 4)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Reductor$tune(input, ..., workers = parallel::detectCores() - 4)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

@@ -1,53 +1,65 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# easybio
-
-<!-- badges: start -->
-<!-- badges: end -->
-
-is developing…..
-
-## Installation
-
-You can install the development version of easybio like so:
-
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+library(easybio)
 ```
 
-## Example
+## GEO下载整理
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-# library(easybio)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+给定GSE编号, 检查是否存在表达矩阵信息, 如有,
+从GPL注释信息中对表达矩阵进行注释, 可选的注释方法包括max和mean。
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+y <- download_geo("GSE119186", dir = ".")
+# return a list with annotated gene expression data.table object and metadata
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+## `analysis`函数
 
-You can also embed plots, for example:
+所有分析都通过`analysis`函数调用, 通过指定Object,
+以及task自动完成任务分配。
+所有`analysis`返回的结果都可以直接调用`plot`函数查看结果。
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+``` r
+data(expr) # differential analysis
+y <- analysis(object = expr, ta = "limma", pattern = "cc", data_type = "array")
+plot(y) # S3 method for all analysis
+```
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" />
+
+``` r
+# GO
+library(org.Hs.eg.db)
+z <- analysis(object = gene_vector, ta = "go")
+plot(z)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="50%" />
+
+## Reductor对象
+
+用于方便查看降维算法不同参数组合的可视化效果。
+
+``` r
+library(palmerpenguins)
+
+x <-
+  penguins |>
+  tidyr::drop_na()
+
+y <- x$species
+x <- x |>
+  dplyr::select(where(is.numeric)) |>
+  dplyr::select(-year)
+x <- scale(x)
+# show the results of different arguments
+happy <- Reductor$new("tsne")
+set.seed(20230530)
+tune_fit <- happy$tune(x,
+  perplexity = c(30, 40, 50, 60),
+  n_iter = c(1000, 2000, 2500)
+)
+happy$plot(tune_fit, y)
+```

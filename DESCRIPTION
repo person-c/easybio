@@ -1,9 +1,9 @@
 Package: easybio
 Title: A package to help you to do common bioinfomatics analysis easier
-Version: 0.0.0.9000
+Version: 0.9
 Authors@R: 
     person("Cui", "Wei", , "cosm.de.c@gamil.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: To live better.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -34,5 +34,8 @@ Suggests:
     survival,
     survminer,
     knitr,
-    rmarkdown
+    rmarkdown,
+    dplyr,
+    tidyr,
+    palmerpenguins
 VignetteBuilder: knitr

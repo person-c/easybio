@@ -185,6 +185,8 @@ plot.go <- function(x, n = 8, ...) {
       axis.ticks.x = ggplot2::element_line(linewidth = .5),
       legend.position = "none"
     )
+
+  return(p)
 }
 
 
@@ -203,7 +205,7 @@ plot.go <- function(x, n = 8, ...) {
 #' library(org.Hs.eg.db)
 #' data(kegg)
 #' y <- analysis(
-#'   object = kegg, type = "kegg", db = org.Hs.eg.db,
+#'   object = kegg, task = "kegg", db = org.Hs.eg.db,
 #'   from = "SYMBOL",
 #'   to = "ENTREZID"
 #' )
