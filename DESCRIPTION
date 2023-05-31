@@ -38,5 +38,8 @@ Suggests:
     rmarkdown,
     dplyr,
     tidyr,
-    palmerpenguins
+    palmerpenguins,
+    future,
+    parallel,
+    furrr
 VignetteBuilder: knitr
