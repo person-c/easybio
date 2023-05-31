@@ -148,41 +148,38 @@ plot.go <- function(x, n = 8, ...) {
     p <- ggplot2::ggplot(
       x,
       ggplot2::aes(
-        x = Description,
-        y = -log10(p.adjust),
+        x = -log10(p.adjust),
+        y = Description,
         fill = ONTOLOGY
       )
     ) +
-      ggplot2::facet_wrap(~ONTOLOGY, scales = "free_x", nrow = 1)
+      ggplot2::facet_grid(ONTOLOGY ~ ., scales = "free_y")
   } else {
     x <- x[, head(.SD, n)]
     p <- ggplot2::ggplot(
       x,
       ggplot2::aes(
-        x = Description,
-        y = -log10(p.adjust),
+        x = -log10(p.adjust),
+        y = Description,
         fill = "constant"
       )
     )
   }
 
-  x[, Description := list(val = factor(Description, levels = Description))]
+  x[, Description := list(val = factor(Description, levels = rev(Description)))]
 
   p <- p +
     ggplot2::geom_col(width = 1, ggplot2::aes(colour = "black")) +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(0)) +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(0)) +
     ggplot2::scale_color_manual(values = "black") +
-    ggplot2::labs(y = "-log10(p.adjust)") +
+    ggplot2::labs(x = "-log10(p.adjust)") +
     ggplot2::theme(
-      aspect.ratio = 15 / 10,
-      axis.title.y = ggplot2::element_text(size = 14),
-      axis.text.x = ggplot2::element_text(
-        size = 14, angle = 90, hjust = 1, vjust = .5
-      ),
-      panel.background = ggplot2::element_blank(),
-      axis.title.x = ggplot2::element_blank(),
-      axis.ticks.length = ggplot2::unit(2, "mm"),
+      axis.title.x = ggplot2::element_text(size = 14),
+      axis.text.x = ggplot2::element_text(size = 14),
       axis.ticks.x = ggplot2::element_line(linewidth = .5),
+      axis.title.y = ggplot2::element_blank(),
+      axis.ticks.length = ggplot2::unit(2, "mm"),
+      panel.background = ggplot2::element_blank(),
       legend.position = "none"
     )
 

@@ -36,9 +36,6 @@ Suggests:
     survminer,
     knitr,
     rmarkdown,
-    dplyr,
-    tidyr,
-    palmerpenguins,
     future,
     parallel,
     furrr
