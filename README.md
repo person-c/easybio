@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![R-CMD-check](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml/badge.svg?branch=main)](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml)
+
 ``` r
 library(easybio)
 ```
@@ -19,7 +21,8 @@ y <- download_geo("GSE119186", dir = ".")
 
 所有分析都通过`analysis`函数调用, 通过指定Object,
 以及task自动完成任务分配。
-所有`analysis`返回的结果都可以直接调用`plot`函数查看结果。
+所有`analysis`返回的结果都可以直接调用`plot`函数查看结果。`plot`返回的结果为`ggplot`object,
+可用于后续自定义修改图片细节。
 
 ``` r
 data(expr) # differential analysis
