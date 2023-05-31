@@ -44,12 +44,10 @@ plot(z)
 
 # A R6 object for dimension reduction
 
-```{r}
+```{r, eval=FALSE}
 if (!requireNamespace("future")) {
   install.packages("future")
 }
-library(future)
-library(palmerpenguins)
 
 x <-
   penguins |>

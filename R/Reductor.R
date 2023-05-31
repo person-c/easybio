@@ -30,10 +30,6 @@ Reductor <- R6::R6Class("Reductor",
     #' @param ... the args space
     #' @param workers number of cores used to do parellel computation
     tune = function(input, ..., workers = parallel::detectCores() - 4) {
-      if (!requireNamespace("future")) {
-        install.packages("future")
-      }
-
       force(input)
       arg_space <- CJ(...) |> asplit(1)
 
