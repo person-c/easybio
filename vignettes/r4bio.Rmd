@@ -33,7 +33,9 @@ library(easybio)
 data(expr) # differential analysis
 y <- analysis(object = expr, task = "limma", pattern = "cc", data_type = "array")
 plot(y) # S3 method for all analysis
+```
 
+```{r, fig.height=10}
 # GO
 library(org.Hs.eg.db)
 z <- analysis(object = gene_vector, task = "go")
