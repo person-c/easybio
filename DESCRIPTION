@@ -11,7 +11,8 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
-    data.table
+    data.table,
+    R6
 Collate: 
     'analysis.R'
     'download.R'
@@ -24,7 +25,6 @@ LazyData: true
 Suggests: 
     rlang,
     purrr,
-    R6,
     ggplot2,
     clusterProfiler,
     edgeR,
