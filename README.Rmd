@@ -37,23 +37,30 @@ y <- download_geo("GSE119186", dir = ".")
 # return a list with annotated gene expression data.table object and metadata
 ```
 
-## `analysis`函数
+## `analyze`函数
 
-所有分析都通过`analysis`函数调用, 通过指定Object, 以及task自动完成任务分配。
-所有`analysis`返回的结果都可以直接调用`plot`函数查看结果。`plot`返回的结果为`ggplot`object, 可用于后续自定义修改图片细节。
+所有分析都通过`analyze`函数调用, 通过指定Object, 以及task自动完成任务分配。
+所有`analyze`返回的结果都可以直接调用`plot`函数查看结果。`plot`返回的结果为`ggplot`object, 可用于后续自定义修改图片细节。
 ```{r}
 data(expr) # differential analysis
 y <- analyze(object = expr, task = "limma", pattern = "cc", data_type = "array")
 plot(y) # S3 method for all analysis
 ```
 
-```{r, fig.height=10}
+```{r, fig.height=6, fig.width=10}
 # GO
 library(org.Hs.eg.db)
-z <- analyze(object = gene_vector, task = "go")
+z <- analyze(object = gene_vector, task = "go", ont = "ALL") #
 plot(z)
 ```
 
+调整图片颜色:
+
+```{r, fig.height=6, fig.width=10, eval = FALSE}
+library(viridis)
+p <- plot(z)
+p + scale_fill_viridis(discrete = TRUE)
+```
 ## Reductor对象
 
 用于方便查看降维算法不同参数组合的可视化效果。

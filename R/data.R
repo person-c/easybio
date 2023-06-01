@@ -46,5 +46,3 @@
 #' @format
 #' See \url{https://www.ncbi.nlm.nih.gov/geo/}
 "kegg"
-
-

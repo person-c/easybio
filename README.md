@@ -17,16 +17,16 @@ y <- download_geo("GSE119186", dir = ".")
 # return a list with annotated gene expression data.table object and metadata
 ```
 
-## `analysis`函数
+## `analyze`函数
 
-所有分析都通过`analysis`函数调用, 通过指定Object,
+所有分析都通过`analyze`函数调用, 通过指定Object,
 以及task自动完成任务分配。
-所有`analysis`返回的结果都可以直接调用`plot`函数查看结果。`plot`返回的结果为`ggplot`object,
+所有`analyze`返回的结果都可以直接调用`plot`函数查看结果。`plot`返回的结果为`ggplot`object,
 可用于后续自定义修改图片细节。
 
 ``` r
 data(expr) # differential analysis
-y <- analysis(object = expr, task = "limma", pattern = "cc", data_type = "array")
+y <- analyze(object = expr, task = "limma", pattern = "cc", data_type = "array")
 plot(y) # S3 method for all analysis
 ```
 
@@ -35,11 +35,19 @@ plot(y) # S3 method for all analysis
 ``` r
 # GO
 library(org.Hs.eg.db)
-z <- analysis(object = gene_vector, task = "go")
+z <- analyze(object = gene_vector, task = "go", ont = "ALL") #
 plot(z)
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="50%" />
+
+调整图片颜色:
+
+``` r
+library(viridis)
+p <- plot(z)
+p + scale_fill_viridis(discrete = TRUE)
+```
 
 ## Reductor对象
 

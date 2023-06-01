@@ -28,11 +28,11 @@ library(easybio)
 # return a list with annotated gene expression data.table object and metadata
 ```
 
-# A wrapper function for all analysis
+# A wrapper function for all analyses
 ```{r}
 data(expr) # differential analysis
 y <- analyze(object = expr, task = "limma", pattern = "cc", data_type = "array")
-plot(y) # S3 method for all analysis
+plot(y) # S3 method for all analyses
 ```
 
 ```{r, fig.height=10}
