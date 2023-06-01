@@ -3,7 +3,10 @@
 
 [![R-CMD-check](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml/badge.svg?branch=main)](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml)
 
+## download
+
 ``` r
+# devtools::install_github('snowGlint/easybio')
 library(easybio)
 ```
 

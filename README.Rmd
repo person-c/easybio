@@ -24,7 +24,11 @@ knitr::opts_chunk$set(
 
 
 [![R-CMD-check](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml/badge.svg?branch=main)](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml)
+
+## download
+
 ```{r setup}
+# devtools::install_github('snowGlint/easybio')
 library(easybio)
 ```
 
