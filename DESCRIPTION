@@ -4,7 +4,7 @@ Version: 0.9
 Authors@R: 
     person("Wei", "Cui", email = "cosm.de.c@gamil.com", role = c("aut", "cre"))
 Description: Provide a uniform interface for common bioinfomatics analyses.
-URL: https://github.com/snowGlint/easybio
+URL: https://cying.org/easybio
 BugReports: https://github.com/snowGlint/easybio/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
