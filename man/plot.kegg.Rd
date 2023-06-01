@@ -22,7 +22,7 @@ used to plot kegg rich colplot for kegg task.
 \examples{
 library(org.Hs.eg.db)
 data(kegg)
-y <- analysis(
+y <- analyze(
   object = kegg, task = "kegg", db = org.Hs.eg.db,
   from = "SYMBOL",
   to = "ENTREZID"

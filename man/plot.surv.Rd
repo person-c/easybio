@@ -21,6 +21,6 @@ Used to plot survival curve for surv task.
 }
 \examples{
 library(survival)
-y <- analysis(lung, "surv", Surv(time, status) ~ sex)
+y <- analyze(lung, "surv", Surv(time, status) ~ sex)
 plot(y, time = "y")
 }

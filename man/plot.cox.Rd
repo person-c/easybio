@@ -19,6 +19,6 @@ used to plot forest plot
 }
 \examples{
 library(survival)
-y <- analysis(lung, "cox", Surv(time, status) ~ sex)
+y <- analyze(lung, "cox", Surv(time, status) ~ sex)
 plot(y, time = "y")
 }

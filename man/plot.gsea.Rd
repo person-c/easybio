@@ -24,6 +24,6 @@ library(fgsea)
 data(examplePathways)
 data(exampleRanks)
 set.seed(42)
-y <- analysis(exampleRanks, "gsea", examplePathways)
+y <- analyze(exampleRanks, "gsea", examplePathways)
 plot(y, name = "5991130_Programmed_Cell_Death")
 }

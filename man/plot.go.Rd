@@ -22,7 +22,7 @@ used to plot GO rich colplot
 \examples{
 data(gene_vector)
 library(org.Hs.eg.db)
-y <- analysis(gene_vector, "go",
+y <- analyze(gene_vector, "go",
   db = org.Hs.eg.db,
   from = "SYMBOL",
   to = "ENSEMBL",

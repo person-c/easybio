@@ -8,7 +8,7 @@
 #'
 #' @return Depending on the certain task.
 #' @export
-analysis <- function(object, task, ...) {
+analyze <- function(object, task, ...) {
   class(object) <- c(task, class(object))
   bio(object, ...)
 }

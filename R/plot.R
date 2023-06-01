@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' data(expr)
-#' y <- analysis(expr, "limma", "cc", "array")
+#' y <- analyze(expr, "limma", "cc", "array")
 #' plot(y)
 plot.limma <- function(x, fd_name, fd_hold, ap_name, ...) {
   data <- x$diff
@@ -61,7 +61,7 @@ plot.limma <- function(x, fd_name, fd_hold, ap_name, ...) {
 #' @export
 #' @examples
 #' library(survival)
-#' y <- analysis(lung, "surv", Surv(time, status) ~ sex)
+#' y <- analyze(lung, "surv", Surv(time, status) ~ sex)
 #' plot(y, time = "y")
 plot.surv <- function(x, time = "y", ...) {
   fit <- x$fit
@@ -112,7 +112,7 @@ plot.surv <- function(x, time = "y", ...) {
 #' data(examplePathways)
 #' data(exampleRanks)
 #' set.seed(42)
-#' y <- analysis(exampleRanks, "gsea", examplePathways)
+#' y <- analyze(exampleRanks, "gsea", examplePathways)
 #' plot(y, name = "5991130_Programmed_Cell_Death")
 plot.gsea <- function(x, name, ...) {
   fgsea::plotEnrichment(x$pathways[[name]], x$ranks) +
@@ -132,7 +132,7 @@ plot.gsea <- function(x, name, ...) {
 #' @examples
 #' data(gene_vector)
 #' library(org.Hs.eg.db)
-#' y <- analysis(gene_vector, "go",
+#' y <- analyze(gene_vector, "go",
 #'   db = org.Hs.eg.db,
 #'   from = "SYMBOL",
 #'   to = "ENSEMBL",
@@ -201,7 +201,7 @@ plot.go <- function(x, n = 8, ...) {
 #' @examples
 #' library(org.Hs.eg.db)
 #' data(kegg)
-#' y <- analysis(
+#' y <- analyze(
 #'   object = kegg, task = "kegg", db = org.Hs.eg.db,
 #'   from = "SYMBOL",
 #'   to = "ENTREZID"
@@ -242,7 +242,7 @@ plot.kegg <- function(x, n = 8, ...) {
 #' @export
 #' @examples
 #' library(survival)
-#' y <- analysis(lung, "cox", Surv(time, status) ~ sex)
+#' y <- analyze(lung, "cox", Surv(time, status) ~ sex)
 #' plot(y, time = "y")
 plot.cox <- function(x, ...) {
   survminer::ggforest(model = x$fit, data = x$data)

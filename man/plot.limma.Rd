@@ -25,6 +25,6 @@ Used to plot valcano for limma analysis.
 }
 \examples{
 data(expr)
-y <- analysis(expr, "limma", "cc", "array")
+y <- analyze(expr, "limma", "cc", "array")
 plot(y)
 }

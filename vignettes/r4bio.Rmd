@@ -31,24 +31,20 @@ library(easybio)
 # A wrapper function for all analysis
 ```{r}
 data(expr) # differential analysis
-y <- analysis(object = expr, task = "limma", pattern = "cc", data_type = "array")
+y <- analyze(object = expr, task = "limma", pattern = "cc", data_type = "array")
 plot(y) # S3 method for all analysis
 ```
 
 ```{r, fig.height=10}
 # GO
 library(org.Hs.eg.db)
-z <- analysis(object = gene_vector, task = "go")
+z <- analyze(object = gene_vector, task = "go")
 plot(z)
 ```
 
 # A R6 object for dimension reduction
 
 ```{r, eval=FALSE}
-if (!requireNamespace("future")) {
-  install.packages("future")
-}
-
 x <-
   penguins |>
   tidyr::drop_na()
