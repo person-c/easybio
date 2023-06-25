@@ -1,9 +1,0 @@
-{
-  "grammarly.selectors": [
-    {
-      "language": "debian-control.r",
-      "scheme": "file",
-      "pattern": "DESCRIPTION"
-    }
-  ]
-}
