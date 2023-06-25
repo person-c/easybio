@@ -9,19 +9,19 @@ Artist <- R6::R6Class("Artist",
   public = list(
     #' @description
     #' boxplot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    box = function(.data, .x, .y, .fill, ...) {
+    box = function(data, x, y, fill, ...) {
       cols <- c("#CFD8DC", "#90A4AE", "#455A64")
 
       ggplot(
-        .data,
+        data,
         aes(
-          x = {{ .x }}, y = {{ .y }},
-          fill = {{ .fill }}, ...
+          x = {{ x }}, y = {{ y }},
+          fill = {{ fill }}, ...
         )
       ) +
         stat_boxplot(
@@ -30,35 +30,35 @@ Artist <- R6::R6Class("Artist",
         ) +
         geom_boxplot(
           alpha = 0.8, # Fill transparency
-          colour = "#474747", # Border color
+          colour = "#474747", # Border col
           outlier.colour = 1
-        ) + # Outlier color
-        scale_fill_manual(values = cols) # Fill colors
+        ) + # Outlier col
+        scale_fill_manual(values = cols) # Fill cols
     },
     #' @description
     #' density area plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    density = function(.data, .x, .fill, ...) {
+    density = function(data, x, fill, ...) {
       cols <- c("#F76D5E", "#FFFFBF", "#72D8FF")
-      ggplot(.data, aes(x = {{ .x }}, fill = {{ .fill }}, ...)) +
-        geom_density(alpha = 0.8, color = NA) +
+      ggplot(data, aes(x = {{ x }}, fill = {{ fill }}, ...)) +
+        geom_density(alpha = 0.8, col = NA) +
         scale_fill_manual(values = cols)
     },
     #' @description
     #' violin plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
     #' @param ... additional aesthetics properties mapping
-    violin = function(.data, .x, .y, ...) {
+    violin = function(data, x, y, ...) {
       ggplot(
-        .data,
+        data,
         aes(
-          x = {{ .x }}, y = {{ .y }},
-          fill = {{ .x }}, ...
+          x = {{ x }}, y = {{ y }},
+          fill = {{ x }}, ...
         )
       ) +
         geom_violin(trim = FALSE) +
@@ -67,40 +67,40 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' scatter plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .col map to color
-    #' @param .size map to size
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param col map to col
+    #' @param size map to size
     #' @param ... additional aesthetics properties mapping
-    scatter = function(.data, .x, .y, .col = NULL, .size = NULL, ...) {
-      ggplot(data = .data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
-        geom_point(aes(col = {{ .col }}, size = {{ .size }})) +
+    scatter = function(data, x, y, col = NULL, size = NULL, ...) {
+      ggplot(data = data, aes(x = {{ x }}, y = {{ y }}, ...)) +
+        geom_point(aes(col = {{ col }}, size = {{ size }})) +
         geom_smooth(method = "loess", se = FALSE)
     },
     #' @description
     #' counts plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
     #' @param ... additional aesthetics properties mapping
-    counts = function(.data, .x, .y, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
+    counts = function(data, x, y, ...) {
+      ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_count(col = "tomato3", show.legend = FALSE)
     },
     #' @description
     #' correlation plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    cor = function(.data, .x, .y, .fill, ...) {
+    cor = function(data, x, y, fill, ...) {
       ggplot2::ggplot(
-        .data,
+        data,
         ggplot2::aes(
-          x = {{ .x }}, y = {{ .y }},
-          fill = {{ .fill }}, ...
+          x = {{ x }}, y = {{ y }},
+          fill = {{ fill }}, ...
         )
       ) +
         ggplot2::geom_raster() +
@@ -113,35 +113,35 @@ Artist <- R6::R6Class("Artist",
         ggplot2::theme_bw() +
         ggplot2::theme(
           axis.title = ggplot2::element_blank(),
-          axis.text.x = ggplot2::element_text(angle = 90)
+          axis.textx = ggplot2::element_text(angle = 90)
         )
     },
     #' @description
     #' dumbbbell plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .color map to color
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param col map to col
     #' @param ... additional aesthetics properties mapping
-    dumbbbell = function(.data, .x, .y, .color, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}), ...) +
+    dumbbbell = function(data, x, y, color, ...) {
+      ggplot(data, aes(x = {{ x }}, y = {{ y }}), ...) +
         geom_line() +
-        geom_point(aes(color = {{ .color }}), size = 3)
+        geom_point(aes(col = {{ col }}), size = 3)
     },
     #' @description
     #' bubble plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .size map to size
-    #' @param .color map to color
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param size map to size
+    #' @param col map to col
     #' @param ... additional aesthetics properties mapping
-    bubble = function(.data, .x, .y, .size, .color, ...) {
+    bubble = function(data, x, y, size, color, ...) {
       ggplot(
-        .data,
+        data,
         aes(
-          x = {{ .x }}, y = {{ .y }},
-          size = {{ .size }}, color = {{ .color }},
+          x = {{ x }}, y = {{ y }},
+          size = {{ size }}, col = {{ col }},
           ...
         )
       ) +
@@ -150,17 +150,17 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' heatmap
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    heatmap = function(.data, .x, .y, .fill, ...) {
+    heatmap = function(data, x, y, fill, ...) {
       ggplot2::ggplot(
-        .data,
+        data,
         ggplot2::aes(
-          x = {{ .x }}, y = {{ .y }},
-          fill = {{ .fill }}, ...
+          x = {{ x }}, y = {{ y }},
+          fill = {{ fill }}, ...
         )
       ) +
         ggplot2::geom_raster() +
@@ -169,31 +169,31 @@ Artist <- R6::R6Class("Artist",
         ggplot2::theme_bw() +
         ggplot2::theme(
           axis.title = ggplot2::element_blank(),
-          axis.text.x = ggplot2::element_text(angle = 90)
+          axis.textx = ggplot2::element_text(angle = 90)
         )
     },
     #' @description
     #' divergence barchart
-    #' @param .data data
-    #' @param .group map to group
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param group map to group
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    barchart_divergence = function(.data, .group, .y, .fill, ...) {
+    barchart_divergence = function(data, .group, y, fill, ...) {
       ggplot(
         df,
         aes(
-          x = reorder({{ .group }}, {{ .y }}),
-          y = {{ .y }}, ...
+          x = reorder({{ group }}, {{ y }}),
+          y = {{ y }}, ...
         )
       ) +
         geom_bar(
           stat = "identity",
           show.legend = FALSE,
           fill = ifelse(y >= 0, "lightblue", "lightpink"),
-          color = "white"
+          col = "white"
         ) +
-        geom_hline(yintercept = 0, color = 1, lwd = 0.2) +
+        geom_hline(yintercept = 0, col = 1, lwd = 0.2) +
         geom_text(aes(
           label = group, # Text with groups
           hjust = ifelse(value < 0, 1.5, -1),
@@ -208,51 +208,51 @@ Artist <- R6::R6Class("Artist",
         coord_flip() +
         theme_minimal() +
         theme(
-          axis.text.y = element_blank(), # Remove Y-axis texts
-          axis.ticks.y = element_blank(), # Remove Y-axis ticks
-          panel.grid.major.y = element_blank()
+          axis.texty = element_blank(), # Remove Y-axis texts
+          axis.ticksy = element_blank(), # Remove Y-axis ticks
+          panel.grid.majory = element_blank()
         ) # Remove horizontal grid
     },
     #' @description
     #' sankey plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .next_x next_x
-    #' @param .node node
-    #' @param .next_node node
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param next_x next_x
+    #' @param node node
+    #' @param next_node node
     #' @param ... additional aesthetics properties mapping
-    sankey = function(.data, .x, .y, .next_x, .node, .next_node, ...) {
-      ggplot(.data, aes(
-        x = {{ .x }},
-        next_x = {{ .next_x }},
-        node = {{ .node }},
-        next_node = {{ .next_node }},
-        fill = factor({{ .node }}),
-        label = {{ .node }},
+    sankey = function(data, x, y, next_x, node, next_node, ...) {
+      ggplot(data, aes(
+        x = {{ x }},
+        next_x = {{ next_x }},
+        node = {{ node }},
+        next_node = {{ next_node }},
+        fill = factor({{ node }}),
+        label = {{ node }},
         ...
       )) +
-        ggsankey::geom_sankey(flow.alpha = 0.5, node.color = 1) +
-        ggsankey::geom_sankey_label(size = 3.5, color = 1, fill = "white") +
+        ggsankey::geom_sankey(flow.alpha = 0.5, nodecol = 1) +
+        ggsankey::geom_sankey_label(size = 3.5, col = 1, fill = "white") +
         scale_fill_viridis_d() +
         theme_sankey(base_size = 16) +
         theme(legend.position = "none")
     },
     #' @description
     #' waterfull plot
-    #' @param .data data
-    waterfall = function(.data) {
-      waterfalls::waterfall(.data)
+    #' @param data data
+    waterfall = function(data) {
+      waterfalls::waterfall(data)
     },
     #' @description
     #' ridges plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
     #' @param ... additional aesthetics properties mapping
-    ridges = function(.data, .x, .y, ...) {
-      ggplot(.data, aes({{ .x }},
-        y = {{ .y }},
+    ridges = function(data, x, y, ...) {
+      ggplot(data, aes({{ x }},
+        y = {{ y }},
         fill = 0.5 - abs(0.5 - stat(ecdf)),
         ...
       )) +
@@ -266,19 +266,19 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' stream plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    stream = function(.data, .x, .y, .fill, ...) {
+    stream = function(data, x, y, fill, ...) {
       cols <- c("#FFB400", "#FFC740", "#C20008", "#FF020D", "#13AFEF")
 
       ggplot(
-        .data,
+        data,
         aes(
-          x = {{ .x }},
-          y = {{ .y }}, fill = {{ .fill }}, ...
+          x = {{ x }},
+          y = {{ y }}, fill = {{ fill }}, ...
         )
       ) +
         ggstream::geom_stream(extra_span = 0.2) +
@@ -291,15 +291,15 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' slope plot
-    #' @param .data data
-    #' @param .times times
-    #' @param .measure measure
-    #' @param .group group
-    slope = function(.data, .times, .measure, .group) {
-      CGPfunctions::newggslopegraph(.data,
-        times = {{ .times }},
-        measure = {{ .measure }},
-        group = {{ .group }},
+    #' @param data data
+    #' @param times times
+    #' @param measure measure
+    #' @param group group
+    slope = function(data, times, .measure, .group) {
+      CGPfunctions::newggslopegraph(data,
+        times = {{ times }},
+        measure = {{ measure }},
+        group = {{ group }},
         Title = "GDP evolution",
         SubTitle = "1970-1979",
         Caption = "By R CHARTS",
@@ -308,16 +308,16 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' treemap
-    #' @param .data data
-    #' @param .area area
-    #' @param .label map to lable
-    #' @param .fill map to fill
-    #' @param .subgroup map to subgroup
+    #' @param data data
+    #' @param area area
+    #' @param lable map to lable
+    #' @param fill map to fill
+    #' @param subgroup map to subgroup
     #' @param ... additional aesthetics properties mapping
-    treemap = function(.data, .area, .fill, .label, .subgroup, ...) {
-      ggplot(.data, aes(
-        area = {{ .area }}, fill = {{ .fill }},
-        label = {{ .label }}, subgroup = {{ .subgroup }},
+    treemap = function(data, area, fill, lable, subgroup, ...) {
+      ggplot(data, aes(
+        area = {{ area }}, fill = {{ fill }},
+        label = {{ lable }}, subgroup = {{ subgroup }},
         ...
       )) +
         treemapify::geom_treemap() +
@@ -334,21 +334,21 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' alluvila plot
-    #' @param .data data
-    #' @param .axis1 map to axis2
-    #' @param .axis2 map to axis2
-    #' @param .y map to y
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param axis1 map to axis
+    #' @param axis2 map to axis2
+    #' @param y map to y
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    alluvial = function(.data, .axis1, .axis2, .y, .fill, ...) {
+    alluvial = function(data, axis1, axis2, y, fill, ...) {
       ggplot(
-        data = {{ .data }},
+        data = {{ data }},
         aes(
-          axis1 = {{ .axis1 }}, axis2 = {{ .axis2 }},
-          y = {{ .y }}, ...
+          axis1 = {{ axis1 }}, axis2 = {{ axis2 }},
+          y = {{ y }}, ...
         )
       ) +
-        ggalluvial::geom_alluvium(aes(fill = {{ .fill }})) +
+        ggalluvial::geom_alluvium(aes(fill = {{ fill }})) +
         ggalluvial::geom_stratum() +
         geom_text(
           stat = "stratum",
@@ -363,52 +363,52 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' lollipot plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
     #' @param ... additional aesthetics properties mapping
-    lollipop = function(.data, .x, .y, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
-        geom_segment(aes(x = {{ .x }}, xend = {{ .x }}, y = 0, yend = {{ .y }}),
-          color = "gray", lwd = 1
+    lollipop = function(data, x, y, ...) {
+      ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
+        geom_segment(aes(x = {{ x }}, xend = {{ x }}, y = 0, yend = {{ y }}),
+          col = "gray", lwd = 1
         ) +
         geom_point(size = 7.5, pch = 21, bg = 4, col = 1) +
-        geom_text(aes(label = y), color = "white", size = 3) +
+        geom_text(aes(label = y), col = "white", size = 3) +
         scale_x_discrete(labels = paste0("G_", 1:10)) +
         coord_flip() +
         theme_minimal()
     },
     #' @description
     #' contour
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
     #' @param ... additional aesthetics properties mapping
-    contour = function(.data, .x, .y, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
+    contour = function(data, x, y, ...) {
+      ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_point() +
         geom_density_2d_filled(alpha = 0.4) +
         geom_density_2d(colour = "black")
     },
     #' @description
     #' venn plot
-    #' @param .data data
-    venn = function(.data) {
-      ggVennDiagram::VennDiagram(.data, color = 1, lwd = 0.7) +
+    #' @param data data
+    venn = function(data) {
+      ggVennDiagram::VennDiagram(data, col = 1, lwd = 0.7) +
         scale_fill_gradient(low = "#F4FAFE", high = "#4981BF") +
         theme(legend.position = "none")
     },
     #' @description
     #' scatter plot with ellipses
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .color map to color
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param col map to col
     #' @param ... additional aesthetics properties mapping
-    scatter_ellipses = function(.data, .x, .y, .color, ...) {
-      ggplot(.data, aes(
-        x = {{ .x }},
-        y = {{ .y }}, color = {{ .color }}, ...
+    scatter_ellipses = function(data, x, y, color, ...) {
+      ggplot(data, aes(
+        x = {{ x }},
+        y = {{ y }}, col = {{ col }}, ...
       )) +
         geom_point() +
         stat_ellipse(
@@ -419,18 +419,18 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' donut plot
-    #' @param .data data
-    #' @param .x map to x-axis
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param x map to x-axis
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    donut = function(.data, .x, .y, .fill, ...) {
+    donut = function(data, x, y, fill, ...) {
       hsize <- 3
-      ggplot(.data, aes(
-        x = {{ .x }}, y = {{ .y }},
-        fill = {{ .fill }}, ...
+      ggplot(data, aes(
+        x = {{ x }}, y = {{ y }},
+        fill = {{ fill }}, ...
       )) +
-        geom_col(color = "black") +
+        geom_col(col = "black") +
         geom_text(aes(label = value),
           position = position_stack(vjust = 0.5)
         ) +
@@ -447,19 +447,19 @@ Artist <- R6::R6Class("Artist",
     },
     #' @description
     #' pie plot
-    #' @param .data data
-    #' @param .y map to y-axis
-    #' @param .fill map to fill
+    #' @param data data
+    #' @param y map to y-axis
+    #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    pie = function(.data, .y, .fill) {
+    pie = function(data, y, fill) {
       ggplot(
-        .data,
+        data,
         aes(
-          x = "", y = {{ .y }},
-          fill = fct_inorder({{ .fill }})
+          x = "", y = {{ y }},
+          fill = fct_inorder({{ fill }})
         )
       ) +
-        geom_col(width = 1, color = 1) +
+        geom_col(width = 1, col = 1) +
         geom_text(aes(label = value),
           position = position_stack(vjust = 0.5)
         ) +
