@@ -21,7 +21,7 @@ Artist <- R6::R6Class("Artist",
         .data,
         aes(
           x = {{ .x }}, y = {{ .y }},
-          fill = {{ .fill }}, {{ ... }}
+          fill = {{ .fill }}, ...
         )
       ) +
         stat_boxplot(
@@ -43,7 +43,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... additional aesthetics properties mapping
     density = function(.data, .x, .fill, ...) {
       cols <- c("#F76D5E", "#FFFFBF", "#72D8FF")
-      ggplot(.data, aes(x = {{ .x }}, fill = {{ .fill }}, {{ ... }})) +
+      ggplot(.data, aes(x = {{ .x }}, fill = {{ .fill }}, ...)) +
         geom_density(alpha = 0.8, color = NA) +
         scale_fill_manual(values = cols)
     },
@@ -58,7 +58,7 @@ Artist <- R6::R6Class("Artist",
         .data,
         aes(
           x = {{ .x }}, y = {{ .y }},
-          fill = {{ .x }}, {{ ... }}
+          fill = {{ .x }}, ...
         )
       ) +
         geom_violin(trim = FALSE) +
@@ -74,7 +74,7 @@ Artist <- R6::R6Class("Artist",
     #' @param .size map to size
     #' @param ... additional aesthetics properties mapping
     scatter = function(.data, .x, .y, .col = NULL, .size = NULL, ...) {
-      ggplot(data = .data, aes(x = {{ .x }}, y = {{ .y }}, {{ ... }})) +
+      ggplot(data = .data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
         geom_point(aes(col = {{ .col }}, size = {{ .size }})) +
         geom_smooth(method = "loess", se = FALSE)
     },
@@ -85,7 +85,7 @@ Artist <- R6::R6Class("Artist",
     #' @param .y map to y-axis
     #' @param ... additional aesthetics properties mapping
     counts = function(.data, .x, .y, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, {{ ... }})) +
+      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
         geom_count(col = "tomato3", show.legend = FALSE)
     },
     #' @description
@@ -100,7 +100,7 @@ Artist <- R6::R6Class("Artist",
         .data,
         ggplot2::aes(
           x = {{ .x }}, y = {{ .y }},
-          fill = {{ .fill }}, {{ ... }}
+          fill = {{ .fill }}, ...
         )
       ) +
         ggplot2::geom_raster() +
@@ -124,7 +124,7 @@ Artist <- R6::R6Class("Artist",
     #' @param .color map to color
     #' @param ... additional aesthetics properties mapping
     dumbbbell = function(.data, .x, .y, .color, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}), {{ ... }}) +
+      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}), ...) +
         geom_line() +
         geom_point(aes(color = {{ .color }}), size = 3)
     },
@@ -142,7 +142,7 @@ Artist <- R6::R6Class("Artist",
         aes(
           x = {{ .x }}, y = {{ .y }},
           size = {{ .size }}, color = {{ .color }},
-          {{ ... }}
+          ...
         )
       ) +
         geom_point() +
@@ -160,7 +160,7 @@ Artist <- R6::R6Class("Artist",
         .data,
         ggplot2::aes(
           x = {{ .x }}, y = {{ .y }},
-          fill = {{ .fill }}, {{ ... }}
+          fill = {{ .fill }}, ...
         )
       ) +
         ggplot2::geom_raster() +
@@ -184,7 +184,7 @@ Artist <- R6::R6Class("Artist",
         df,
         aes(
           x = reorder({{ .group }}, {{ .y }}),
-          y = {{ .y }}, {{ ... }}
+          y = {{ .y }}, ...
         )
       ) +
         geom_bar(
@@ -230,7 +230,7 @@ Artist <- R6::R6Class("Artist",
         next_node = {{ .next_node }},
         fill = factor({{ .node }}),
         label = {{ .node }},
-        {{ ... }}
+        ...
       )) +
         ggsankey::geom_sankey(flow.alpha = 0.5, node.color = 1) +
         ggsankey::geom_sankey_label(size = 3.5, color = 1, fill = "white") +
@@ -254,7 +254,7 @@ Artist <- R6::R6Class("Artist",
       ggplot(.data, aes({{ .x }},
         y = {{ .y }},
         fill = 0.5 - abs(0.5 - stat(ecdf)),
-        {{ ... }}
+        ...
       )) +
         ggridges::stat_density_ridges(
           geom = "density_ridges_gradient", calc_ecdf = TRUE
@@ -278,7 +278,7 @@ Artist <- R6::R6Class("Artist",
         .data,
         aes(
           x = {{ .x }},
-          y = {{ .y }}, fill = {{ .fill }}, {{ ... }}
+          y = {{ .y }}, fill = {{ .fill }}, ...
         )
       ) +
         ggstream::geom_stream(extra_span = 0.2) +
@@ -318,7 +318,7 @@ Artist <- R6::R6Class("Artist",
       ggplot(.data, aes(
         area = {{ .area }}, fill = {{ .fill }},
         label = {{ .label }}, subgroup = {{ .subgroup }},
-        {{ ... }}
+        ...
       )) +
         treemapify::geom_treemap() +
         treemapify::geom_treemap_subgroup_border(colour = "white", size = 5) +
@@ -345,7 +345,7 @@ Artist <- R6::R6Class("Artist",
         data = {{ .data }},
         aes(
           axis1 = {{ .axis1 }}, axis2 = {{ .axis2 }},
-          y = {{ .y }}, {{ ... }}
+          y = {{ .y }}, ...
         )
       ) +
         ggalluvial::geom_alluvium(aes(fill = {{ .fill }})) +
@@ -368,7 +368,7 @@ Artist <- R6::R6Class("Artist",
     #' @param .y map to y-axis
     #' @param ... additional aesthetics properties mapping
     lollipop = function(.data, .x, .y, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, {{ ... }})) +
+      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
         geom_segment(aes(x = {{ .x }}, xend = {{ .x }}, y = 0, yend = {{ .y }}),
           color = "gray", lwd = 1
         ) +
@@ -385,7 +385,7 @@ Artist <- R6::R6Class("Artist",
     #' @param .y map to y-axis
     #' @param ... additional aesthetics properties mapping
     contour = function(.data, .x, .y, ...) {
-      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, {{ ... }})) +
+      ggplot(.data, aes(x = {{ .x }}, y = {{ .y }}, ...)) +
         geom_point() +
         geom_density_2d_filled(alpha = 0.4) +
         geom_density_2d(colour = "black")
@@ -408,7 +408,7 @@ Artist <- R6::R6Class("Artist",
     scatter_ellipses = function(.data, .x, .y, .color, ...) {
       ggplot(.data, aes(
         x = {{ .x }},
-        y = {{ .y }}, color = {{ .color }}, {{ ... }}
+        y = {{ .y }}, color = {{ .color }}, ...
       )) +
         geom_point() +
         stat_ellipse(
@@ -428,7 +428,7 @@ Artist <- R6::R6Class("Artist",
       hsize <- 3
       ggplot(.data, aes(
         x = {{ .x }}, y = {{ .y }},
-        fill = {{ .fill }}, {{ ... }}
+        fill = {{ .fill }}, ...
       )) +
         geom_col(color = "black") +
         geom_text(aes(label = value),
