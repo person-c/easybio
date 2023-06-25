@@ -123,7 +123,7 @@ Artist <- R6::R6Class("Artist",
     #' @param y map to y-axis
     #' @param col map to col
     #' @param ... additional aesthetics properties mapping
-    dumbbbell = function(data, x, y, color, ...) {
+    dumbbbell = function(data, x, y, col, ...) {
       ggplot(data, aes(x = {{ x }}, y = {{ y }}), ...) +
         geom_line() +
         geom_point(aes(col = {{ col }}), size = 3)
@@ -136,7 +136,7 @@ Artist <- R6::R6Class("Artist",
     #' @param size map to size
     #' @param col map to col
     #' @param ... additional aesthetics properties mapping
-    bubble = function(data, x, y, size, color, ...) {
+    bubble = function(data, x, y, size, col, ...) {
       ggplot(
         data,
         aes(
@@ -179,7 +179,7 @@ Artist <- R6::R6Class("Artist",
     #' @param y map to y-axis
     #' @param fill map to fill
     #' @param ... additional aesthetics properties mapping
-    barchart_divergence = function(data, .group, y, fill, ...) {
+    barchart_divergence = function(data, group, y, fill, ...) {
       ggplot(
         df,
         aes(
@@ -295,7 +295,7 @@ Artist <- R6::R6Class("Artist",
     #' @param times times
     #' @param measure measure
     #' @param group group
-    slope = function(data, times, .measure, .group) {
+    slope = function(data, times, measure, group) {
       CGPfunctions::newggslopegraph(data,
         times = {{ times }},
         measure = {{ measure }},
@@ -405,7 +405,7 @@ Artist <- R6::R6Class("Artist",
     #' @param y map to y-axis
     #' @param col map to col
     #' @param ... additional aesthetics properties mapping
-    scatter_ellipses = function(data, x, y, color, ...) {
+    scatter_ellipses = function(data, x, y, col, ...) {
       ggplot(data, aes(
         x = {{ x }},
         y = {{ y }}, col = {{ col }}, ...

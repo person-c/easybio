@@ -42,19 +42,19 @@ UMAP and t-SNE.
 \subsection{Method \code{box()}}{
 boxplot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$box(.data, .x, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$box(data, x, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -67,17 +67,17 @@ boxplot
 \subsection{Method \code{density()}}{
 density area plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$density(.data, .x, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$density(data, x, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -90,17 +90,17 @@ density area plot
 \subsection{Method \code{violin()}}{
 violin plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$violin(.data, .x, .y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$violin(data, x, y, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -113,21 +113,21 @@ violin plot
 \subsection{Method \code{scatter()}}{
 scatter plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$scatter(.data, .x, .y, .col = NULL, .size = NULL, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$scatter(data, x, y, col = NULL, size = NULL, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.col}}{map to color}
+\item{\code{col}}{map to col}
 
-\item{\code{.size}}{map to size}
+\item{\code{size}}{map to size}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -140,17 +140,17 @@ scatter plot
 \subsection{Method \code{counts()}}{
 counts plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$counts(.data, .x, .y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$counts(data, x, y, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -163,19 +163,19 @@ counts plot
 \subsection{Method \code{cor()}}{
 correlation plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$cor(.data, .x, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$cor(data, x, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -188,19 +188,19 @@ correlation plot
 \subsection{Method \code{dumbbbell()}}{
 dumbbbell plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$dumbbbell(.data, .x, .y, .color, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$dumbbbell(data, x, y, col, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.color}}{map to color}
+\item{\code{col}}{map to col}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -213,21 +213,21 @@ dumbbbell plot
 \subsection{Method \code{bubble()}}{
 bubble plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$bubble(.data, .x, .y, .size, .color, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$bubble(data, x, y, size, col, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.size}}{map to size}
+\item{\code{size}}{map to size}
 
-\item{\code{.color}}{map to color}
+\item{\code{col}}{map to col}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -240,19 +240,19 @@ bubble plot
 \subsection{Method \code{heatmap()}}{
 heatmap
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$heatmap(.data, .x, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$heatmap(data, x, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -265,19 +265,19 @@ heatmap
 \subsection{Method \code{barchart_divergence()}}{
 divergence barchart
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$barchart_divergence(.data, .group, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$barchart_divergence(data, group, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.group}}{map to group}
+\item{\code{group}}{map to group}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -290,23 +290,23 @@ divergence barchart
 \subsection{Method \code{sankey()}}{
 sankey plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$sankey(.data, .x, .y, .next_x, .node, .next_node, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$sankey(data, x, y, next_x, node, next_node, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.next_x}}{next_x}
+\item{\code{next_x}}{next_x}
 
-\item{\code{.node}}{node}
+\item{\code{node}}{node}
 
-\item{\code{.next_node}}{node}
+\item{\code{next_node}}{node}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -319,13 +319,13 @@ sankey plot
 \subsection{Method \code{waterfall()}}{
 waterfull plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$waterfall(.data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$waterfall(data)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 }
 \if{html}{\out{</div>}}
 }
@@ -336,17 +336,17 @@ waterfull plot
 \subsection{Method \code{ridges()}}{
 ridges plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$ridges(.data, .x, .y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$ridges(data, x, y, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -359,19 +359,19 @@ ridges plot
 \subsection{Method \code{stream()}}{
 stream plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$stream(.data, .x, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$stream(data, x, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -384,19 +384,19 @@ stream plot
 \subsection{Method \code{slope()}}{
 slope plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$slope(.data, .times, .measure, .group)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$slope(data, times, measure, group)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.times}}{times}
+\item{\code{times}}{times}
 
-\item{\code{.measure}}{measure}
+\item{\code{measure}}{measure}
 
-\item{\code{.group}}{group}
+\item{\code{group}}{group}
 }
 \if{html}{\out{</div>}}
 }
@@ -407,21 +407,21 @@ slope plot
 \subsection{Method \code{treemap()}}{
 treemap
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$treemap(.data, .area, .fill, .label, .subgroup, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$treemap(data, area, fill, lable, subgroup, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.area}}{area}
+\item{\code{area}}{area}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
-\item{\code{.label}}{map to lable}
+\item{\code{lable}}{map to lable}
 
-\item{\code{.subgroup}}{map to subgroup}
+\item{\code{subgroup}}{map to subgroup}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -434,21 +434,21 @@ treemap
 \subsection{Method \code{alluvial()}}{
 alluvila plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$alluvial(.data, .axis1, .axis2, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$alluvial(data, axis1, axis2, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.axis1}}{map to axis2}
+\item{\code{axis1}}{map to axis}
 
-\item{\code{.axis2}}{map to axis2}
+\item{\code{axis2}}{map to axis2}
 
-\item{\code{.y}}{map to y}
+\item{\code{y}}{map to y}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -461,17 +461,17 @@ alluvila plot
 \subsection{Method \code{lollipop()}}{
 lollipot plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$lollipop(.data, .x, .y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$lollipop(data, x, y, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -484,17 +484,17 @@ lollipot plot
 \subsection{Method \code{contour()}}{
 contour
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$contour(.data, .x, .y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$contour(data, x, y, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -507,13 +507,13 @@ contour
 \subsection{Method \code{venn()}}{
 venn plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$venn(.data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$venn(data)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 }
 \if{html}{\out{</div>}}
 }
@@ -524,19 +524,19 @@ venn plot
 \subsection{Method \code{scatter_ellipses()}}{
 scatter plot with ellipses
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$scatter_ellipses(.data, .x, .y, .color, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$scatter_ellipses(data, x, y, col, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.color}}{map to color}
+\item{\code{col}}{map to col}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -549,19 +549,19 @@ scatter plot with ellipses
 \subsection{Method \code{donut()}}{
 donut plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$donut(.data, .x, .y, .fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$donut(data, x, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.x}}{map to x-axis}
+\item{\code{x}}{map to x-axis}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
@@ -574,17 +574,17 @@ donut plot
 \subsection{Method \code{pie()}}{
 pie plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$pie(.data, .y, .fill)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$pie(data, y, fill)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{data}
+\item{\code{data}}{data}
 
-\item{\code{.y}}{map to y-axis}
+\item{\code{y}}{map to y-axis}
 
-\item{\code{.fill}}{map to fill}
+\item{\code{fill}}{map to fill}
 
 \item{\code{...}}{additional aesthetics properties mapping}
 }
