@@ -42,7 +42,8 @@ Suggests:
     future,
     parallel,
     furrr,
-    ggsankey,
     treemapify,
     ggridges
+Remotes: 
+    davidsjoberg/ggsankey
 VignetteBuilder: knitr
