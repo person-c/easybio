@@ -62,7 +62,7 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
   exp <- merge(ids, exp, by.x = "probe_id", by.y = "rn")
 
   if (method == "max") {
-    exp <- exp[, .SD[which.max(rowMeans(.SD))], keyby = symbol, .SDcols = is.numeric]
+    exp <- exp[, .SD[which.max(rowMeans(.SD, na.rm = TRUE))], keyby = symbol, .SDcols = is.numeric]
   }
   if (method == "mean") {
     exp <- exp[, lapply(.SD, function(x) sum(x) / length(x)), keyby = symbol, .SDcols = is.numeric]
