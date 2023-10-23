@@ -230,3 +230,166 @@ bio.cox <- function(object, form, ...) {
   class(result) <- c("cox", class(result))
   return(result)
 }
+
+#' WGCNA - gene cluster analysis
+#'
+#' Use WGCNA to do gene cluster analysis
+#' @param object a numeric matrix or data frame, with genes(feature) in columns and samples in rows.
+#' @param trait a numeric matrix or data frame with clinical features in columns. All classification features should be converted to numeric.
+#' @param  powers a numeric atomic vector to be used for the powers pick.
+#' @param power the picked power from powers.
+#' @param ... additional arguments
+#'
+#' @return depending on the arguments you supply.
+
+bio.wgcna <- function(
+    object,
+    trait = NULL,
+    powers = NULL,
+    power = NULL,
+    ...) {
+  # check missings
+  gsg <- WGCNA::goodSamplesGenes(object, verbose = 3)
+  if (!gsg$allOK) {
+    if (sum(!gsg$goodGenes) > 0) {
+      dynamicTreeCut::printFlush(
+        paste(
+          "Removing genes:",
+          paste(names(object)[!gsg$goodGenes], collapse = ", ")
+        )
+      )
+    }
+    if (sum(!gsg$goodSamples) > 0) {
+      dynamicTreeCut::printFlush(
+        paste(
+          "Removing samples:",
+          paste(rownames(object)[!gsg$goodSamples], collapse = ", ")
+        )
+      )
+    }
+    object <- object[gsg$goodSamples, gsg$goodGenes]
+  }
+
+  nsamples <- nrow(object)
+  # check outliers of samples
+  sptree <- fastcluster::hclust(dist(object), method = "average")
+
+  if (is.null(trait)) {
+    png("sample-cluster.png")
+    WGCNA::sizeGrWindow(12, 9)
+    par(cex = 0.6)
+    par(mar = c(0, 4, 2, 0))
+    plot(sptree,
+      main = "Sample clustering to detect outliers",
+      sub = "", xlab = "", cex.lab = 1.5,
+      cex.axis = 1.5, cex.main = 2
+    )
+  } else {
+    trait2colors <- WGCNA::numbers2colors(trait, signed = FALSE)
+    # Plot the sample dendrogram and the colors underneath.
+    WGCNA::sizeGrWindow(12, 9)
+    p <- WGCNA::plotDendroAndColors(sptree, trait2colors,
+      groupLabels = names(trait),
+      main = "Sample dendrogram and trait heatmap"
+    )
+
+    p
+  }
+
+
+  # pick soft-traitColors
+  if (!is.null(powers)) {
+    WGCNA::enableWGCNAThreads()
+    sft <- WGCNA::pickSoftThreshold(object, powerVector = powers, verbose = 5)
+    # Plot the results:
+    png("power-tunning.png")
+    WGCNA::sizeGrWindow(9, 5)
+    par(mfrow = c(1, 2))
+    cex1 <- 0.9
+    # Scale-free topology fit index as a function of the soft-thresholding power
+    plot(sft$fitIndices[, 1], -sign(sft$fitIndices[, 3]) * sft$fitIndices[, 2],
+      xlab = "Soft Threshold (power)",
+      ylab = "Scale Free Topology Model Fit,signed R^2", type = "n",
+      main = paste("Scale independence")
+    )
+    text(sft$fitIndices[, 1], -sign(sft$fitIndices[, 3]) * sft$fitIndices[, 2],
+      labels = powers, cex = cex1, col = "red"
+    )
+    # this line corresponds to using an R^2 cut-off of h
+    abline(h = 0.90, col = "red")
+    # Mean connectivity as a function of the soft-thresholding power
+    plot(sft$fitIndices[, 1], sft$fitIndices[, 5],
+      xlab = "Soft Threshold (power)", ylab = "Mean Connectivity", type = "n",
+      main = paste("Mean connectivity")
+    )
+    text(sft$fitIndices[, 1], sft$fitIndices[, 5],
+      labels = powers, cex = cex1, col = "red"
+    )
+    return(sft)
+  }
+
+  # network construction based on topologial overlap matrix
+  if (!is.null(power)) {
+    WGCNA::enableWGCNAThreads()
+    net <- WGCNA::blockwiseModules(object,
+      power,
+      TOMType = "unsigned", minModuleSize = 30,
+      reassignThreshold = 0, mergeCutHeight = 0.25,
+      numericLabels = TRUE, pamRespectsDendro = FALSE,
+      maxBlockSize = 60000,
+      saveTOMs = TRUE,
+      verbose = 3
+    )
+
+    mcolors <- WGCNA::labels2colors(net$colors)
+    p <- WGCNA::plotDendroAndColors(net$dendrograms[[1]],
+      mcolors[net$blockGenes[[1]]],
+      "Module colors",
+      dendroLabels = FALSE, hang = 0.03,
+      addGuide = TRUE, guideHang = 0.05
+    )
+    print(p)
+    gcluster <- data.table::data.table(
+      gene = names(net$colors),
+      colors = WGCNA::labels2colors(net$colors)
+    )
+
+
+    meg <- WGCNA::moduleEigengenes(object, mcolors)$eigengenes
+    meg <- WGCNA::orderMEs(meg)
+    data.table::fwrite(meg, "eigenvector.csv")
+    data.table::fwrite(x = gcluster, "module.csv")
+
+    if (!is.null(trait)) {
+      cor5mt <- WGCNA::cor(meg, trait, use = "p")
+      p5cor5mt <- WGCNA::corPvalueStudent(cor5mt, nsamples)
+
+      # view module-traits relationship heatmap
+      tmatrix <- paste(
+        signif(cor5mt, 2),
+        "\n(", signif(p5cor5mt, 1), ")",
+        sep = ""
+      )
+      dim(tmatrix) <- dim(cor5mt)
+      par(mar = c(6, 8.5, 3, 3))
+      # Display the correlation values within a heatmap plot
+      p <- WGCNA::labeledHeatmap(
+        Matrix = cor5mt,
+        xLabels = names(trait),
+        yLabels = names(meg),
+        ySymbols = names(meg),
+        colorLabels = FALSE,
+        colors = WGCNA::blueWhiteRed(50),
+        textMatrix = tmatrix,
+        setStdMargins = FALSE,
+        cex.text = 0.5,
+        zlim = c(-1, 1),
+        main = paste("Module-trait relationships")
+      )
+
+      print(p)
+    }
+
+    return(net)
+  }
+}

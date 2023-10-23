@@ -12,15 +12,15 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     data.table,
-    R6,
     ggplot2
 Collate: 
-    'analysis.R'
+    'analyze.R'
     'download.R'
     'plot.R'
     'Reductor.R'
     'Artist.R'
     'data.R'
+    'dprocess.R'
 Depends: 
     R (>= 2.10)
 LazyData: true
@@ -43,7 +43,10 @@ Suggests:
     parallel,
     furrr,
     treemapify,
-    ggridges
+    ggridges,
+    WGCNA,
+    fastcluster,
+    dynamicTreeCut
 Remotes: 
     davidsjoberg/ggsankey
 VignetteBuilder: knitr
