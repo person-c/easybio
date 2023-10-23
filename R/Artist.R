@@ -24,10 +24,6 @@ Artist <- R6::R6Class("Artist",
           fill = {{ fill }}, ...
         )
       ) +
-        stat_boxplot(
-          geom = "errorbar",
-          width = 0.25
-        ) +
         geom_boxplot(
           alpha = 0.8, # Fill transparency
           colour = "#474747", # Border col
