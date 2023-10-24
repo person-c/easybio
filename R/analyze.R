@@ -330,6 +330,7 @@ bio.wgcna <- function(
 
   # network construction based on topologial overlap matrix
   if (!is.null(power)) {
+    cor <- WGCNA::cor
     WGCNA::enableWGCNAThreads()
     net <- WGCNA::blockwiseModules(object,
       power = power,
@@ -340,6 +341,7 @@ bio.wgcna <- function(
       saveTOMs = TRUE,
       verbose = 3
     )
+    cor <- stats::cor
 
     mcolors <- WGCNA::labels2colors(net$colors)
     p <- WGCNA::plotDendroAndColors(net$dendrograms[[1]],
