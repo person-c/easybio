@@ -332,7 +332,7 @@ bio.wgcna <- function(
   if (!is.null(power)) {
     WGCNA::enableWGCNAThreads()
     net <- WGCNA::blockwiseModules(object,
-      power,
+      power = power,
       TOMType = "unsigned", minModuleSize = 30,
       reassignThreshold = 0, mergeCutHeight = 0.25,
       numericLabels = TRUE, pamRespectsDendro = FALSE,
