@@ -165,7 +165,7 @@ Artist <- R6::R6Class("Artist",
         ggplot2::theme_bw() +
         ggplot2::theme(
           axis.title = ggplot2::element_blank(),
-          axis.textx = ggplot2::element_text(angle = 90)
+          axis.text = ggplot2::element_text(angle = 90)
         )
     },
     #' @description
