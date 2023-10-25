@@ -389,10 +389,8 @@ Artist <- R6::R6Class("Artist",
     #' @description
     #' venn plot
     #' @param data data
-    venn = function(data) {
-      ggVennDiagram::VennDiagram(data, col = 1, lwd = 0.7) +
-        scale_fill_gradient(low = "#F4FAFE", high = "#4981BF") +
-        theme(legend.position = "none")
+    venn = function(data, ...) {
+      ggvenn::ggvenn(data, ...)
     },
     #' @description
     #' scatter plot with ellipses
