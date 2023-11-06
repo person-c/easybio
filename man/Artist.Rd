@@ -507,13 +507,15 @@ contour
 \subsection{Method \code{venn()}}{
 venn plot
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$venn(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$venn(data, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{data}
+
+\item{\code{...}}{useless arguments}
 }
 \if{html}{\out{</div>}}
 }

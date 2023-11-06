@@ -389,6 +389,7 @@ Artist <- R6::R6Class("Artist",
     #' @description
     #' venn plot
     #' @param data data
+    #' @param ... useless arguments
     venn = function(data, ...) {
       ggvenn::ggvenn(data, ...)
     },

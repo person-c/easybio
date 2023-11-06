@@ -254,7 +254,8 @@ bio.cox <- function(object, form, ...) {
 #' @param ... additional arguments
 #'
 #' @return depending on the arguments you supply.
-
+#' @importFrom grDevices  png
+#' @importFrom graphics abline par text
 bio.wgcna <- function(
     object,
     trait = NULL,
