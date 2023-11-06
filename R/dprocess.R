@@ -20,6 +20,6 @@ setcolnames <- function(object = nm, nm) {
 #' @return the renamed data.frame or matrix
 #' @export
 setrownames <- function(object = nm, nm) {
-  colnames(object) <- nm
+  rownames(object) <- nm
   object
 }
