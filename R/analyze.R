@@ -29,7 +29,8 @@ bio <- function(object, ...) {
 
 #' Use limma to do differential analysis
 #'
-#' limma is a R package used to do differential analysis for RNAseq and Array data.
+#' limma is a R package used to do differential analysis
+#' for RNAseq and Array data.
 #'
 #' @param object A numeric data.frame with rownames.
 #' @param pattern Regex pattern to divide the data into two groups.
@@ -41,12 +42,18 @@ bio.limma <- function(object, pattern, data_type, ...) {
   index_control <- grep(pattern, colnames(object))
   index_treat <- grep(pattern, colnames(object), invert = TRUE)
   data <- object[, c(index_control, index_treat)]
-  group <- rep(c("control", "treat"), c(length(index_control), length(index_treat)))
+  group <- rep(
+    c("control", "treat"),
+    c(length(index_control), length(index_treat))
+  )
 
   design <- stats::model.matrix(~ 0 + group)
   colnames(design) <- gsub("group", "", colnames(design))
   rownames(design) <- colnames(data)
-  contrast_matrix <- limma::makeContrasts(paste0(c("treat", "control"), collapse = "-"), levels = design)
+  contrast_matrix <- limma::makeContrasts(
+    paste0(c("treat", "control"), collapse = "-"),
+    levels = design
+  )
 
 
   if (data_type == "rnaSeq") {
@@ -63,22 +70,31 @@ bio.limma <- function(object, pattern, data_type, ...) {
     limma::plotSA(efit, main = "Final model: Mean-variance trend")
 
     result <- limma::topTable(efit, coef = 1, n = Inf)
-    result <- list(diff = result, design_matrix = design, contrast = contrast_matrix)
+    result <- list(
+      diff = result,
+      design_matrix = design,
+      contrast = contrast_matrix
+    )
     class(result) <- c("limma", class(result))
 
     return(result)
   }
 
   if (data_type == "array") {
-    col_max <- sapply(X = object, FUN = max)
-    if (any(col_max > 25)) warning("You'd better do log transformation before diff-analysis")
+    if (any(sapply(object, max) > 20)) {
+      warning("You'd better do log transformation before diff-analysis")
+    }
 
-    fit <- limma::lmFit(limma::normalizeBetweenArrays(data, method = "cyclicloess"), design)
+    fit <- limma::lmFit(data, design)
     fit2 <- limma::contrasts.fit(fit, contrast_matrix)
     efit <- limma::eBayes(fit2)
     result <- limma::topTable(efit, coef = 1, n = Inf)
 
-    result <- list(diff = result, design_matrix = design, contrast = contrast_matrix)
+    result <- list(
+      diff = result,
+      design_matrix = design,
+      contrast = contrast_matrix
+    )
 
     class(result) <- c("limma", class(result))
     return(result)
@@ -181,13 +197,7 @@ bio.kegg <- function(
 #'
 #' @return List
 bio.gsea <- function(object, pathways, ...) {
-  fgseaRes <- fgsea::fgsea(
-    pathways = pathways,
-    stats = object,
-    minSize = 15,
-    maxSize = 500
-  )
-
+  fgseaRes <- clusterProfiler::GSEA(object, TERM2GENE = pathways, ...)
   result <- list(fgseaRes, ranks = object, pathways = pathways)
   class(result) <- "gsea"
   return(result)
@@ -234,8 +244,11 @@ bio.cox <- function(object, form, ...) {
 #' WGCNA - gene cluster analysis
 #'
 #' Use WGCNA to do gene cluster analysis
-#' @param object a numeric matrix or data frame, with genes(feature) in columns and samples in rows.
-#' @param trait a numeric matrix or data frame with clinical features in columns. All classification features should be converted to numeric.
+#' @param object a numeric matrix or data frame,
+#' with genes(feature) in columns and samples in rows.
+#' @param trait a numeric matrix or data frame with
+#' clinical features in columns.
+#' All classification features should be converted to numeric.
 #' @param  powers a numeric atomic vector to be used for the powers pick.
 #' @param power the picked power from powers.
 #' @param ... additional arguments
@@ -392,4 +405,32 @@ bio.wgcna <- function(
 
     return(net)
   }
+}
+
+
+#' Use STRINGdb to do PPI analysis
+#'
+#' PPI analysis
+#' @param object a data.frame with one column of gene
+#' @param ... additional arguments
+#'
+#' @return data.table
+bio.ppi <- function(object, ...) {
+  dt <- object
+  st <- STRINGdb::STRINGdb$new(
+    version = "12.0",
+    species = 9606, score_threshold = 400
+  )
+
+  stid <- st$map(dt, colnames(dt)[[1]], removeUnmappedRows = TRUE)
+  st$plot_network(stid$STRING_id)
+
+  inter <- st$get_interactions(stid$STRING_id)
+  id2symbol <- stid$candidant
+  names(id2symbol) <- stid$STRING_id
+
+  data.table::setDT(inter)[, from := id2symbol[from]][, to := id2symbol[to]]
+  data.table::setnames(inter, old = "combined_score", "weight")
+
+  class(inter) <- c("ppi", class(inter))
 }

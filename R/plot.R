@@ -6,46 +6,70 @@
 #' @param fd_name fold change name.
 #' @param fd_hold fold change therehold.
 #' @param ap_name adjusted p value.
+#' @param ap_hold adjusted p value therehold.
+#' @param top top number genes to show lables.
 #' @param ... additional arguments
-#'
 #' @return ggplot2 object
 #' @importFrom data.table `:=`
 #' @export
 #' @examples
 #' data(expr)
 #' y <- analyze(expr, "limma", "cc", "array")
-#' plot(y)
-plot.limma <- function(x, fd_name, fd_hold, ap_name, ...) {
-  data <- x$diff
-
+#' plot(y, logFC, 1, adj.P.Val, 0.05, 10)
+plot.limma <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, ...) {
   lfun <- function(x, y) {
-    ifelse(x > 1 & y < 0.05, "Up", ifelse(x < -1 & y < 0.05, "Down", "Unchanged"))
+    ifelse(x > fd_hold & y < ap_hold, "Up",
+      ifelse(x < -fd_hold & y < ap_hold, "Down", "Unchanged")
+    )
   }
 
-  data <- data.table::setDT(data)
-  data[, exp := list(val = lfun(logFC, adj.P.Val))]
+  dt <- data.table::setDT(x$diff, keep.rownames = TRUE)
+  eval(substitute(dt[, exp := list(val = lfun(fd_name, ap_name))]))
 
-  ggplot2::ggplot(data, ggplot2::aes(logFC, -log(adj.P.Val, 10))) +
-    ggplot2::geom_point(ggplot2::aes(color = exp), size = 1.2) +
-    ggplot2::xlab(expression("log"[2] * "FC")) +
-    ggplot2::ylab(expression("-log"[10] * "adj.P.Val")) +
-    ggplot2::scale_color_manual(values = c("green", "grey", "red")) +
-    ggplot2::guides(
-      colour = ggplot2::guide_legend(override.aes = list(size = 1.5))
+
+  p <- ggplot2::ggplot(
+    data = dt,
+    ggplot2::aes(x = {{ fd_name }}, y = -log10({{ ap_name }}), color = exp)
+  ) +
+    ggplot2::geom_point(size = 1.2, alpha = 0.4, na.rm = TRUE) +
+    ggplot2::scale_color_manual(
+      values = c(Down = "seagreen", Unchanged = "darkgray", Up = "firebrick2"),
+      guide = guide_legend(override.aes = list(size = 4))
     ) +
-    ggplot2::theme_bw() +
+    ggplot2::scale_x_continuous(
+      name = expression("log"[2] * "FC")
+    ) +
+    ggplot2::scale_y_continuous(name = expression("-log"[10] * "adj.P.Val")) +
+    ggplot2::geom_vline(
+      xintercept = c(-fd_hold, fd_hold), lty = 4, col = "darkgray", lwd = 0.6
+    ) +
+    ggplot2::geom_hline(
+      yintercept = -log10(0.05), lty = 4, col = "darkgray", lwd = 0.6
+    ) +
+    ggplot2::theme_bw(base_size = 12, base_family = "Times") +
     ggplot2::theme(
-      panel.grid = ggplot2::element_blank(),
-      panel.border = ggplot2::element_blank(),
-      legend.title = ggplot2::element_blank(),
       legend.position = "top",
-      legend.text = ggplot2::element_text(size = 10, color = "black"),
-      axis.text = ggplot2::element_text(size = 12, color = "black"),
-      axis.title = ggplot2::element_text(size = 12, color = "black"),
-      axis.ticks.length = ggplot2::unit(3, "mm"),
-      axis.line.x.bottom = ggplot2::element_line(),
-      axis.line.y.left = ggplot2::element_line(),
+      panel.grid = element_blank(),
+      legend.title = element_blank(),
+      plot.title = element_text(hjust = 0.5),
+      text = element_text(
+        face = "bold", color = "black", size = 18
+      )
     )
+
+  if (top) {
+    dttp <- eval(substitute(dt[c(
+      order(logFC)[1:top],
+      order(-logFC)[1:top]
+    )]))
+    p + ggrepel::geom_label_repel(
+      data = dttp, aes(label = rn),
+      max.overlaps = 20, size = 4,
+      box.padding = unit(0.5, "lines"), min.segment.length = 0,
+      point.padding = unit(0.8, "lines"),
+      segment.color = "black", show.legend = FALSE
+    )
+  }
 }
 
 
@@ -102,21 +126,27 @@ plot.surv <- function(x, time = "y", ...) {
 #' used to gsea
 #'
 #' @param x gsea results
-#' @param name pathway name
+#' @param name pathway you want to plot
+#' @param top top p.adjust number to show
 #' @param ... additional arguments
 #'
 #' @return ggplot2 object
 #' @export
-#' @examples
-#' library(fgsea)
-#' data(examplePathways)
-#' data(exampleRanks)
-#' set.seed(42)
-#' y <- analyze(exampleRanks, "gsea", examplePathways)
-#' plot(y, name = "5991130_Programmed_Cell_Death")
-plot.gsea <- function(x, name, ...) {
-  fgsea::plotEnrichment(x$pathways[[name]], x$ranks) +
-    ggplot2::labs(title = name)
+plot.gsea <- function(x, name = FALSE, top = 5, ...) {
+  if (name) {
+    fgsea::plotEnrichment(x$pathways[[name]], x$ranks) +
+      ggplot2::labs(title = name)
+  } else {
+    sortedgsea <- data.table::as.data.table(x[[1]])[order(p.adjust)]
+    enrichplot::gseaplot2(x[[1]], sortedgsea[["ID"]][1:top],
+      base_size = 10,
+      color = c(
+        "#7B68EE", "#CD3333", "#20B2AA",
+        "#FF8C00", "#FF6666", "#8CC785"
+      ),
+      rel_heights = c(1.5, 0.3, 0.5)
+    )
+  }
 }
 
 #' plot go_rich plot
@@ -246,4 +276,33 @@ plot.kegg <- function(x, n = 8, ...) {
 #' plot(y, time = "y")
 plot.cox <- function(x, ...) {
   survminer::ggforest(model = x$fit, data = x$data)
+}
+
+
+#' Visualize PPI analysis
+#'
+#' used to plot PPI network
+#'
+#' @param x PPI analyzze result
+#' @param ... additional arguments
+#'
+#' @return ggplot2 object
+#' @export
+plot.ppi <- function(x, ...) {
+  x <- tidygraph::as_tbl_graph(x)
+  igraph::V(x)$deg <- igraph::degree(x)
+  igraph::V(x)$size <- igraph::degree(x) / 5
+  igraph::E(x)$width <- igraph::E(x)$weight / 10
+  ggraph::ggraph(x, layout = "linear", circular = TRUE) +
+    ggraph::geom_edge_fan(ggplot2::aes(edge_width = width),
+      color = "lightblue", show.legend = FALSE
+    ) +
+    ggraph::geom_node_point(aes(size = size), color = "orange", alpha = 0.7) +
+    ggraph::geom_node_text(aes(filter = deg > 0, label = name),
+      size = 5, repel = TRUE
+    ) +
+    ggraph::scale_edge_width(range = c(0.2, 1)) +
+    ggplot2::scale_size_continuous(range = c(1, 10)) +
+    ggplot2::guides(size = FALSE) +
+    ggraph::theme_graph()
 }

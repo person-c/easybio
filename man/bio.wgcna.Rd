@@ -7,9 +7,12 @@
 \method{bio}{wgcna}(object, trait = NULL, powers = NULL, power = NULL, ...)
 }
 \arguments{
-\item{object}{a numeric matrix or data frame, with genes(feature) in columns and samples in rows.}
+\item{object}{a numeric matrix or data frame,
+with genes(feature) in columns and samples in rows.}
 
-\item{trait}{a numeric matrix or data frame with clinical features in columns. All classification features should be converted to numeric.}
+\item{trait}{a numeric matrix or data frame with
+clinical features in columns.
+All classification features should be converted to numeric.}
 
 \item{powers}{a numeric atomic vector to be used for the powers pick.}
 

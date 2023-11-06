@@ -46,7 +46,13 @@ Suggests:
     ggridges,
     WGCNA,
     fastcluster,
-    dynamicTreeCut
+    dynamicTreeCut,
+    enrichplot, 
+    ggraph,
+    ggrepel,
+    igraph,
+    tidygraph,
+    STRINGdb
 Remotes: 
     davidsjoberg/ggsankey
 VignetteBuilder: knitr

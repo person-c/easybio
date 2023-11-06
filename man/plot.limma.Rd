@@ -4,7 +4,7 @@
 \alias{plot.limma}
 \title{Plot valcano}
 \usage{
-\method{plot}{limma}(x, fd_name, fd_hold, ap_name, ...)
+\method{plot}{limma}(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, ...)
 }
 \arguments{
 \item{x}{differential results.}
@@ -14,6 +14,10 @@
 \item{fd_hold}{fold change therehold.}
 
 \item{ap_name}{adjusted p value.}
+
+\item{ap_hold}{adjusted p value therehold.}
+
+\item{top}{top number genes to show lables.}
 
 \item{...}{additional arguments}
 }
@@ -26,5 +30,5 @@ Used to plot valcano for limma analysis.
 \examples{
 data(expr)
 y <- analyze(expr, "limma", "cc", "array")
-plot(y)
+plot(y, logFC, 1, adj.P.Val, 0.05, 10)
 }

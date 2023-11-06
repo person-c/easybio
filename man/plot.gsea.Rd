@@ -4,12 +4,14 @@
 \alias{plot.gsea}
 \title{plot gsea plot}
 \usage{
-\method{plot}{gsea}(x, name, ...)
+\method{plot}{gsea}(x, name = FALSE, top = 5, ...)
 }
 \arguments{
 \item{x}{gsea results}
 
-\item{name}{pathway name}
+\item{name}{pathway you want to plot}
+
+\item{top}{top p.adjust number to show}
 
 \item{...}{additional arguments}
 }
@@ -18,12 +20,4 @@ ggplot2 object
 }
 \description{
 used to gsea
-}
-\examples{
-library(fgsea)
-data(examplePathways)
-data(exampleRanks)
-set.seed(42)
-y <- analyze(exampleRanks, "gsea", examplePathways)
-plot(y, name = "5991130_Programmed_Cell_Death")
 }

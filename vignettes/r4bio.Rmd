@@ -32,7 +32,7 @@ library(easybio)
 ```{r}
 data(expr) # differential analysis
 y <- analyze(object = expr, task = "limma", pattern = "cc", data_type = "array")
-plot(y) # S3 method for all analyses
+plot(y, logFC, 1, adj.P.Val, 0.05, 10) # S3 method for all analyses
 ```
 
 ```{r, fig.height=10}

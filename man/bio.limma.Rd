@@ -19,5 +19,6 @@
 list containing differential analysis and data
 }
 \description{
-limma is a R package used to do differential analysis for RNAseq and Array data.
+limma is a R package used to do differential analysis
+for RNAseq and Array data.
 }
