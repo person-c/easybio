@@ -68,5 +68,7 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
     exp <- exp[, lapply(.SD, function(x) sum(x) / length(x)), keyby = symbol, .SDcols = is.numeric]
   }
 
+  exp <- exp[, gsub("//s.+", "", symbol)][!grepl("^$")]
+
   return(list(exprMatrix = exp, metaData = pd))
 }
