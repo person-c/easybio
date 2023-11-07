@@ -379,6 +379,8 @@ bio.wgcna <- function(
     if (!is.null(trait)) {
       cor5mt <- WGCNA::cor(meg, trait, use = "p")
       p5cor5mt <- WGCNA::corPvalueStudent(cor5mt, nsamples)
+      data.table::fwrite(cor5mt, "module_trait_correlation.csv")
+      data.table::fwrite(p5cor5mt, "module_trait_cor_sig.csv")
 
       # view module-traits relationship heatmap
       tmatrix <- paste(
