@@ -1,6 +1,6 @@
 Package: easybio
 Title: A Package to Help You to Do Common Bioinformatics Analyses Easier
-Version: 1.0
+Version: 1.01
 Authors@R: 
     person("Wei", "Cui", email = "cosm.de.c@gmail.com", role = c("aut", "cre", "cph"))
 Description: Provide a uniform interface for common bioinformatics analyses.
