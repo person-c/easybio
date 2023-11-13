@@ -59,6 +59,7 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
 
   ids <- data.table::setDT(ids)
   exp <- data.table::setDT(exp, keep.rownames = TRUE)
+  if (exp[["rn"]][[1]] == "1") exp[, rn := as.numeric(rn)]
   if (nrow(exp) == nrow(ids)) {
     exp <- merge(ids, exp, by.x = "probe_id", by.y = "rn")
   } else {
