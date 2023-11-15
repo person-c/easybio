@@ -59,15 +59,9 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
 
   ids <- data.table::setDT(ids)
   exp <- data.table::setDT(exp, keep.rownames = TRUE)
-  if (exp[["rn"]][[1]] == "1") exp[, rn := as.numeric(rn)]
-  if (nrow(exp) == nrow(ids)) {
-    exp <- merge(ids, exp, by.x = "probe_id", by.y = "rn")
-  } else {
-    warning("Ids rownumber is not compatible with the expression dataframe!")
-    exp[, rn := ids[["symbol"]][1:nrow(exp)]]
-    setnames(exp, old = "rn", new = "symbol")
-  }
-
+  if (is.numeric(ids[[1]])) ids[, probe_id := as.character(probe_id)]
+  exp <- merge(ids, exp, by.x = "probe_id", by.y = "rn")
+  
   if (method == "max") {
     exp <- exp[, .SD[which.max(rowMeans(.SD, na.rm = TRUE))], keyby = symbol, .SDcols = is.numeric]
   }
