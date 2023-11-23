@@ -34,7 +34,7 @@ plot.limma <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, ...) 
     ggplot2::geom_point(size = 1.2, alpha = 0.4, na.rm = TRUE) +
     ggplot2::scale_color_manual(
       values = c(Down = "seagreen", Unchanged = "darkgray", Up = "firebrick2"),
-      guide = guide_legend(override.aes = list(size = 4))
+      guide = ggplot2::guide_legend(override.aes = list(size = 4))
     ) +
     ggplot2::scale_x_continuous(
       name = expression("log"[2] * "FC")
@@ -49,10 +49,10 @@ plot.limma <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, ...) 
     ggplot2::theme_bw(base_size = 12, base_family = "Times") +
     ggplot2::theme(
       legend.position = "top",
-      panel.grid = element_blank(),
-      legend.title = element_blank(),
-      plot.title = element_text(hjust = 0.5),
-      text = element_text(
+      panel.grid = ggplot2::element_blank(),
+      legend.title = ggplot2::element_blank(),
+      plot.title = ggplot2::element_text(hjust = 0.5),
+      text = ggplot2::element_text(
         face = "bold", color = "black", size = 18
       )
     )
@@ -63,10 +63,10 @@ plot.limma <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, ...) 
       order(-logFC)[1:top]
     )]))
     p + ggrepel::geom_label_repel(
-      data = dttp, aes(label = rn),
+      data = dttp, ggplot2::aes(label = rn),
       max.overlaps = 20, size = 4,
-      box.padding = unit(0.5, "lines"), min.segment.length = 0,
-      point.padding = unit(0.8, "lines"),
+      box.padding = ggplot2::unit(0.5, "lines"), min.segment.length = 0,
+      point.padding = ggplot2::unit(0.8, "lines"),
       segment.color = "black", show.legend = FALSE
     )
   }
