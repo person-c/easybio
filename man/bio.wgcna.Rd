@@ -18,7 +18,7 @@ All classification features should be converted to numeric.}
 
 \item{power}{the picked power from powers.}
 
-\item{...}{additional arguments}
+\item{...}{additional arguments, see ?WGCNA::blockwiseModules}
 }
 \value{
 depending on the arguments you supply.

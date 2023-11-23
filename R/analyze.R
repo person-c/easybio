@@ -251,11 +251,10 @@ bio.cox <- function(object, form, ...) {
 #' All classification features should be converted to numeric.
 #' @param  powers a numeric atomic vector to be used for the powers pick.
 #' @param power the picked power from powers.
-#' @param ... additional arguments
+#' @param ... additional arguments, see ?WGCNA::blockwiseModules
 #'
 #' @return depending on the arguments you supply.
-#' @importFrom grDevices  png
-#' @importFrom graphics abline par text
+#' @importFrom grDevices  png pdf
 bio.wgcna <- function(
     object,
     trait = NULL,
@@ -289,25 +288,22 @@ bio.wgcna <- function(
   sptree <- fastcluster::hclust(dist(object), method = "average")
 
   if (is.null(trait)) {
-    png("sample-cluster.png")
-    WGCNA::sizeGrWindow(12, 9)
-    par(cex = 0.6)
-    par(mar = c(0, 4, 2, 0))
+    pdf("sample-cluster.pdf")
     plot(sptree,
       main = "Sample clustering to detect outliers",
       sub = "", xlab = "", cex.lab = 1.5,
       cex.axis = 1.5, cex.main = 2
     )
+    dev.off()
   } else {
     trait2colors <- WGCNA::numbers2colors(trait, signed = FALSE)
     # Plot the sample dendrogram and the colors underneath.
-    WGCNA::sizeGrWindow(12, 9)
-    p <- WGCNA::plotDendroAndColors(sptree, trait2colors,
+    pdf("sample_cluster_with_traits.pdf")
+    WGCNA::plotDendroAndColors(sptree, trait2colors,
       groupLabels = names(trait),
       main = "Sample dendrogram and trait heatmap"
     )
-
-    p
+    dev.off()
   }
 
 
@@ -316,29 +312,30 @@ bio.wgcna <- function(
     WGCNA::enableWGCNAThreads()
     sft <- WGCNA::pickSoftThreshold(object, powerVector = powers, verbose = 5)
     # Plot the results:
-    png("power-tunning.png")
-    WGCNA::sizeGrWindow(9, 5)
-    par(mfrow = c(1, 2))
-    cex1 <- 0.9
-    # Scale-free topology fit index as a function of the soft-thresholding power
-    plot(sft$fitIndices[, 1], -sign(sft$fitIndices[, 3]) * sft$fitIndices[, 2],
-      xlab = "Soft Threshold (power)",
-      ylab = "Scale Free Topology Model Fit,signed R^2", type = "n",
-      main = paste("Scale independence")
-    )
-    text(sft$fitIndices[, 1], -sign(sft$fitIndices[, 3]) * sft$fitIndices[, 2],
-      labels = powers, cex = cex1, col = "red"
-    )
-    # this line corresponds to using an R^2 cut-off of h
-    abline(h = 0.90, col = "red")
-    # Mean connectivity as a function of the soft-thresholding power
-    plot(sft$fitIndices[, 1], sft$fitIndices[, 5],
-      xlab = "Soft Threshold (power)", ylab = "Mean Connectivity", type = "n",
-      main = paste("Mean connectivity")
-    )
-    text(sft$fitIndices[, 1], sft$fitIndices[, 5],
-      labels = powers, cex = cex1, col = "red"
-    )
+    p1 <- ggplot2::ggplot(
+      data.table::setDT(sft[[2]]),
+      ggplot2::aes(x = Power, y = SFT.R.sq)
+    ) +
+      ggplot2::geom_point(color = "red") +
+      ggplot2::geom_text(ggplot2::aes(x = Power, label = Power)) +
+      ggplot2::geom_hline(yintercept = 0.9) +
+      ggplot2::theme_bw()
+
+
+    p2 <- ggplot2::ggplot(
+      data.table::setDT(sft[[2]]),
+      ggplot2::aes(x = Power, y = mean.k.)
+    ) +
+      ggplot2::geom_point(color = "red") +
+      ggplot2::scale_x_continuous(
+        labels = c(1:10, 12, 14, 16, 18, 20),
+        breaks = c(1:10, 12, 14, 16, 18, 20)
+      ) +
+      ggplot2::theme_bw()
+
+    patchwork::wrap_plots(p1, p2, ncol = 2)
+    ggplot2::ggsave("fig.png")
+    ggplot2::ggsave("fig.pdf")
     return(sft)
   }
 
@@ -348,28 +345,28 @@ bio.wgcna <- function(
     WGCNA::enableWGCNAThreads()
     net <- WGCNA::blockwiseModules(object,
       power = power,
-      TOMType = "unsigned", minModuleSize = 30,
-      reassignThreshold = 0, mergeCutHeight = 0.25,
+      ...,
+      reassignThreshold = 0,
       numericLabels = TRUE, pamRespectsDendro = FALSE,
       maxBlockSize = 60000,
-      saveTOMs = TRUE,
       verbose = 3
     )
     cor <- stats::cor
 
     mcolors <- WGCNA::labels2colors(net$colors)
-    p <- WGCNA::plotDendroAndColors(net$dendrograms[[1]],
+    png("modules.pdf")
+    WGCNA::plotDendroAndColors(net$dendrograms[[1]],
       mcolors[net$blockGenes[[1]]],
       "Module colors",
       dendroLabels = FALSE, hang = 0.03,
       addGuide = TRUE, guideHang = 0.05
     )
-    print(p)
+    dev.off()
+
     gcluster <- data.table::data.table(
       gene = names(net$colors),
       colors = WGCNA::labels2colors(net$colors)
     )
-
 
     meg <- WGCNA::moduleEigengenes(object, mcolors)$eigengenes
     meg <- WGCNA::orderMEs(meg)
@@ -389,9 +386,9 @@ bio.wgcna <- function(
         sep = ""
       )
       dim(tmatrix) <- dim(cor5mt)
-      par(mar = c(6, 8.5, 3, 3))
       # Display the correlation values within a heatmap plot
-      p <- WGCNA::labeledHeatmap(
+      pdf("moduleTraits_correlation.pdf")
+      WGCNA::labeledHeatmap(
         Matrix = cor5mt,
         xLabels = names(trait),
         yLabels = names(meg),
@@ -404,8 +401,7 @@ bio.wgcna <- function(
         zlim = c(-1, 1),
         main = paste("Module-trait relationships")
       )
-
-      print(p)
+      dev.off()
     }
 
     return(net)
