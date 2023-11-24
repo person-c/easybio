@@ -354,8 +354,8 @@ bio.wgcna <- function(
     cor <- stats::cor
 
     mcolors <- WGCNA::labels2colors(net$colors)
-    png("modules.pdf")
-    WGCNA::plotDendroAndColors(net$dendrograms[[1]],
+    pdf("modules.pdf")
+    p <- WGCNA::plotDendroAndColors(net$dendrograms[[1]],
       mcolors[net$blockGenes[[1]]],
       "Module colors",
       dendroLabels = FALSE, hang = 0.03,
@@ -374,32 +374,16 @@ bio.wgcna <- function(
     data.table::fwrite(x = gcluster, "module.csv")
 
     if (!is.null(trait)) {
-      cor5mt <- WGCNA::cor(meg, trait, use = "p")
-      p5cor5mt <- WGCNA::corPvalueStudent(cor5mt, nsamples)
-      data.table::fwrite(cor5mt, "module_trait_correlation.csv")
-      data.table::fwrite(p5cor5mt, "module_trait_cor_sig.csv")
-
-      # view module-traits relationship heatmap
-      tmatrix <- paste(
-        signif(cor5mt, 2),
-        "\n(", signif(p5cor5mt, 1), ")",
-        sep = ""
-      )
-      dim(tmatrix) <- dim(cor5mt)
-      # Display the correlation values within a heatmap plot
-      pdf("moduleTraits_correlation.pdf")
-      WGCNA::labeledHeatmap(
-        Matrix = cor5mt,
-        xLabels = names(trait),
-        yLabels = names(meg),
-        ySymbols = names(meg),
-        colorLabels = FALSE,
-        colors = WGCNA::blueWhiteRed(50),
-        textMatrix = tmatrix,
-        setStdMargins = FALSE,
-        cex.text = 0.5,
-        zlim = c(-1, 1),
-        main = paste("Module-trait relationships")
+      lt <- WGCNA::corAndPvalue(meg, trait, use = "p")
+      lt <- lapply(lt, function(x) {
+        colnames(x) <- colnames(trait)
+        x
+      })
+      saveRDS(lt, "moduleTraitCorrelation.rds")
+      pdf("moduleTraitCorrelation.pdf")
+      corrplot::corrplot(
+        corr = lt[[1]], sig.level = "label_sig",
+        p.mat = lt[[2]]
       )
       dev.off()
     }
