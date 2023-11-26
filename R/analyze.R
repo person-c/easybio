@@ -354,8 +354,8 @@ bio.wgcna <- function(
     cor <- stats::cor
 
     mcolors <- WGCNA::labels2colors(net$colors)
-    pdf("modules.pdf")
-    p <- WGCNA::plotDendroAndColors(net$dendrograms[[1]],
+    png("modules.png")
+    WGCNA::plotDendroAndColors(net$dendrograms[[1]],
       mcolors[net$blockGenes[[1]]],
       "Module colors",
       dendroLabels = FALSE, hang = 0.03,
