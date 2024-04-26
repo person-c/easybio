@@ -1,79 +1,52 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![R-CMD-check](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml/badge.svg?branch=main)](https://github.com/snowGlint/easybio/actions/workflows/check-standard.yaml)
+# easybio
 
-## download
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of easybio is to …
+
+## Installation
+
+You can install the development version of easybio from
+[GitHub](https://github.com/) with:
 
 ``` r
-# devtools::install_github('snowGlint/easybio')
+# install.packages("devtools")
+devtools::install_github("snowGlint/easybio")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+``` r
 library(easybio)
+## basic example code
 ```
 
-## GEO下载整理
-
-给定GSE编号, 检查是否存在表达矩阵信息, 如有,
-从GPL注释信息中对表达矩阵进行注释, 可选的注释方法包括max和mean。
+What is special about using `README.Rmd` instead of just `README.md`?
+You can include R chunks like so:
 
 ``` r
-y <- download_geo("GSE119186", dir = ".")
-# return a list with annotated gene expression data.table object and metadata
+summary(cars)
+#>      speed           dist       
+#>  Min.   : 4.0   Min.   :  2.00  
+#>  1st Qu.:12.0   1st Qu.: 26.00  
+#>  Median :15.0   Median : 36.00  
+#>  Mean   :15.4   Mean   : 42.98  
+#>  3rd Qu.:19.0   3rd Qu.: 56.00  
+#>  Max.   :25.0   Max.   :120.00
 ```
 
-## `analyze`函数
+You’ll still need to render `README.Rmd` regularly, to keep `README.md`
+up-to-date. `devtools::build_readme()` is handy for this.
 
-所有分析都通过`analyze`函数调用, 通过指定Object,
-以及task自动完成任务分配。
-所有`analyze`返回的结果都可以直接调用`plot`函数查看结果。`plot`返回的结果为`ggplot`object,
-可用于后续自定义修改图片细节。
+You can also embed plots, for example:
 
-``` r
-data(expr) # differential analysis
-y <- analyze(object = expr, task = "limma", pattern = "cc", data_type = "array")
-plot(y) # S3 method for all analysis
-```
+<img src="man/figures/README-pressure-1.png" width="100%" />
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" />
-
-``` r
-# GO
-library(org.Hs.eg.db)
-z <- analyze(object = gene_vector, task = "go", ont = "ALL") #
-plot(z)
-```
-
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="50%" />
-
-调整图片颜色:
-
-``` r
-library(viridis)
-p <- plot(z)
-p + scale_fill_viridis(discrete = TRUE)
-```
-
-## Reductor对象
-
-用于方便查看降维算法不同参数组合的可视化效果。
-
-``` r
-library(palmerpenguins)
-
-x <-
-  penguins |>
-  tidyr::drop_na()
-
-y <- x$species
-x <- x |>
-  dplyr::select(where(is.numeric)) |>
-  dplyr::select(-year)
-x <- scale(x)
-# show the results of different arguments
-happy <- Reductor$new("tsne")
-set.seed(20230530)
-tune_fit <- happy$tune(x,
-  perplexity = c(30, 40, 50, 60),
-  n_iter = c(1000, 2000, 2500)
-)
-happy$plot(tune_fit, y)
-```
+In that case, don’t forget to commit and push the resulting figure
+files, so they display on GitHub and CRAN.
