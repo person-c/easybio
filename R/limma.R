@@ -195,6 +195,7 @@ view.go <- function(data, y, n = 8) {
       ggplot2::facet_grid(. ~ ONTOLOGY, scales = "free_x")
   } else {
     x <- eval(substitute(x[, head(.SD[order(y)], n)]))
+    x[, Description := factor(Description, levels = Description)]
     p <- ggplot2::ggplot(
       x,
       ggplot2::aes(
@@ -205,7 +206,7 @@ view.go <- function(data, y, n = 8) {
   }
 
   p <- p +
-    ggplot2::geom_col(width = 1) +
+    ggplot2::geom_col(width = 1, fill = "#B2DF8A") +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(0.01))
   p + scale_x_discrete(guide = guide_axis(angle = 75))
 }
