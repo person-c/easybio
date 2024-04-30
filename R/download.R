@@ -11,15 +11,17 @@
 #'
 #' @return a list containing expression matrix and metadata.
 #' @importFrom utils download.file
+#' @import data.table
 #' @export
 #' @examples
 #' # ADD_EXAMPLES_HERE
 download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
+  if (length(eset) > 1) warning("There are more than one GSE data; only the first one extracted!")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)
   pd <- eset[[1]]@phenoData@data
 
-  if (length(exp) == 0L) {
+  if (nrow(exp) == 0L) {
     message(sprintf("%s seems not array data; Trying to download supplementary files.", geo))
 
     stub <- gsub("\\d{1,3}$", "nnn", geo, perl = TRUE)
@@ -42,7 +44,7 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
     gene_symbol <- purrr::map_chr(gene_symbol, ~ `[`(.x, 2))
     ids <- data.frame(probe_id = gpl[[1]], symbol = gene_symbol)
     ids <- stats::na.omit(ids)
-  } else if (any(grepl(x = colnames(gpl), pattern = "symbol|genename", ignore.case = TRUE))) {
+  } else if (any(colnames(gpl) %ilike% "symbol|genename")) {
     ids <- gpl[, c(1, grep(colnames(gpl), pattern = "symbol|genename", ignore.case = TRUE))]
     ids <- stats::na.omit(ids)
     names(ids) <- c("probe_id", "symbol")
@@ -61,7 +63,7 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
   exp <- data.table::setDT(exp, keep.rownames = TRUE)
   if (is.numeric(ids[[1]])) ids[, probe_id := as.character(probe_id)]
   exp <- merge(ids, exp, by.x = "probe_id", by.y = "rn")
-  
+
   if (method == "max") {
     exp <- exp[, .SD[which.max(rowMeans(.SD, na.rm = TRUE))], keyby = symbol, .SDcols = is.numeric]
   }
