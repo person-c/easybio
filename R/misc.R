@@ -23,3 +23,14 @@ setrownames <- function(object = nm, nm) {
   rownames(object) <- nm
   object
 }
+
+#' Convert a named list with vector values in each element to a long data.table
+#'
+#' @param  x a list.
+#'
+#' @return data.table
+#' @importFrom data.table data.table
+#' @export
+list2dt <- function(x) {
+  data.table(name = rep(names(x), sapply(x, length)), value = unlist(x))
+}
