@@ -13,8 +13,7 @@ RoxygenNote: 7.3.1
 Imports: 
     clusterProfiler,
     data.table,
-    ggplot2,
-    Seurat
+    ggplot2
 Depends: 
     R (>= 2.10)
 LazyData: true
