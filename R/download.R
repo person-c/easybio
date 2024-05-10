@@ -5,6 +5,7 @@
 #'
 #' @param geo GSE ID.
 #' @param dir download directory.
+#' @param combine whether to combine probes.
 #' @param method ways to process many probes to one symbol(max or mean).
 #' @param filter_regex regex keywords to decide what kind of supplementary file
 #' to download.

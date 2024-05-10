@@ -4,12 +4,20 @@
 \alias{download_geo}
 \title{download GEO data}
 \usage{
-download_geo(geo, dir = ".", method = "max", filter_regex = NULL)
+download_geo(
+  geo,
+  dir = ".",
+  combine = TRUE,
+  method = "max",
+  filter_regex = NULL
+)
 }
 \arguments{
 \item{geo}{GSE ID.}
 
 \item{dir}{download directory.}
+
+\item{combine}{whether to combine probes.}
 
 \item{method}{ways to process many probes to one symbol(max or mean).}
 
@@ -22,7 +30,4 @@ a list containing expression matrix and metadata.
 \description{
 A function to download GEO data and convert it to a standard expression if existed;
 It will try to download the supplementary tabular data if no expression data is checked.
-}
-\examples{
-# ADD_EXAMPLES_HERE
 }
