@@ -13,11 +13,9 @@
 #' @importFrom utils download.file
 #' @import data.table
 #' @export
-#' @examples
-#' # ADD_EXAMPLES_HERE
-download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
+download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_regex = NULL) {
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
-  if (length(eset) > 1) warning("There are more than one GSE data; only the first one extracted!")
+  if (length(eset) > 1) warning("There are more than one geo dataset;only the first one extracted")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)
   pd <- eset[[1]]@phenoData@data
 
@@ -31,47 +29,45 @@ download_geo <- function(geo, dir = ".", method = "max", filter_regex = NULL) {
     a <- rvest::html_attr(nodes, "href")
     index <- ifelse(!is.null(filter_regex), grep(pattern = filter_regex, a), grep(pattern = ".gz|xls|csv", a))
     destfile_url <- paste0(mirror, a[index])
-    purrr::walk2(destfile_url, a[index], download.file)
+    Map(download.file, destfile_url, a[index])
 
     return(eset[[1]]@phenoData@data)
   }
 
   gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = ".")
   gpl <- GEOquery::Table(gpl)
+  setDT(gpl)
+  gpl <- gpl[.(rownames(exp)), on = .(ID)]
 
-  if ("gene_assignment" %in% colnames(gpl)) {
-    gene_symbol <- strsplit(x = gpl$gene_assignment, "//")
-    gene_symbol <- purrr::map_chr(gene_symbol, ~ `[`(.x, 2))
-    ids <- data.frame(probe_id = gpl[[1]], symbol = gene_symbol)
-    ids <- stats::na.omit(ids)
-  } else if (any(colnames(gpl) %ilike% "symbol|genename")) {
-    ids <- gpl[, c(1, grep(colnames(gpl), pattern = "symbol|genename", ignore.case = TRUE))]
-    ids <- stats::na.omit(ids)
-    names(ids) <- c("probe_id", "symbol")
-  } else {
-    exp <- data.table::setDT(exp, keep.rownames = TRUE)
-    warning(sprintf(
-      "%s: It seems that no columns containing symbol information
-      in the GPL annotation; try to check the GPL annotation's column names",
-      geo
-    ))
-
-    return(list(exprMatrix = exp, metaData = pd))
+  if (!combine) {
+    gpl <- setDF(gpl, gpl[[1]])
+    return(list(data = exp, sample = pd, feature = gpl))
   }
 
-  ids <- data.table::setDT(ids)
-  exp <- data.table::setDT(exp, keep.rownames = TRUE)
-  if (is.numeric(ids[[1]])) ids[, probe_id := as.character(probe_id)]
-  exp <- merge(ids, exp, by.x = "probe_id", by.y = "rn")
+  gpl2 <- copy(gpl)
+  if ("gene_assignment" %chin% colnames(gpl)) {
+    gpl2[, symbol := sapply(strsplit(x = gene_assignment, "//"), `[`, 2)]
+  }
+
+  if (any(colnames(gpl) %ilike% "symbol|genename")) {
+    gpl2[["symbol"]] <- gpl[[which(colnames(gpl) %ilike% "symbol|genename")]]
+  }
+
+  exp2 <- as.data.table(exp)
+  exp2[, symbol := gpl2[, symbol]]
+  exp2 <- exp2[symbol != ""]
 
   if (method == "max") {
-    exp <- exp[, .SD[which.max(rowMeans(.SD, na.rm = TRUE))], keyby = symbol, .SDcols = is.numeric]
+    exp2 <- exp2[, .SD[which.max(rowMeans(.SD, na.rm = TRUE))], by = symbol, .SDcols = is.numeric]
   }
   if (method == "mean") {
-    exp <- exp[, lapply(.SD, function(x) sum(x) / length(x)), keyby = symbol, .SDcols = is.numeric]
+    exp2 <- exp2[, lapply(.SD, function(x) sum(x) / length(x)), by = symbol, .SDcols = is.numeric]
   }
 
-  exp <- exp[, symbol := gsub("\\s.+", "", symbol)][!grepl("^$", symbol)]
-
-  return(list(exprMatrix = exp, metaData = pd))
+  exp2 <- setDF(exp2, exp2$symbol)
+  exp2$symbol <- NULL
+  gpl2 <- gpl2[.(rownames(exp2)), on = .(symbol), mult = "first"]
+  gpl2 <- setDF(gpl2, gpl2$symbol)
+  gpl2$symbol <- NULL
+  return(list(data = exp2, sample = pd, feature = gpl2))
 }
