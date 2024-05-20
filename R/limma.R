@@ -29,7 +29,7 @@ dgeList <- function(count, sample.info, feature.info) {
 #' @return DGEList
 #' @import data.table
 #' @export
-dProcess <- function(x, group.column, min.count = 10) {
+dprocess.DGEList <- function(x, group.column, min.count = 10) {
   lcpm <- edgeR::cpm(x, log = TRUE, prior.count = 2)
   # filter low expressed genes
   keep_exprs <- edgeR::filterByExpr(x, group = x$samples[[group.column]], min.count = min.count)
