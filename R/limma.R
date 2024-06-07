@@ -29,7 +29,7 @@ dgeList <- function(count, sample.info, feature.info) {
 #' @return DGEList
 #' @import data.table
 #' @export
-dProcess <- function(x, group.column, min.count = 10) {
+dprocess.DGEList <- function(x, group.column, min.count = 10) {
   lcpm <- edgeR::cpm(x, log = TRUE, prior.count = 2)
   # filter low expressed genes
   keep_exprs <- edgeR::filterByExpr(x, group = x$samples[[group.column]], min.count = min.count)
@@ -206,7 +206,7 @@ view.go <- function(data, y, n = 8) {
   }
 
   p <- p +
-    ggplot2::geom_col(width = 1, fill = "#B2DF8A") +
+    ggplot2::geom_col(width = 1) +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(0.01))
   p + scale_x_discrete(guide = guide_axis(angle = 75))
 }
@@ -251,4 +251,40 @@ view.kegg <- function(data, color, n = 8) {
     geom_point(aes(size = Count)) +
     scale_color_distiller(palette = "YlOrRd") +
     theme_bw()
+}
+
+#' Visualization of enrichment result
+#'
+#' @param data enrichment dataframe.
+#' @param y the y value's aesthetic.
+#' @param n number of terms to show.
+#' @param .fill the filled value for ggplot2.
+#' @import data.table
+#' @import ggplot2
+#' @export
+view.rich <- function(data, y, n = 8., .fill) {
+  x <- data.table::setDT(copy(data))
+  if ("ONTOLOGY" %in% colnames(x)) {
+    x <- eval(substitute(x[, head(.SD[order(y)], n), keyby = ONTOLOGY]))
+    x[, `:=`(Description, factor(Description, levels = rev(Description)))]
+    p <- ggplot2::ggplot(x, ggplot2::aes(y = -log10({{ y }}), x = Description, fill = ONTOLOGY)) +
+      ggplot2::facet_grid(. ~ ONTOLOGY, scales = "free_x")
+  } else {
+    x <- eval(substitute(x[, head(.SD[order(y)], n)]))
+    x[, `:=`(Description, factor(Description, levels = rev(Description)))]
+    p <- ggplot2::ggplot(x, ggplot2::aes(y = -log10({{ y }}), x = Description))
+  }
+  p <- p + ggplot2::geom_col(fill = .fill, width = 0.5) +
+    ggplot2::geom_point(aes(size = log10(Count))) +
+    ggplot2::scale_size_continuous(range = c(0.5, 3)) +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(0, 0)) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = c(0, 1)))
+  p <- p + scale_x_discrete() +
+    labs(x = expression(-log(pvalue))) +
+    coord_flip() + theme_classic() +
+    theme(
+      # aspect.ratio = 0.3 / 1,
+      axis.title.y = element_blank(),
+      text = element_text(family = "sans")
+    )
 }
