@@ -34,8 +34,6 @@ Suggests:
     future,
     parallel,
     furrr,
-    treemapify,
-    ggridges,
     WGCNA,
     fastcluster,
     dynamicTreeCut,
@@ -46,6 +44,4 @@ Suggests:
     tidygraph,
     STRINGdb,
     patchwork
-Remotes: 
-    davidsjoberg/ggsankey
 VignetteBuilder: knitr
