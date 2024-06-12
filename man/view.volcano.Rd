@@ -2,7 +2,7 @@
 % Please edit documentation in R/limma.R
 \name{view.volcano}
 \alias{view.volcano}
-\title{Vacano plot}
+\title{Volcano plot}
 \usage{
 view.volcano(
   x,
@@ -33,5 +33,5 @@ view.volcano(
 \item{legendName}{new column for color aesthetics.}
 }
 \description{
-Vacano plot
+Volcano plot
 }
