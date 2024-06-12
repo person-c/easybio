@@ -262,29 +262,38 @@ view.kegg <- function(data, color, n = 8) {
 #' @import data.table
 #' @import ggplot2
 #' @export
-view.rich <- function(data, y, n = 8., .fill) {
+view.rich <- function(data, y, n = 8, .fill) {
   x <- data.table::setDT(copy(data))
   if ("ONTOLOGY" %in% colnames(x)) {
     x <- eval(substitute(x[, head(.SD[order(y)], n), keyby = ONTOLOGY]))
     x[, `:=`(Description, factor(Description, levels = rev(Description)))]
     p <- ggplot2::ggplot(x, ggplot2::aes(y = -log10({{ y }}), x = Description, fill = ONTOLOGY)) +
-      ggplot2::facet_grid(. ~ ONTOLOGY, scales = "free_x")
+      coord_flip() +
+      ggplot2::facet_grid(ONTOLOGY ~ ., scales = "free_y") +
+      geom_col(aes(fill = ONTOLOGY), width = 0.5) +
+      scale_fill_brewer(palette = "Paired")
   } else {
     x <- eval(substitute(x[, head(.SD[order(y)], n)]))
     x[, `:=`(Description, factor(Description, levels = rev(Description)))]
-    p <- ggplot2::ggplot(x, ggplot2::aes(y = -log10({{ y }}), x = Description))
+    p <- ggplot2::ggplot(x, ggplot2::aes(y = -log10({{ y }}), x = Description)) +
+      ggplot2::geom_col(fill = .fill, width = 0.5) +
+      coord_flip()
   }
-  p <- p + ggplot2::geom_col(fill = .fill, width = 0.5) +
+  p <- p +
     ggplot2::geom_point(aes(size = log10(Count))) +
     ggplot2::scale_size_continuous(range = c(0.5, 3)) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(0, 0)) +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = c(0, 1)))
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = c(0, 1.01)))
   p <- p + scale_x_discrete() +
-    labs(x = expression(-log(pvalue))) +
-    coord_flip() + theme_classic() +
+    theme_classic() +
     theme(
-      # aspect.ratio = 0.3 / 1,
+      panel.grid = element_blank(),
       axis.title.y = element_blank(),
-      text = element_text(family = "sans")
+      text = element_text(family = "sans"),
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+      panel.spacing = unit(0, "cm")
     )
+
+  p
 }
