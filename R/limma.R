@@ -96,7 +96,7 @@ limmaFit <- function(x, group.column) {
   efit
 }
 
-#' Vacano plot
+#' Volcano plot
 #'
 #' @param x processed DGEList.
 #' @param fd_name Fold change symbol.
