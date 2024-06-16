@@ -3,7 +3,7 @@ Title: A Package to Help You to Do Common Bioinformatics Analyses Easier
 Version: 1.01
 Authors@R: 
     person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
-Description: Provide a uniform interface for common bioinformatics analyses.
+Description: Provide an uniform interface for common bioinformatics analyses.
 URL: https://cying.org/easybio
 BugReports: https://github.com/snowGlint/easybio/issues
 License: MIT + file LICENSE
@@ -26,7 +26,6 @@ Suggests:
     limma,
     org.Hs.eg.db,
     rvest,
-    stats,
     survival,
     survminer,
     knitr,
