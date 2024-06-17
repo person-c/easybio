@@ -4,12 +4,14 @@
 \alias{matchCellMarker2}
 \title{match markers from cellMarker2}
 \usage{
-matchCellMarker2(marker, n)
+matchCellMarker2(marker, n, species)
 }
 \arguments{
 \item{marker}{markers from \code{FindAllMarkers}}
 
 \item{n}{top number of genes to match}
+
+\item{species}{'Human' or 'Mouse'}
 }
 \value{
 matched cellMarker data.frame
