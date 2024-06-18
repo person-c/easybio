@@ -2,15 +2,17 @@
 #'
 #' @param marker markers from `FindAllMarkers`
 #' @param n top number of genes to match
-#' @param species 'Human' or 'Mouse'
+#' @param spc 'Human' or 'Mouse'
 #'
 #' @return matched cellMarker data.frame
 #' @export
-matchCellMarker2 <- function(marker, n, species) {
+matchCellMarker2 <- function(marker, n, spc) {
   setDT(marker)
 
-  cellMarker2 <- cellMarker2[.(species), .SD, on = .(species)]
-  marker <- marker[, .SD[order(-avg_log2FC)][1:n], keyby = .(cluster)][cellMarker2, on = "gene==marker", nomatch = NULL]
+  cellMarker2 <- subset(cellMarker2, species == spc)
+  marker <- marker[avg_log2FC > 0 & p_val_adj < 0.05, .SD[order(-avg_log2FC)][1:n], keyby = .(cluster)][cellMarker2, on = "gene==Symbol", nomatch = NULL]
   marker <- marker[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
-  marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
+  marker <- marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
+
+  marker
 }
