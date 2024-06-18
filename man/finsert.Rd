@@ -2,9 +2,9 @@
 % Please edit documentation in R/misc.R
 \name{finsert}
 \alias{finsert}
-\title{Insert character value in specified index  for character in a weird way.}
+\title{Insert character value in specified index  for character in a weird way(Used only for single cell annotation).}
 \usage{
-finsert(x = expression(c(1, 3) == "a", c(2, 4) == "b"), na = "Unknown")
+finsert(x = expression(c(0, 1, 3) == "a", c(2, 4) == "b"), na = "Unknown")
 }
 \arguments{
 \item{x}{expression}
@@ -15,5 +15,5 @@ finsert(x = expression(c(1, 3) == "a", c(2, 4) == "b"), na = "Unknown")
 characte
 }
 \description{
-Insert character value in specified index  for character in a weird way.
+Insert character value in specified index  for character in a weird way(Used only for single cell annotation).
 }
