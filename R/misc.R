@@ -56,3 +56,23 @@ finsert <- function(x = expression(c(0, 1, 3) == "a", c(2, 4) == "b"), na = "Unk
   v[is.na(v)] <- na
   v
 }
+
+#' Split big matrix to multiple smaller matrices by column.
+#'
+#' @param matrix raw matrix.
+#' @param chunk_size number of column of each smaller matrix.
+#'
+#' @return a list containg multiple smaller matrix
+#' @export
+split_matrix <- function(matrix, chunk_size) {
+  chunk_number <- floor(ncol(matrix) / chunk_size)
+  message(sprintf("matrix was divided to %f chunks", chunk_number + 1))
+  start_end <- lapply(0:chunk_number, function(x) {
+    c(1, chunk_size) + (chunk_size * x)
+  })
+  start_end[[chunk_number + 1]][[2]] <- ncol(matrix)
+  start_end
+  matrix_divided <- lapply(start_end, function(x) matrix[, x[[1]]:x[[2]]])
+
+  matrix_divided
+}
