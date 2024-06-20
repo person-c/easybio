@@ -65,7 +65,10 @@ finsert <- function(x = expression(c(0, 1, 3) == "a", c(2, 4) == "b"), na = "Unk
 #' @return a list containg multiple smaller matrix
 #' @export
 split_matrix <- function(matrix, chunk_size) {
-  chunk_number <- floor(ncol(matrix) / chunk_size)
+  chunk_number <- ifelse(ncol(matrix) %% chunk_size == 0,
+    ncol(matrix) / chunk_size - 1,
+    floor(ncol(matrix) / chunk_size)
+  )
   message(sprintf("matrix was divided to %f chunks", chunk_number + 1))
   start_end <- lapply(0:chunk_number, function(x) {
     c(1, chunk_size) + (chunk_size * x)
