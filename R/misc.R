@@ -79,3 +79,14 @@ split_matrix <- function(matrix, chunk_size) {
 
   matrix_divided
 }
+
+#' Get attributes.
+#'
+#' @param x R object with attributes.
+#' @param attr_name attributes name.
+#'
+#' @return attributes name.
+#' @export
+get_attr <- function(x, attr_name) {
+  attributes(x)[[attr_name]]
+}

@@ -16,7 +16,11 @@ matchCellMarker2 <- function(marker, n, spc) {
   marker <- marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
   topcell <- marker[, head(.SD, 2), keyby = .(cluster)][, unique(cell_name)]
-  topmarker <- cellMarker2[.(topcell), let(count = .N), on = .(cell_name), by = .(cell_name, Symbol)][, .SD[order(-count)] |> head(10), by = .(cell_name)]
+  topmarker <- cellMarker2[.(topcell), .SD, on = .(cell_name)]
+  topmarker <- topmarker[,
+    .(count = .N),
+    by = .(cell_name, Symbol)
+  ][, .SD[order(-count)] |> head(10), by = .(cell_name)]
 
   setattr(marker, "topmarker", topmarker)
   marker
