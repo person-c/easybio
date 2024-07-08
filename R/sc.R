@@ -5,6 +5,7 @@
 #' @param spc 'Human' or 'Mouse'
 #'
 #' @return matched cellMarker data.frame
+#' @import data.table
 #' @export
 matchCellMarker2 <- function(marker, n, spc) {
   setDT(marker)
@@ -14,5 +15,9 @@ matchCellMarker2 <- function(marker, n, spc) {
   marker <- marker[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
   marker <- marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
+  topcell <- marker[, head(.SD, 2), keyby = .(cluster)][, unique(cell_name)]
+  topmarker <- cellMarker2[.(topcell), let(count = .N), on = .(cell_name), by = .(cell_name, Symbol)][, .SD[order(-count)] |> head(10), by = .(cell_name)]
+
+  setattr(marker, "topmarker", topmarker)
   marker
 }
