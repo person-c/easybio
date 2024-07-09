@@ -28,3 +28,4 @@ Suggests:
     ggraph,
     ggrepel
 VignetteBuilder: knitr
+Language: en-US
