@@ -18,14 +18,14 @@ CoreAlg <- function(X, y, absolute, abs_method) {
     if (i == 3) {
       nus <- 0.75
     }
-    model <- svm(X, y, type = "nu-regression", kernel = "linear", nu = nus, scale = F)
+    model <- e1071::svm(X, y, type = "nu-regression", kernel = "linear", nu = nus, scale = F)
     model
   }
 
   if (Sys.info()["sysname"] == "Windows") {
-    out <- mclapply(1:svn_itor, res, mc.cores = 1)
+    out <- parallel::mclapply(1:svn_itor, res, mc.cores = 1)
   } else {
-    out <- mclapply(1:svn_itor, res, mc.cores = svn_itor)
+    out <- parallel::mclapply(1:svn_itor, res, mc.cores = svn_itor)
   }
 
   nusvm <- rep(0, svn_itor)
@@ -59,6 +59,7 @@ CoreAlg <- function(X, y, absolute, abs_method) {
   mix_r <- corrv[mn]
 
   newList <- list("w" = w, "mix_rmse" = mix_rmse, "mix_r" = mix_r)
+  newList
 }
 
 #' doPerm performs permutation-based sampling and runs the CoreAlg function iteratively.

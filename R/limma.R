@@ -76,6 +76,7 @@ dprocess.DGEList <- function(x, group.column, min.count = 10) {
 #' @import data.table
 #' @export
 limmaFit <- function(x, group.column) {
+  makeContrasts <- limma::makeContrasts()
   design <- model.matrix(~ 0 + x$samples[[group.column]])
   colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
 

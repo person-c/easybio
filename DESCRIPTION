@@ -13,34 +13,18 @@ RoxygenNote: 7.3.1
 Imports: 
     clusterProfiler,
     data.table,
+    e1071,
     ggplot2
 Depends: 
     R (>= 2.10)
 LazyData: true
 Suggests: 
     rlang,
-    purrr,
     edgeR,
-    fgsea,
     GEOquery,
     limma,
-    org.Hs.eg.db,
-    rvest,
-    survival,
-    survminer,
     knitr,
     rmarkdown,
-    future,
-    parallel,
-    furrr,
-    WGCNA,
-    fastcluster,
-    dynamicTreeCut,
-    enrichplot,
     ggraph,
-    ggrepel,
-    igraph,
-    tidygraph,
-    STRINGdb,
-    patchwork
+    ggrepel
 VignetteBuilder: knitr

@@ -86,7 +86,7 @@ download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_
 #' @return list
 #' @import data.table
 #' @export
-dprepare.tcga <- function(data) {
+prepare_tcga <- function(data) {
   sample_info <- data@colData
   sample_info$OS <- fcoalesce(sample_info$days_to_death, sample_info$days_to_last_follow_up)
 
