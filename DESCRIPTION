@@ -11,21 +11,18 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports: 
-    clusterProfiler,
     data.table,
-    e1071,
-    ggplot2
+    ggplot2,
+    ggrepel,
+    limma
 Depends: 
     R (>= 2.10)
 LazyData: true
 Suggests: 
-    rlang,
+    e1071,
     edgeR,
     GEOquery,
-    limma,
     knitr,
-    rmarkdown,
-    ggraph,
-    ggrepel
+    rmarkdown
 VignetteBuilder: knitr
 Language: en-US

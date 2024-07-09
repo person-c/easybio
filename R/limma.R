@@ -28,6 +28,10 @@ dgeList <- function(count, sample.info, feature.info) {
 #'
 #' @return DGEList
 #' @import data.table
+#' @import grDevices
+#' @import graphics
+#' @import stats
+#' @import utils
 #' @export
 dprocess.DGEList <- function(x, group.column, min.count = 10) {
   lcpm <- edgeR::cpm(x, log = TRUE, prior.count = 2)
@@ -80,7 +84,7 @@ limmaFit <- function(x, group.column) {
   design <- model.matrix(~ 0 + x$samples[[group.column]])
   colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
 
-  all_vs <- combn(unique(x$samples[[group.column]]), 2, simplify = TRUE)
+  all_vs <- utils::combn(unique(x$samples[[group.column]]), 2, simplify = TRUE)
   all_vs2 <- str2expression(paste0(all_vs[1, ], "-", all_vs[2, ]))
   all_vs2 <- setNames(as.list(all_vs2), paste0(all_vs[1, ], "vs", all_vs[2, ]))
   contr_matrix <- do.call("makeContrasts", c(all_vs2, levels = list(colnames(design))))
@@ -109,6 +113,7 @@ limmaFit <- function(x, group.column) {
 #' @param legendName new column for color aesthetics.
 #' @import data.table
 #' @import ggplot2
+#' @importfrom ggrepel geom_label_repel
 #' @export
 view.volcano <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, label, legendName) {
   dt <- setDT(copy(x), keep.rownames = TRUE)
@@ -136,7 +141,7 @@ view.volcano <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, lab
 
   if (top) {
     dttp <- eval(substitute(dt[.(c("Up", "Down")), on = .(legendName)][
-      , head(.SD[order(-abs(fd_name))], 5),
+      , utils::head(.SD[order(-abs(fd_name))], 5),
       by = .(legendName)
     ]))
 

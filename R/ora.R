@@ -1,22 +1,22 @@
-#' GO ENRICHMENT
-#'
-#' @param degs processed DGEList.
-#' @param .subset subset expression.
-#' @param .column gene name column.
-#' @param org species.
-#' @param pathway defined gene sets.
-#' @import data.table
-#' @importFrom clusterProfiler enricher
-#' @importFrom clusterProfiler enrichGO
-richGO <- function(degs, .subset, .column, org, pathway = NULL) {
-  sig <- eval(substitute(subset(degs, subset = .subset, .column, drop = TRUE)))
-  message(sprintf("%d genes used to do GO enrichment", length(sig)))
-  if (!is.null(pathway)) {
-    return(clusterProfiler::enricher(sig, TERM2GENE = pathway, pvalueCutoff = 1, qvalueCutoff = 1)@result)
-  }
-  res <- clusterProfiler::enrichGO(sig, org, keyType = "SYMBOL", ont = "ALL", pvalueCutoff = 1, qvalueCutoff = 1)
-  res@result
-}
+# #' GO ENRICHMENT
+# #'
+# #' @param degs processed DGEList.
+# #' @param .subset subset expression.
+# #' @param .column gene name column.
+# #' @param org species.
+# #' @param pathway defined gene sets.
+# #' @import data.table
+# #' @importFrom clusterProfiler enricher
+# #' @importFrom clusterProfiler enrichGO
+# richGO <- function(degs, .subset, .column, org, pathway = NULL) {
+#   sig <- eval(substitute(subset(degs, subset = .subset, .column, drop = TRUE)))
+#   message(sprintf("%d genes used to do GO enrichment", length(sig)))
+#   if (!is.null(pathway)) {
+#     return(clusterProfiler::enricher(sig, TERM2GENE = pathway, pvalueCutoff = 1, qvalueCutoff = 1)@result)
+#   }
+#   res <- clusterProfiler::enrichGO(sig, org, keyType = "SYMBOL", ont = "ALL", pvalueCutoff = 1, qvalueCutoff = 1)
+#   res@result
+# }
 
 #' GO ENRICHMENT VISIULIZATION
 #'
@@ -60,26 +60,26 @@ view.go <- function(data, y, n = 8) {
 }
 
 
-#' KEGG ENRICHMENT
-#'
-#' @param degs degs.
-#' @param .subset subset expression.
-#' @param .column gene name column.
-#' @param  org species
-#' @param pathway gene sets.
-#' @import data.table
-richKEGG <- function(degs, .subset, .column, org, pathway = NULL) {
-  sig <- eval(substitute(subset(degs, subset = .subset, .column, drop = TRUE)))
-  message(sprintf("%d genes used to do KEGG enrichment", length(sig)))
-  if (!is.null(pathway)) {
-    return(clusterProfiler::enricher(sig, TERM2GENE = pathway, pvalueCutoff = 1, qvalueCutoff = 1)@result)
-  }
-  sig <- clusterProfiler::bitr(sig, "SYMBOL", "ENTREZID", org)
-  sig <- sig[[2]]
-  res <- clusterProfiler::enrichKEGG(sig, pvalueCutoff = 1, qvalueCutoff = 1)
+# #' KEGG ENRICHMENT
+# #'
+# #' @param degs degs.
+# #' @param .subset subset expression.
+# #' @param .column gene name column.
+# #' @param  org species
+# #' @param pathway gene sets.
+# #' @import data.table
+# richKEGG <- function(degs, .subset, .column, org, pathway = NULL) {
+#   sig <- eval(substitute(subset(degs, subset = .subset, .column, drop = TRUE)))
+#   message(sprintf("%d genes used to do KEGG enrichment", length(sig)))
+#   if (!is.null(pathway)) {
+#     return(clusterProfiler::enricher(sig, TERM2GENE = pathway, pvalueCutoff = 1, qvalueCutoff = 1)@result)
+#   }
+#   sig <- clusterProfiler::bitr(sig, "SYMBOL", "ENTREZID", org)
+#   sig <- sig[[2]]
+#   res <- clusterProfiler::enrichKEGG(sig, pvalueCutoff = 1, qvalueCutoff = 1)
 
-  res@result
-}
+#   res@result
+# }
 
 #' KEGG ENRICHMENT VISUALIZATION
 #'
