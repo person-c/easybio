@@ -4,7 +4,7 @@
 \alias{view.rich}
 \title{Visualization of enrichment result}
 \usage{
-view.rich(data, y, n = 8, .fill)
+view.rich(data, y, n = 8, fill, size)
 }
 \arguments{
 \item{data}{enrichment dataframe.}
@@ -12,6 +12,8 @@ view.rich(data, y, n = 8, .fill)
 \item{y}{the y value's aesthetic.}
 
 \item{n}{number of terms to show.}
+
+\item{size}{size aes.}
 
 \item{.fill}{the filled value for ggplot2.}
 }

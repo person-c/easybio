@@ -61,7 +61,7 @@ matchCellMarker2 <- function(marker, n, spc) {
 #' @import data.table
 #' @export
 check_marker <- function(marker, n, spc, cl = c()) {
-  marker_matched <- easybio::matchCellMarker2(marker, n, spc)
+  marker_matched <- matchCellMarker2(marker, n, spc)
   marker_top <- na.omit(attributes(marker_matched)[["topmarker"]])
   marker_top <- unique(marker_top, by = "Symbol")
   marker_top <- marker_top[

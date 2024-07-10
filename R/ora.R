@@ -106,11 +106,12 @@ view.kegg <- function(data, color, n = 8) {
 #' @param y the y value's aesthetic.
 #' @param n number of terms to show.
 #' @param .fill the filled value for ggplot2.
+#' @param size size aes.
 #' @import data.table
 #' @import ggplot2
 #' @export
-view.rich <- function(data, y, n = 8, .fill) {
-  x <- data.table::setDT(copy(data))
+view.rich <- function(data, y, n = 8, fill, size) {
+  x <- data.table::setDT(data)
   if ("ONTOLOGY" %in% colnames(x)) {
     x <- eval(substitute(x[, head(.SD[order(y)], n), keyby = ONTOLOGY]))
     x[, `:=`(Description, factor(Description, levels = rev(Description)))]
@@ -123,11 +124,11 @@ view.rich <- function(data, y, n = 8, .fill) {
     x <- eval(substitute(x[, head(.SD[order(y)], n)]))
     x[, `:=`(Description, factor(Description, levels = rev(Description)))]
     p <- ggplot2::ggplot(x, ggplot2::aes(y = -log10({{ y }}), x = Description)) +
-      ggplot2::geom_col(fill = .fill, width = 0.5) +
+      ggplot2::geom_col(fill = fill, width = 0.5) +
       coord_flip()
   }
   p <- p +
-    ggplot2::geom_point(aes(size = log10(Count))) +
+    ggplot2::geom_point(aes(size = log10({{ size }}))) +
     ggplot2::scale_size_continuous(range = c(0.5, 3)) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(0, 0)) +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(add = c(0, 1.01)))
