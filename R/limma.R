@@ -113,7 +113,6 @@ limmaFit <- function(x, group.column) {
 #' @param legendName new column for color aesthetics.
 #' @import data.table
 #' @import ggplot2
-#' @importFrom ggrepel geom_label_repel
 #' @export
 view.volcano <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, label, legendName) {
   dt <- setDT(copy(x), keep.rownames = TRUE)

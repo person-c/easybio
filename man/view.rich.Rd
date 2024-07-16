@@ -13,9 +13,9 @@ view.rich(data, y, n = 8, fill, size)
 
 \item{n}{number of terms to show.}
 
-\item{size}{size aes.}
+\item{fill}{the filled value for ggplot2.}
 
-\item{.fill}{the filled value for ggplot2.}
+\item{size}{size aes.}
 }
 \description{
 Visualization of enrichment result

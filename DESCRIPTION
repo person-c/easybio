@@ -13,7 +13,6 @@ RoxygenNote: 7.3.1
 Imports: 
     data.table,
     ggplot2,
-    ggrepel,
     limma
 Depends: 
     R (>= 2.10)
@@ -21,8 +20,11 @@ LazyData: true
 Suggests: 
     e1071,
     edgeR,
+    fgsea,
     GEOquery,
     knitr,
-    rmarkdown
+    patchwork,
+    rmarkdown,
+    ggrepel
 VignetteBuilder: knitr
 Language: en-US
