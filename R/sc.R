@@ -77,3 +77,21 @@ check_marker <- function(marker, n, spc, cl = c()) {
   cell_features <- setNames(marker_top$Symbol, make.names(marker_top$cell_name))
   cell_features
 }
+
+
+#' Get marker for specific cell in cellMarker2.
+#'
+#' @param spc 'Human' or 'Mouse'.
+#' @param cell cell you want to search.
+#' @param number number ot marker you want to get.
+#' @param min.count the minimum number the marker reporteded
+#'
+#' @return marker list
+#' @import data.table
+#' @export
+get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
+  marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)][, .N, by = .(cell_name, marker)][N > min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)][, .(marker = .(marker)), by = .(cell_name)]
+  marker <- setNames(marker$marker, marker$cell_name)
+
+  marker
+}
