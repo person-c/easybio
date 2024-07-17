@@ -197,7 +197,7 @@ plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize 
 #' @import ggplot2
 #' @export
 plotRank <- function(stats) {
-  rankData <- data.table(ranks = 1:length(stats), y = sort(stats, TRUE))
+  rankData <- data.table(ranks = 1:length(stats), y = fsort(stats, TRUE))
   ggplot(data = rankData) +
     scale_x_discrete(expand = expansion(0, 0)) +
     geom_segment(aes(x = ranks, y = 0, xend = ranks, yend = y), color = "gray60") +
