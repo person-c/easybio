@@ -236,3 +236,38 @@ plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
 
   p3
 }
+
+#' Visualization of ORA test.
+#'
+#' @param data ORA result.
+#' @param x x-axis.
+#' @param y y-axis.
+#' @param size point size.
+#' @param fill aesthetic fill. Use constant value for one categroy.
+#' @param flip wheather to flip plot
+#'
+#' @import ggplot2
+#' @export
+plotORA <- function(data, x, y, size, fill, flip = FALSE) {
+  p <- ggplot(
+    data,
+    aes(
+      x = {{ x }},
+      y = {{ y }}
+    )
+  ) +
+    geom_col(aes(fill = {{ fill }}), width = 0.5, show.legend = !is.character(fill)) +
+    geom_point(aes(size = {{ size }})) +
+    scale_x_continuous(expand = expansion(add = c(0, 1))) +
+    scale_fill_brewer(palette = "Paired") +
+    theme_classic()
+
+  if (flip) {
+    p <- p + scale_y_discrete(
+      expand = expansion(0, 0),
+      guide = guide_axis(angle = 80)
+    ) + coord_flip()
+  }
+
+  p
+}

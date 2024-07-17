@@ -152,3 +152,38 @@ view.volcano <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, lab
     )
   }
 }
+
+
+#' Plot volcano
+#'
+#' @param data DEGs result.
+#' @param data.text labeled data.
+#' @param x axis x.
+#' @param y axis y.
+#' @param color color aesthetic.
+#' @param label text label aesthetic.
+#' @import ggplot2
+#' @export
+plotVolcano <- function(data, data.text, x, y, color, label) {
+  p <- ggplot(data, aes(x = {{ x }}, y = {{ y }})) +
+    geom_point(aes(color = {{ color }})) +
+    theme_classic() +
+    scale_color_manual(
+      values = c("#414788FF", "darkgray", "#22A884FF"),
+      guide = guide_legend(override.aes = list(size = 4))
+    )
+
+  if (!missing(data.text)) {
+    p + ggrepel::geom_text_repel(
+      data = data.text, aes(label = {{ label }}),
+      arrow = arrow(length = unit(0.1, "cm")),
+      max.overlaps = 20,
+      size = 4,
+      box.padding = unit(0.5, "lines"),
+      min.segment.length = 0,
+      point.padding = unit(0.8, "lines"),
+      segment.color = "black",
+      show.legend = FALSE
+    )
+  }
+}
