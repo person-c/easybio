@@ -224,7 +224,7 @@ plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
   p2 <- plotRank(stats)
   p3 <- patchwork::wrap_plots(p1, p2, heights = c(0.8, 0.3)) +
     patchwork::plot_annotation(
-      title = "5991130_Programmed_Cell_Death",
+      title = pwayname,
       subtitle = sprintf("NES: %f, padj: %f", anno_text[[1]], anno_text[[2]]),
       theme = theme(
         plot.title = element_text(size = 8),
