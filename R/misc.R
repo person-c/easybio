@@ -69,3 +69,31 @@ split_matrix <- function(matrix, chunk_size) {
 get_attr <- function(x, attr_name) {
   attributes(x)[[attr_name]]
 }
+
+
+#' Get graph from a named list according to the overlap between each list element.
+#'
+#' @param nodes named list.
+#' @param attr_name attributes name.
+#'
+#' @import data.table
+#' @return attributes name.
+#' @export
+list2graph <- function(nodes) {
+  node_x <- c()
+  node_y <- c()
+  weight <- numeric()
+  for (i in seq_along(nodes)) {
+    j <- i + 1
+    while (j <= length(nodes)) {
+      node_x <- append(node_x, names(nodes[i]))
+      node_y <- append(node_y, names(nodes[j]))
+      weight <- append(weight, intersect(nodes[[i]], nodes[[i]]) |> length())
+
+      j <- j + 1
+    }
+  }
+
+  net <- data.table(node_x = node_x, node_y = node_y, weight = weight)
+  net
+}
