@@ -74,7 +74,6 @@ get_attr <- function(x, attr_name) {
 #' Get graph from a named list according to the overlap between each list element.
 #'
 #' @param nodes named list.
-#' @param attr_name attributes name.
 #'
 #' @import data.table
 #' @return attributes name.

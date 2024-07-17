@@ -8,8 +8,6 @@ list2graph(nodes)
 }
 \arguments{
 \item{nodes}{named list.}
-
-\item{attr_name}{attributes name.}
 }
 \value{
 attributes name.
