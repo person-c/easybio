@@ -158,7 +158,7 @@ view.rich <- function(data, y, n = 8, fill, size) {
 #' @import ggplot2
 #' @export
 plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize = 0.2) {
-  pd <- plotEnrichmentData(
+  pd <- fgsea::plotEnrichmentData(
     pathway = pathways[[pwayname]], stats = stats,
     gseaParam = gseaParam
   )
