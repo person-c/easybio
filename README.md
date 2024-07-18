@@ -15,4 +15,4 @@ devtools::install_github("snowGlint/easybio")
 ```
 
 To know how to use this package, please see the
-wiki\[<https://github.com/snowGlint/easybio/wiki>\].
+[wiki](https://github.com/snowGlint/easybio/wiki).
