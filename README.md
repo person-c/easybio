@@ -13,3 +13,6 @@ You can install the development version of easybio from
 # install.packages("devtools")
 devtools::install_github("snowGlint/easybio")
 ```
+
+To know how to use this package, please see the
+wiki\[<https://github.com/snowGlint/easybio/wiki>\].
