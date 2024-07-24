@@ -96,3 +96,29 @@ list2graph <- function(nodes) {
   net <- data.table(node_x = node_x, node_y = node_y, weight = weight)
   net
 }
+
+#' Summary by group according to the regex.
+#'
+#' @param f function.
+#' @param x data
+#' @param xname names of x.
+#' @param patterns regex to group.
+#'
+#' @return summary data by group
+#' @export
+groupStat <- function(f, x, xname = names(x), patterns) {
+  i <- lapply(patterns, \(.x) which(xname %like% .x))
+  sapply(i, \(.x) force(f)(x[.x]), simplify = FALSE)
+}
+
+#' Summary by group according to the index.
+#'
+#' @param f function.
+#' @param x data
+#' @param i group index.
+#'
+#' @return summary data by group
+#' @export
+groupStatI <- function(f, x, i) {
+  sapply(i, \(.x) force(f)(x[.x]), simplify = FALSE)
+}
