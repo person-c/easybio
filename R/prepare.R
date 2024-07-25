@@ -15,6 +15,8 @@
 #' @import data.table
 #' @export
 download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_regex = NULL) {
+  . <- ID <- symbol <- gene_assignment <- NULL
+
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
   if (length(eset) > 1) warning("There are more than one geo dataset;only the first one extracted")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)
