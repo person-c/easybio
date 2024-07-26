@@ -4,14 +4,14 @@
 \alias{groupStatI}
 \title{Summary by group according to the index.}
 \usage{
-groupStatI(f, x, i)
+groupStatI(f, x, idx)
 }
 \arguments{
 \item{f}{function.}
 
 \item{x}{data}
 
-\item{i}{group index.}
+\item{idx}{group index.}
 }
 \value{
 summary data by group
