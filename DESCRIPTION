@@ -26,5 +26,6 @@ Suggests:
     patchwork,
     rmarkdown,
     ggrepel
+biocViews: limma
 VignetteBuilder: knitr
 Language: en-US
