@@ -31,26 +31,29 @@ finsert <- function(x = expression(c(0, 1, 3) == "Neutrophil", c(2, 4, 8) == "Ma
 #' @export
 matchCellMarker2 <- function(marker, n, spc) {
   . <- NULL
-  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- Symbol <- count <- N <- NULL
+  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- count <- N <- NULL
 
-
+  marker <- copy(marker)
   setDT(marker)
 
-  cellMarker2 <- subset(cellMarker2, species == spc)
-  marker <- marker[avg_log2FC > 0 & p_val_adj < 0.05, .SD[order(-avg_log2FC)][1:n],
+  cellMarker2 <- cellMarker2[.(spc), on = .(species)]
+  marker <- marker[
+    avg_log2FC > 0 & p_val_adj < 0.05,
+    .SD[order(-avg_log2FC)][1:n],
     keyby = .(cluster)
-  ][cellMarker2, on = "gene==Symbol", nomatch = NULL]
+  ]
+
+  marker <- marker[cellMarker2, on = "gene==marker", nomatch = NULL]
   marker <- marker[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
   marker <- marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
   topcell <- marker[, head(.SD, 2), keyby = .(cluster)][, unique(cell_name)]
   topmarker <- cellMarker2[.(topcell), .SD, on = .(cell_name)]
-  topmarker <- topmarker[,
-    .(count = .N),
-    by = .(cell_name, Symbol)
-  ][, .SD[order(-count)] |> head(10), by = .(cell_name)]
-
+  topmarker <- topmarker[!is.na(marker), .(count = .N), by = .(cell_name, marker)]
+  topmarker <- topmarker[, head(.SD[order(-count)], 10), by = .(cell_name)]
+  setnames(topmarker, old = "marker", new = "Symbol")
   setattr(marker, "topmarker", topmarker)
+
   marker
 }
 
