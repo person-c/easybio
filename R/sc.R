@@ -30,8 +30,8 @@ finsert <- function(x = expression(c(0, 1, 3) == "Neutrophil", c(2, 4, 8) == "Ma
 #' @import data.table
 #' @export
 matchCellMarker2 <- function(marker, n, spc) {
-  . <- NULL
-  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- count <- N <- NULL
+  . <- markerWith <- NULL
+  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- count <- N <- len <- NULL
 
   marker <- copy(marker)
   setDT(marker)
@@ -54,7 +54,8 @@ matchCellMarker2 <- function(marker, n, spc) {
   setnames(topmarker, old = "marker", new = "Symbol")
   setattr(marker, "topmarker", topmarker)
 
-  marker
+  marker[, len := sapply(markerWith, FUN = \(x) length(unique(x)))]
+  marker[]
 }
 
 #' Check markers from cell returned by `matchCellMarker`
