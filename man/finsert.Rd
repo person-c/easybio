@@ -20,3 +20,14 @@ character
 \description{
 Insert character value in specified index  for character in a weird way(Used only for single cell annotation).
 }
+\examples{
+library(easybio)
+tmp <- finsert(
+  x = expression(
+    c(0, 1, 3) == "Neutrophil",
+    c(2, 4, 8) == "Macrophage"
+  ),
+  na = "Unknown"
+)
+names(tmp) <- as.character(0:8)
+}

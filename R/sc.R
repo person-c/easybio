@@ -5,6 +5,16 @@
 #'
 #' @return character
 #' @export
+#' @examples
+#' library(easybio)
+#' tmp <- finsert(
+#'   x = expression(
+#'     c(0, 1, 3) == "Neutrophil",
+#'     c(2, 4, 8) == "Macrophage"
+#'   ),
+#'   na = "Unknown"
+#' )
+#' names(tmp) <- as.character(0:8)
 finsert <- function(x = expression(c(0, 1, 3) == "Neutrophil", c(2, 4, 8) == "Macrophage"), na = "Unknown") {
   x <- eval(substitute(x))
   x <- lapply(x, as.list)
@@ -29,9 +39,13 @@ finsert <- function(x = expression(c(0, 1, 3) == "Neutrophil", c(2, 4, 8) == "Ma
 #' @return matched cellMarker data.frame
 #' @import data.table
 #' @export
+#' @examples
+#' library(easybio)
+#' data(exampleMarker)
+#' matchCellMarker2(exampleMarker, n = 50, spc = "Human")
 matchCellMarker2 <- function(marker, n, spc) {
-  . <- markerWith <- symbol <- NULL
-  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- count <- N <- len <- NULL
+  . <- markerWith <- NULL
+  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- count <- N <- NULL
 
   marker <- copy(marker)
   setDT(marker)
@@ -54,9 +68,10 @@ matchCellMarker2 <- function(marker, n, spc) {
   setnames(topmarker, old = "marker", new = "Symbol")
   setattr(marker, "topmarker", topmarker)
 
-  marker[, len := sapply(markerWith, FUN = \(x) length(unique(x)))]
-  marker[, symbol := lapply(markerWith, FUN = \(x) unique(x))]
-  setcolorder(marker, c("cluster", "cell_name", "len", "N", "symbol", "markerWith"))
+  marker[, let(uniqueN = sapply(markerWith, FUN = \(x) length(unique(x))))]
+  marker[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
+  marker[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
+  setcolorder(marker, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
   marker[]
 }
 
@@ -66,11 +81,16 @@ matchCellMarker2 <- function(marker, n, spc) {
 #' @param n top number of genes to match.
 #' @param spc 'Human' or 'Mouse'.
 #' @param cl cluster you want to check.
+#' @param unique not yet implemented...waiting for.
 #'
 #' @return matched cellMarker data.frame
 #' @import data.table
 #' @export
-check_marker <- function(marker, n, spc, cl = c()) {
+#' @examples
+#' library(easybio)
+#' data(exampleMarker)
+#' check_marker(exampleMarker, n = 50, spc = "Human", cl = c(1, 4, 7))
+check_marker <- function(marker, n, spc, cl = c(), unique = TRUE) {
   . <- NULL
   Symbol <- cell_name <- cluster <- count <- NULL
 
@@ -102,6 +122,9 @@ check_marker <- function(marker, n, spc, cl = c()) {
 #' @return marker list
 #' @import data.table
 #' @export
+#' @examples
+#' library(easybio)
+#' get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"))
 get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
   . <- NULL
   species <- cell_name <- N <- marker <- NULL

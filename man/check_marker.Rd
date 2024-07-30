@@ -4,7 +4,7 @@
 \alias{check_marker}
 \title{Check markers from cell returned by \code{matchCellMarker}}
 \usage{
-check_marker(marker, n, spc, cl = c())
+check_marker(marker, n, spc, cl = c(), unique = TRUE)
 }
 \arguments{
 \item{marker}{markers from \code{Seurat::FindAllMarkers}}
@@ -14,10 +14,17 @@ check_marker(marker, n, spc, cl = c())
 \item{spc}{'Human' or 'Mouse'.}
 
 \item{cl}{cluster you want to check.}
+
+\item{unique}{not yet implemented...waiting for.}
 }
 \value{
 matched cellMarker data.frame
 }
 \description{
 Check markers from cell returned by \code{matchCellMarker}
+}
+\examples{
+library(easybio)
+data(exampleMarker)
+check_marker(exampleMarker, n = 50, spc = "Human", cl = c(1, 4, 7))
 }

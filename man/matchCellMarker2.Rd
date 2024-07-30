@@ -19,3 +19,8 @@ matched cellMarker data.frame
 \description{
 match markers from cellMarker2
 }
+\examples{
+library(easybio)
+data(exampleMarker)
+matchCellMarker2(exampleMarker, n = 50, spc = "Human")
+}

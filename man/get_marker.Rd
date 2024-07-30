@@ -21,3 +21,7 @@ marker list
 \description{
 Get marker for specific cell in cellMarker2.
 }
+\examples{
+library(easybio)
+get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"))
+}
