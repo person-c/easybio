@@ -30,7 +30,7 @@ finsert <- function(x = expression(c(0, 1, 3) == "Neutrophil", c(2, 4, 8) == "Ma
 #' @import data.table
 #' @export
 matchCellMarker2 <- function(marker, n, spc) {
-  . <- markerWith <- NULL
+  . <- markerWith <- symbol <- NULL
   species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- count <- N <- len <- NULL
 
   marker <- copy(marker)
@@ -55,6 +55,8 @@ matchCellMarker2 <- function(marker, n, spc) {
   setattr(marker, "topmarker", topmarker)
 
   marker[, len := sapply(markerWith, FUN = \(x) length(unique(x)))]
+  marker[, symbol := lapply(markerWith, FUN = \(x) unique(x))]
+  setcolorder(marker, c("cluster", "cell_name", "len", "N", "symbol", "markerWith"))
   marker[]
 }
 
