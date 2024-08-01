@@ -25,7 +25,8 @@ Suggests:
     knitr,
     patchwork,
     rmarkdown,
-    ggrepel
+    ggrepel,
+    Seurat
 biocViews: limma
 VignetteBuilder: knitr
 Language: en-US

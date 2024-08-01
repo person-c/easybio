@@ -140,3 +140,47 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
 
   marker
 }
+
+#' Check dotplot for markers from \code{check_marker}.
+#'
+#' @param srt Seurat object.
+#' @param marker From \code{Seurat::FindAllMarkers}
+#' @param n params for \code{check_marker}
+#' @param species params for \code{check_marker}
+#' @param cls a list contain cluster groups to check
+#'
+#' @return NULL
+#' @import ggplot2
+#' @export
+plotSeuratDot <- function(srt, marker, n = 50, species, cls) {
+  tmpdir <- "tmp_check_marker"
+  if (!dir.exists(tmpdir)) {
+    message("Creating tmp directory...please check all result in ths directory")
+    dir.create("tmp")
+  }
+
+  lapply(cls, \(cl) {
+    check_marker(marker, n, species, cl) |>
+      Seurat::DotPlot(srt, features = _) +
+      scale_x_discrete(
+        guide = guide_axis(
+          angle = 60,
+          theme = theme(text = element_text(size = 4))
+        )
+      ) +
+      theme(
+        plot.background = element_rect(fill = "white"),
+        panel.background = element_rect(fill = "white"),
+        strip.text = element_text(size = 8, angle = 30, vjust = 0.1, hjust = 0)
+      )
+
+
+    ggsave(
+      width = 10, height = 8,
+      file.path(
+        tmpdir,
+        paste0(paste0("clusters_", paste0(cl, collapse = "_")), ".pdf")
+      )
+    )
+  })
+}
