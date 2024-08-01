@@ -155,8 +155,8 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
 plotSeuratDot <- function(srt, marker, n = 50, species, cls) {
   tmpdir <- "tmp_check_marker"
   if (!dir.exists(tmpdir)) {
-    message("Creating tmp directory...please check all result in ths directory")
-    dir.create("tmp")
+    message("Creating tmp_check_marker directory...please check all result in ths directory")
+    dir.create(tmpdir)
   }
 
   lapply(cls, \(cl) {
