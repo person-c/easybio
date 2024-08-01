@@ -26,7 +26,8 @@ Suggests:
     patchwork,
     rmarkdown,
     ggrepel,
-    Seurat
+    Seurat,
+    httr2
 biocViews: limma
 VignetteBuilder: knitr
 Language: en-US
