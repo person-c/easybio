@@ -123,3 +123,17 @@ groupStat <- function(f, x, xname = names(x), patterns) {
   idx <- lapply(patterns, \(.x) which(xname %like% .x))
   groupStatI(f, x, idx)
 }
+
+
+#' Set directory
+#'
+#' @param ... see \code{file.path()}
+#'
+#' @return directory path
+#' @export
+setSavedir <- function(...) {
+  savedir <- file.path(...)
+  if (!dir.exists(savedir)) dir.create(savedir, recursive = TRUE)
+
+  return(savedir)
+}
