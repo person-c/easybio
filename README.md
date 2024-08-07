@@ -10,8 +10,8 @@ You can install the development version of easybio from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("snowGlint/easybio")
+# install.packages("BiocManger")
+BiocManger::install("snowGlint/easybio")
 ```
 
 To know how to use this package, please see the
