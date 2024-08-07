@@ -10,7 +10,7 @@ setSavedir(...)
 \item{...}{see \code{file.path()}}
 }
 \value{
-directory
+directory path
 }
 \description{
 Set directory

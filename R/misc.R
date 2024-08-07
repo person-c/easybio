@@ -137,3 +137,20 @@ setSavedir <- function(...) {
 
   return(savedir)
 }
+
+#' Operate in a specific directory and return current directory after execution
+#'
+#' @param dir directory to operate.
+#' @param expr expression.
+#' @return result for expression
+#' @export
+workIn <- function(dir, expr) {
+  .tmp <- getwd()
+  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
+  setwd(dir)
+
+  res <- eval(substitute(expr))
+  setwd(.tmp)
+
+  res
+}
