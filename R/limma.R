@@ -101,58 +101,6 @@ limmaFit <- function(x, group.column) {
   efit
 }
 
-# #' Volcano plot
-# #'
-# #' @param x processed DGEList.
-# #' @param fd_name Fold change symbol.
-# #' @param fd_hold Folding change threshold.
-# #' @param ap_name significant name.
-# #' @param ap_hold significant threshold.
-# #' @param top number of term to show.
-# #' @param label aesthetics \code{ggrepel::geom_label_repel}
-# #' @param legendName new column for color aesthetics.
-# #' @import data.table
-# #' @import ggplot2
-# #' @export
-# view.volcano <- function(x, fd_name, fd_hold, ap_name, ap_hold, top = FALSE, label, legendName) {
-#   dt <- setDT(copy(x), keep.rownames = TRUE)
-#   expr <- substitute(dt[, legendName := fcase(
-#     ap_name < ap_hold & fd_name > fd_hold, "Up",
-#     ap_name < ap_hold & fd_name < -fd_hold, "Down",
-#     default = "Unchanged"
-#   )])
-#   eval(expr)
-
-#   p <- ggplot(
-#     data = dt,
-#     aes(x = {{ fd_name }}, y = -log10({{ ap_name }}), color = {{ legendName }})
-#   ) +
-#     geom_point(size = 1.2, alpha = 1, na.rm = TRUE) +
-#     scale_color_manual(
-#       values = c(Up = "#414788FF", Unchanged = "darkgray", Down = "#22A884FF"),
-#       guide = guide_legend(override.aes = list(size = 4))
-#     ) +
-#     scale_x_continuous(name = expression(LogFC)) +
-#     scale_y_continuous(name = substitute(-log10(ap_name))) +
-#     geom_vline(xintercept = c(-fd_hold, fd_hold), lty = 4, col = "darkgray", lwd = 0.6) +
-#     geom_hline(yintercept = -log10(fd_hold), lty = 4, col = "darkgray", lwd = 0.6) +
-#     theme_classic()
-
-#   if (top) {
-#     dttp <- eval(substitute(dt[.(c("Up", "Down")), on = .(legendName)][
-#       , utils::head(.SD[order(-abs(fd_name))], 5),
-#       by = .(legendName)
-#     ]))
-
-#     p + ggrepel::geom_label_repel(
-#       data = dttp, aes(label = {{ label }}),
-#       label.size = NA, arrow = arrow(length = unit(0.1, "cm")), max.overlaps = 20,
-#       size = 4, box.padding = unit(0.5, "lines"), min.segment.length = 0,
-#       point.padding = unit(0.8, "lines"), segment.color = "black", show.legend = FALSE
-#     )
-#   }
-# }
-
 
 #' Plot volcano
 #'
