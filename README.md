@@ -4,6 +4,7 @@
 # easybio
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
 You can install the development version of easybio from
