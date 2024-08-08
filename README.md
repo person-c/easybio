@@ -11,7 +11,7 @@ You can install the development version of easybio from
 
 ``` r
 # install.packages("BiocManger")
-BiocManger::install("snowGlint/easybio")
+BiocManger::install("person-c/easybio")
 ```
 
 To know how to use this package, please see the
