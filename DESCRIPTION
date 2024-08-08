@@ -1,11 +1,11 @@
 Package: easybio
-Title: A Package to Help You to Do Common Bioinformatics Analyses Easier
+Title: Bioinformatics Toolbox for Common Analyses
 Version: 1.01
 Authors@R: 
     person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
-Description: Provide an uniform interface for common bioinformatics analyses.
+Description: This package provides a collection of functions for performing common bioinformatics.
 URL: https://cying.org/easybio
-BugReports: https://github.com/snowGlint/easybio/issues
+BugReports: https://github.com/person-c/easybio/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
