@@ -4,8 +4,7 @@
 \alias{Artist}
 \title{Reductor Class}
 \description{
-This is the abstract base class for reduction task including PCA,
-UMAP and t-SNE.
+The base class to plot.
 }
 \section{Methods}{
 \subsection{Public methods}{

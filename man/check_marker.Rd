@@ -2,29 +2,41 @@
 % Please edit documentation in R/sc.R
 \name{check_marker}
 \alias{check_marker}
-\title{Check markers from cell returned by \code{matchCellMarker}}
+\title{Verify Markers for Specific Clusters Using matchCellMarker}
 \usage{
-check_marker(marker, n, spc, cl = c(), unique = TRUE)
+check_marker(marker, n, spc, cl = c(), topcellN = 2, cis = FALSE)
 }
 \arguments{
-\item{marker}{markers from \code{Seurat::FindAllMarkers}}
+\item{marker}{A data frame of markers obtained from \code{Seurat::FindAllMarkers}.}
 
-\item{n}{top number of genes to match.}
+\item{n}{An integer specifying the top number of genes to match from the
+input markers.}
 
-\item{spc}{'Human' or 'Mouse'.}
+\item{spc}{A character string specifying the species, which can be either
+'Human' or 'Mouse'.}
 
-\item{cl}{cluster you want to check.}
+\item{cl}{An integer or vector of integers specifying the clusters to check.}
 
-\item{unique}{not yet implemented...waiting for.}
+\item{topcellN}{An integer specifying the number of top cells to check for
+each cluster.}
+
+\item{cis}{A logical value indicating whether to check marker directly from the top symbol of
+\code{matchCellMarker2} or re-search marker for top cell in cellMarker2.}
 }
 \value{
-matched cellMarker data.frame
+A named list where each name corresponds to a cell type and each
+element is a vector of marker names.
 }
 \description{
-Check markers from cell returned by \code{matchCellMarker}
+This function checks the markers for specified clusters returned by the
+\code{matchCellMarker2} function. It allows users to filter by species, cluster,
+and to specify whether to consider cis or trans interactions.
 }
 \examples{
+# Example usage:
+# Check the top 50 markers for clusters 1, 4, and 7 in the Human species.
 library(easybio)
 data(exampleMarker)
-check_marker(exampleMarker, n = 50, spc = "Human", cl = c(1, 4, 7))
+verified_markers <- check_marker(exampleMarker, n = 50, spc = "Human", cl = c(1, 4, 7))
+print(verified_markers)
 }

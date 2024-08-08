@@ -2,20 +2,27 @@
 % Please edit documentation in R/limma.R
 \name{dgeList}
 \alias{dgeList}
-\title{construct DGEList}
+\title{Construct a DGEList Object}
 \usage{
 dgeList(count, sample.info, feature.info)
 }
 \arguments{
-\item{count}{count matrix with rownames(features in row, sample in column).}
+\item{count}{A numeric matrix where rows represent features (e.g., genes) and
+columns represent samples. Row names should correspond to feature identifiers,
+and column names should correspond to sample identifiers.}
 
-\item{sample.info}{sample information.}
+\item{sample.info}{A data frame containing information about the samples. The
+number of rows should match the number of columns in the \code{count} matrix.}
 
-\item{feature.info}{features information.}
+\item{feature.info}{A data frame containing information about the features. The
+number of rows should match the number of rows in the \code{count} matrix.}
 }
 \value{
-DGEList
+A \code{DGEList} object as defined by the edgeR package, which includes the
+count data, sample information, and feature information.
 }
 \description{
-construct DGEList
+This function creates a \code{DGEList} object from a count matrix, sample
+information, and feature information. It is designed to facilitate the
+analysis of differential gene expression using the edgeR package.
 }

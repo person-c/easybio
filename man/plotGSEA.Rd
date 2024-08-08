@@ -2,7 +2,7 @@
 % Please edit documentation in R/ora.R
 \name{plotGSEA}
 \alias{plotGSEA}
-\title{Visualization of GSEA result from fgsea}
+\title{Visualization of GSEA Result from fgsea}
 \usage{
 plotGSEA(fgseaRes, pathways, pwayname, stats, save = FALSE)
 }
@@ -11,12 +11,12 @@ plotGSEA(fgseaRes, pathways, pwayname, stats, save = FALSE)
 
 \item{pathways}{all pathways.}
 
-\item{pwayname}{pathway names you want to show.}
+\item{pwayname}{pathway name you want to show.}
 
-\item{stats}{rank list.}
+\item{stats}{rank vector.}
 
 \item{save}{Wheather to save plot.}
 }
 \description{
-Visualization of GSEA result from fgsea
+Visualization of GSEA Result from fgsea
 }

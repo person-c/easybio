@@ -2,25 +2,37 @@
 % Please edit documentation in R/sc.R
 \name{matchCellMarker2}
 \alias{matchCellMarker2}
-\title{match markers from cellMarker2}
+\title{Match Markers with cellMarker2 Dataset}
 \usage{
 matchCellMarker2(marker, n, spc)
 }
 \arguments{
-\item{marker}{markers from \code{FindAllMarkers}}
+\item{marker}{A data frame of markers obtained from the \code{FindAllMarkers}
+function, expected to contain columns such as \code{avg_log2FC}, \code{p_val_adj},
+and \code{gene}.}
 
-\item{n}{top number of genes to match}
+\item{n}{An integer specifying the top number of genes to match from the
+input markers.}
 
-\item{spc}{'Human' or 'Mouse'}
+\item{spc}{A character string specifying the species, which can be either
+'Human' or 'Mouse'.}
 }
 \value{
-matched cellMarker data.frame
+A data frame containing matched markers from the \code{cellMarker2}
+dataset, with additional columns indicating the number of matches and
+ordered symbols.
 }
 \description{
-match markers from cellMarker2
+This function matches markers from the \code{FindAllMarkers} output with the
+\code{cellMarker2} dataset, filtering by species and selecting the top genes based
+on their average log2 fold change and adjusted p-values.
 }
 \examples{
+# Example usage:
+# Match the top 50 markers from the exampleMarker dataset with the Human
+# species in the cellMarker2 dataset.
 library(easybio)
 data(exampleMarker)
-matchCellMarker2(exampleMarker, n = 50, spc = "Human")
+matched_markers <- matchCellMarker2(exampleMarker, n = 50, spc = "Human")
+print(matched_markers)
 }

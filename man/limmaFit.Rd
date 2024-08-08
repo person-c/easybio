@@ -2,15 +2,22 @@
 % Please edit documentation in R/limma.R
 \name{limmaFit}
 \alias{limmaFit}
-\title{limma fit}
+\title{Fit a Linear Model for RNA-seq data using limma}
 \usage{
 limmaFit(x, group.column)
 }
 \arguments{
-\item{x}{processed DGEList.}
+\item{x}{A processed \code{DGEList} object containing normalized count data.}
 
-\item{group.column}{group column name.}
+\item{group.column}{The name of the column in \code{x$samples} that contains
+the grouping information for the samples.}
+}
+\value{
+An \code{eBayes} object containing the fitted linear model and
+results of the differential expression analysis.
 }
 \description{
-limma fit
+This function fits a linear model to processed \code{DGEList} data using the
+\code{limma} package. It defines contrasts between groups and performs
+differential expression analysis.
 }

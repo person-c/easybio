@@ -2,16 +2,20 @@
 % Please edit documentation in R/misc.R
 \name{list2graph}
 \alias{list2graph}
-\title{Get graph from a named list according to the overlap between each list element.}
+\title{Convert a Named List into a Graph Based on Overlap}
 \usage{
 list2graph(nodes)
 }
 \arguments{
-\item{nodes}{named list.}
+\item{nodes}{A named list where each element is a vector.}
 }
 \value{
-attributes name.
+A data.table representing the graph, with columns for the node names
+(\code{node_x} and \code{node_y}) and the weight of the edge (\code{weight}).
 }
 \description{
-Get graph from a named list according to the overlap between each list element.
+This function creates a graph from a named list, where the edges are determined
+by the overlap between the elements of the list. Each node in the graph represents
+an element of the list, and the weight of the edge between two nodes is the number
+of overlapping elements between the two corresponding lists.
 }

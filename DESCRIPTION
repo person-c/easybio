@@ -18,7 +18,6 @@ Depends:
     R (>= 2.10)
 LazyData: true
 Suggests: 
-    e1071,
     knitr,
     patchwork,
     rmarkdown,

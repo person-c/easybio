@@ -2,16 +2,18 @@
 % Please edit documentation in R/misc.R
 \name{setSavedir}
 \alias{setSavedir}
-\title{Set directory}
+\title{Set a Directory for Saving Files}
 \usage{
 setSavedir(...)
 }
 \arguments{
-\item{...}{see \code{file.path()}}
+\item{...}{Arguments to be passed to \code{file.path()} to construct the directory path.}
 }
 \value{
-directory path
+The path to the newly created or existing directory.
 }
 \description{
-Set directory
+This function sets a directory path for saving files, creating the directory if it
+does not already exist. The directory path is created with the given arguments, which
+are passed directly to \code{file.path()}.
 }

@@ -2,18 +2,18 @@
 % Please edit documentation in R/misc.R
 \name{get_attr}
 \alias{get_attr}
-\title{Get attributes.}
+\title{Retrieve Attributes from an R Object}
 \usage{
 get_attr(x, attr_name)
 }
 \arguments{
-\item{x}{R object with attributes.}
+\item{x}{An R object that has attributes.}
 
-\item{attr_name}{attributes name.}
+\item{attr_name}{The name of the attribute to retrieve.}
 }
 \value{
-attributes name.
+The value of the attribute with the given name.
 }
 \description{
-Get attributes.
+This function extracts a specified attribute from an R object.
 }

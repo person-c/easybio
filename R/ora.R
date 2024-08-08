@@ -1,10 +1,16 @@
-#' Modified plotEnrichment function in R package 'fgsea'
+#' Plot Enrichment for a Specific Pathway in fgsea
 #'
-#' @param pathways all pathways.
-#' @param pwayname pathway name you want to show.
-#' @param stats rank vector.
-#' @param gseaParam walk length.
-#' @param ticksSize default=0.2.
+#' This function creates a plot of enrichment scores for a specified pathway.
+#' It provides a visual representation of the enrichment
+#' score (ES) along with the ranks and ticks indicating the GSEA walk length.
+#'
+#' @param pathways A list of pathways.
+#' @param pwayname The name of the pathway for which to plot enrichment.
+#' @param stats A rank vector obtained from the 'fgsea' package.
+#' @param gseaParam The GSEA walk length parameter. Default is 1.
+#' @param ticksSize The size of the tick marks. Default is 0.2.
+#'
+#' @return A ggplot object representing the enrichment plot.
 #' @import data.table
 #' @import ggplot2
 #' @export
@@ -59,12 +65,12 @@ plotRank <- function(stats) {
 }
 
 
-#' Visualization of GSEA result from fgsea
+#' Visualization of GSEA Result from fgsea
 #'
 #' @param fgseaRes GSEA result from fgsea.
 #' @param pathways all pathways.
-#' @param pwayname pathway names you want to show.
-#' @param stats rank list.
+#' @param pwayname pathway name you want to show.
+#' @param stats rank vector.
 #' @param save Wheather to save plot.
 #'
 #'
@@ -96,11 +102,11 @@ plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
 #' Visualization of ORA test.
 #'
 #' @param data ORA result.
-#' @param x x-axis.
-#' @param y y-axis.
-#' @param size point size.
+#' @param x aesthetic x.
+#' @param y aesthetic y.
+#' @param size point size aethetic.
 #' @param fill aesthetic fill. Use constant value for one categroy.
-#' @param flip wheather to flip plot
+#' @param flip Wheather to flip plot.
 #'
 #' @import ggplot2
 #' @export

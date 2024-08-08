@@ -2,20 +2,26 @@
 % Please edit documentation in R/limma.R
 \name{dprocess.DGEList}
 \alias{dprocess.DGEList}
-\title{filter low expressed genes and normalize data}
+\title{Filter Low-Expressed Genes and Normalize DGEList Data}
 \usage{
 dprocess.DGEList(x, group.column, min.count = 10)
 }
 \arguments{
-\item{x}{DGEList.}
+\item{x}{A \code{DGEList} object containing raw count data.}
 
-\item{group.column}{group column name.}
+\item{group.column}{The name of the column in \code{x$samples} that contains the
+grouping information for the samples.}
 
-\item{min.count}{see \code{edgeR::filterByExpr}}
+\item{min.count}{The minimum number of counts required for a gene to be
+considered expressed. Genes with counts below this threshold in any group
+will be filtered out. Defaults to 10.}
 }
 \value{
-DGEList
+The function returns a \code{DGEList} object with low-expressed genes
+filtered out and normalization factors calculated.
 }
 \description{
-filter low expressed genes and normalize data
+This function filters out low-expressed genes from a \code{DGEList} object and
+normalizes the count data. It also provides diagnostic plots for raw and
+filtered data.
 }

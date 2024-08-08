@@ -2,23 +2,28 @@
 % Please edit documentation in R/limma.R
 \name{plotVolcano}
 \alias{plotVolcano}
-\title{Plot volcano}
+\title{Plot Volcano Plot for Differentially Expressed Genes}
 \usage{
 plotVolcano(data, data.text, x, y, color, label)
 }
 \arguments{
-\item{data}{DEGs result.}
+\item{data}{A data frame containing the DEGs result.}
 
-\item{data.text}{labeled data.}
+\item{data.text}{A data frame containing labeled data for text annotation.}
 
-\item{x}{axis x.}
+\item{x}{variable representing the aesthetic for the x-axis.}
 
-\item{y}{axis y.}
+\item{y}{variable representing the aesthetic for the y-axis.}
 
-\item{color}{color aesthetic.}
+\item{color}{variable representing the column name for the color aesthetic.}
 
-\item{label}{text label aesthetic.}
+\item{label}{variable representing the column name for the text label aesthetic.}
+}
+\value{
+A \code{ggplot} object representing the volcano plot.
 }
 \description{
-Plot volcano
+This function generates a volcano plot for differentially expressed genes
+(DEGs) using \code{ggplot2}. It allows for customization of the plot with
+different aesthetic parameters.
 }

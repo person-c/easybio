@@ -2,21 +2,24 @@
 % Please edit documentation in R/sc.R
 \name{plotSeuratDot}
 \alias{plotSeuratDot}
-\title{Check dotplot for markers from \code{check_marker}.}
+\title{Create Dot Plots for Markers from check_marker}
 \usage{
-plotSeuratDot(srt, marker, n = 50, species, cls)
+plotSeuratDot(srt, cls, ...)
 }
 \arguments{
-\item{srt}{Seurat object.}
+\item{srt}{A Seurat object containing the single-cell data.}
 
-\item{marker}{From \code{Seurat::FindAllMarkers}}
+\item{cls}{A list containing cluster groups to check. Each element of the list
+should correspond to a cluster or a group of clusters for which to generate
+dot plots.}
 
-\item{n}{params for \code{check_marker}}
-
-\item{species}{params for \code{check_marker}}
-
-\item{cls}{a list contain cluster groups to check}
+\item{...}{Additional parameters to pass to the \code{check_marker} function.}
+}
+\value{
+The function returns the temporary directory invisibly.
 }
 \description{
-Check dotplot for markers from \code{check_marker}.
+This function generates dot plots for the markers obtained from the
+\code{check_marker} function for specified cluster groups within a Seurat object.
+The plots are saved to a temporary directory.
 }

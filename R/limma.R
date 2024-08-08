@@ -1,10 +1,19 @@
-#' construct DGEList
+#' Construct a DGEList Object
 #'
-#' @param count count matrix with rownames(features in row, sample in column).
-#' @param sample.info sample information.
-#' @param feature.info features information.
+#' This function creates a `DGEList` object from a count matrix, sample
+#' information, and feature information. It is designed to facilitate the
+#' analysis of differential gene expression using the edgeR package.
 #'
-#' @return DGEList
+#' @param count A numeric matrix where rows represent features (e.g., genes) and
+#'   columns represent samples. Row names should correspond to feature identifiers,
+#'   and column names should correspond to sample identifiers.
+#' @param sample.info A data frame containing information about the samples. The
+#'   number of rows should match the number of columns in the `count` matrix.
+#' @param feature.info A data frame containing information about the features. The
+#'   number of rows should match the number of rows in the `count` matrix.
+#'
+#' @return A `DGEList` object as defined by the edgeR package, which includes the
+#'   count data, sample information, and feature information.
 #' @import data.table
 #' @export
 dgeList <- function(count, sample.info, feature.info) {
@@ -20,13 +29,21 @@ dgeList <- function(count, sample.info, feature.info) {
 }
 
 
-#' filter low expressed genes and normalize data
+#' Filter Low-Expressed Genes and Normalize DGEList Data
 #'
-#' @param x DGEList.
-#' @param min.count see \code{edgeR::filterByExpr}
-#' @param group.column group column name.
+#' This function filters out low-expressed genes from a `DGEList` object and
+#' normalizes the count data. It also provides diagnostic plots for raw and
+#' filtered data.
 #'
-#' @return DGEList
+#' @param x A `DGEList` object containing raw count data.
+#' @param group.column The name of the column in `x$samples` that contains the
+#'   grouping information for the samples.
+#' @param min.count The minimum number of counts required for a gene to be
+#'   considered expressed. Genes with counts below this threshold in any group
+#'   will be filtered out. Defaults to 10.
+#'
+#' @return The function returns a `DGEList` object with low-expressed genes
+#'   filtered out and normalization factors calculated.
 #' @import data.table
 #' @import grDevices
 #' @import graphics
@@ -73,10 +90,18 @@ dprocess.DGEList <- function(x, group.column, min.count = 10) {
 }
 
 
-#' limma fit
+#' Fit a Linear Model for RNA-seq data using limma
 #'
-#' @param x processed DGEList.
-#' @param group.column group column name.
+#' This function fits a linear model to processed `DGEList` data using the
+#' `limma` package. It defines contrasts between groups and performs
+#' differential expression analysis.
+#'
+#' @param x A processed `DGEList` object containing normalized count data.
+#' @param group.column The name of the column in `x$samples` that contains
+#'   the grouping information for the samples.
+#'
+#' @return An `eBayes` object containing the fitted linear model and
+#'   results of the differential expression analysis.
 #' @import data.table
 #' @importFrom limma makeContrasts
 #' @export
@@ -102,14 +127,20 @@ limmaFit <- function(x, group.column) {
 }
 
 
-#' Plot volcano
+#' Plot Volcano Plot for Differentially Expressed Genes
 #'
-#' @param data DEGs result.
-#' @param data.text labeled data.
-#' @param x axis x.
-#' @param y axis y.
-#' @param color color aesthetic.
-#' @param label text label aesthetic.
+#' This function generates a volcano plot for differentially expressed genes
+#' (DEGs) using `ggplot2`. It allows for customization of the plot with
+#' different aesthetic parameters.
+#'
+#' @param data A data frame containing the DEGs result.
+#' @param data.text A data frame containing labeled data for text annotation.
+#' @param x variable representing the aesthetic for the x-axis.
+#' @param y variable representing the aesthetic for the y-axis.
+#' @param color variable representing the column name for the color aesthetic.
+#' @param label variable representing the column name for the text label aesthetic.
+#'
+#' @return A `ggplot` object representing the volcano plot.
 #' @import ggplot2
 #' @export
 plotVolcano <- function(data, data.text, x, y, color, label) {

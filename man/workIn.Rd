@@ -2,18 +2,22 @@
 % Please edit documentation in R/misc.R
 \name{workIn}
 \alias{workIn}
-\title{Operate in a specific directory and return current directory after execution}
+\title{Perform Operations in a Specified Directory and Return to the Original Directory}
 \usage{
 workIn(dir, expr)
 }
 \arguments{
-\item{dir}{directory to operate.}
+\item{dir}{The directory path in which to operate. If the directory does not exist,
+it will be created recursively.}
 
-\item{expr}{expression.}
+\item{expr}{An R expression to be evaluated within the specified directory.}
 }
 \value{
-result for expression
+The result of evaluating the expression within the specified directory.
 }
 \description{
-Operate in a specific directory and return current directory after execution
+This function allows you to perform operations in a specified directory and then
+return to the original directory. It is useful when you need to work with files or
+directories that are located in a specific location, but you want to return to the
+original working directory after the operation is complete.
 }

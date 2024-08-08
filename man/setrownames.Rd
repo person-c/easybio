@@ -2,18 +2,19 @@
 % Please edit documentation in R/misc.R
 \name{setrownames}
 \alias{setrownames}
-\title{set rownames and returns the renamed data.frame}
+\title{Rename Row Names of a Data Frame or Matrix}
 \usage{
 setrownames(object = nm, nm)
 }
 \arguments{
-\item{object}{matrix or data frame}
+\item{object}{A data frame or matrix whose row names will be renamed.}
 
-\item{nm}{names}
+\item{nm}{A character vector containing the new names for the rows.}
 }
 \value{
-the renamed data.frame or matrix
+A data frame or matrix with the new row names.
 }
 \description{
-set colnames
+This function renames the row names of a data frame or matrix to the
+specified names.
 }

@@ -9,15 +9,15 @@ plotORA(data, x, y, size, fill, flip = FALSE)
 \arguments{
 \item{data}{ORA result.}
 
-\item{x}{x-axis.}
+\item{x}{aesthetic x.}
 
-\item{y}{y-axis.}
+\item{y}{aesthetic y.}
 
-\item{size}{point size.}
+\item{size}{point size aethetic.}
 
 \item{fill}{aesthetic fill. Use constant value for one categroy.}
 
-\item{flip}{wheather to flip plot}
+\item{flip}{Wheather to flip plot.}
 }
 \description{
 Visualization of ORA test.

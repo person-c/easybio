@@ -2,16 +2,19 @@
 % Please edit documentation in R/misc.R
 \name{list2dt}
 \alias{list2dt}
-\title{Convert a named list with vector values in each element to a long data.table}
+\title{Convert a List with Vector Values to a Long Data.table}
 \usage{
 list2dt(x)
 }
 \arguments{
-\item{x}{a list.}
+\item{x}{A named list where each element contains a vector of values.}
 }
 \value{
-data.table
+A long data.table with two columns: 'name' and 'value'.
 }
 \description{
-Convert a named list with vector values in each element to a long data.table
+This function converts a named list with vector values in each element to a
+long data.table. The list is first flattened into a single vector, and then
+the data.table is created with two columns: one for the name of the original
+list element and another for the value.
 }

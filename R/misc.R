@@ -1,34 +1,43 @@
-#' set colnames and returns the renamed data.frame
+#' Rename Column Names of a Data Frame or Matrix
 #'
-#' set colnames
-#' @param  object matrix or data frame
-#' @param nm names
+#' This function renames the column names of a data frame or matrix to the
+#' specified names.
 #'
-#' @return the renamed data.frame or matrix
+#' @param object A data frame or matrix whose column names will be renamed.
+#' @param nm A character vector containing the new names for the columns.
+#'
+#' @return A data frame or matrix with the new column names.
 #' @export
 setcolnames <- function(object = nm, nm) {
   colnames(object) <- nm
   object
 }
 
-#' set rownames and returns the renamed data.frame
+#' Rename Row Names of a Data Frame or Matrix
 #'
-#' set colnames
-#' @param  object matrix or data frame
-#' @param nm names
+#' This function renames the row names of a data frame or matrix to the
+#' specified names.
 #'
-#' @return the renamed data.frame or matrix
+#' @param object A data frame or matrix whose row names will be renamed.
+#' @param nm A character vector containing the new names for the rows.
+#'
+#' @return A data frame or matrix with the new row names.
 #' @export
 setrownames <- function(object = nm, nm) {
   rownames(object) <- nm
   object
 }
 
-#' Convert a named list with vector values in each element to a long data.table
+#' Convert a List with Vector Values to a Long Data.table
 #'
-#' @param  x a list.
+#' This function converts a named list with vector values in each element to a
+#' long data.table. The list is first flattened into a single vector, and then
+#' the data.table is created with two columns: one for the name of the original
+#' list element and another for the value.
 #'
-#' @return data.table
+#' @param x A named list where each element contains a vector of values.
+#'
+#' @return A long data.table with two columns: 'name' and 'value'.
 #' @importFrom data.table data.table
 #' @export
 list2dt <- function(x) {
@@ -36,12 +45,16 @@ list2dt <- function(x) {
 }
 
 
-#' Split big matrix to multiple smaller matrices by column.
+#' Split a Matrix into Smaller Submatrices by Column
 #'
-#' @param matrix raw matrix.
-#' @param chunk_size number of column of each smaller matrix.
+#' This function splits a matrix into multiple smaller matrices by column.
+#' It is useful for processing large matrices in chunks, such as when performing
+#' analysis on a single computer with limited memory.
 #'
-#' @return a list containg multiple smaller matrix
+#' @param matrix A numeric or logical matrix to be split.
+#' @param chunk_size The number of columns to include in each smaller matrix.
+#'
+#' @return A list of smaller matrices, each with `chunk_size` columns.
 #' @export
 split_matrix <- function(matrix, chunk_size) {
   chunk_number <- ifelse(ncol(matrix) %% chunk_size == 0,
@@ -59,24 +72,32 @@ split_matrix <- function(matrix, chunk_size) {
   matrix_divided
 }
 
-#' Get attributes.
+#' Retrieve Attributes from an R Object
 #'
-#' @param x R object with attributes.
-#' @param attr_name attributes name.
+#' This function extracts a specified attribute from an R object.
 #'
-#' @return attributes name.
+#' @param x An R object that has attributes.
+#' @param attr_name The name of the attribute to retrieve.
+#'
+#' @return The value of the attribute with the given name.
 #' @export
 get_attr <- function(x, attr_name) {
   attributes(x)[[attr_name]]
 }
 
 
-#' Get graph from a named list according to the overlap between each list element.
+#' Convert a Named List into a Graph Based on Overlap
 #'
-#' @param nodes named list.
+#' This function creates a graph from a named list, where the edges are determined
+#' by the overlap between the elements of the list. Each node in the graph represents
+#' an element of the list, and the weight of the edge between two nodes is the number
+#' of overlapping elements between the two corresponding lists.
 #'
+#' @param nodes A named list where each element is a vector.
+#'
+#' @return A data.table representing the graph, with columns for the node names
+#'   (`node_x` and `node_y`) and the weight of the edge (`weight`).
 #' @import data.table
-#' @return attributes name.
 #' @export
 list2graph <- function(nodes) {
   node_x <- c()
@@ -98,26 +119,34 @@ list2graph <- function(nodes) {
 }
 
 
-#' Summary by group according to the index.
+#' Perform Summary Analysis by Group Using an Index
 #'
-#' @param f function.
-#' @param x data
-#' @param idx group index.
+#' This function applies a specified function to each group defined by an index,
+#' and returns a summary of the results. It is useful for summarizing data by
+#' group when the groups are defined by an index rather than a named column.
 #'
-#' @return summary data by group
+#' @param f A function that takes a single argument and returns a summary of the data.
+#' @param x A data frame or matrix containing the data to be summarized.
+#' @param idx A vector of indices or group names that define the groups.
+#'
+#' @return A data frame or matrix containing the summary statistics for each group.
 #' @export
 groupStatI <- function(f, x, idx) {
   sapply(idx, \(.x) force(f)(x[.x]), simplify = FALSE)
 }
 
-#' Summary by group according to the regex.
+#' Perform Summary Analysis by Group Using Regular Expressions
 #'
-#' @param f function.
-#' @param x data
-#' @param xname names of x.
-#' @param patterns regex to group.
+#' This function applies a specified function to each group defined by a regular expression
+#' pattern applied to the names of a data object. It is useful for summarizing data when
+#' groups are defined by a pattern in the names rather than a specific column or index.
 #'
-#' @return summary data by group
+#' @param f A function that takes a single argument and returns a summary of the data.
+#' @param x A data frame or matrix containing the data to be summarized.
+#' @param xname A character vector containing the names of the variables in `x`.
+#' @param patterns A character vector of regular expressions that define the groups.
+#'
+#' @return A data frame or matrix containing the summary statistics for each group.
 #' @export
 groupStat <- function(f, x, xname = names(x), patterns) {
   idx <- lapply(patterns, \(.x) which(xname %like% .x))
@@ -125,11 +154,15 @@ groupStat <- function(f, x, xname = names(x), patterns) {
 }
 
 
-#' Set directory
+#' Set a Directory for Saving Files
 #'
-#' @param ... see \code{file.path()}
+#' This function sets a directory path for saving files, creating the directory if it
+#' does not already exist. The directory path is created with the given arguments, which
+#' are passed directly to `file.path()`.
 #'
-#' @return directory path
+#' @param ... Arguments to be passed to `file.path()` to construct the directory path.
+#'
+#' @return The path to the newly created or existing directory.
 #' @export
 setSavedir <- function(...) {
   savedir <- file.path(...)
@@ -138,11 +171,18 @@ setSavedir <- function(...) {
   return(savedir)
 }
 
-#' Operate in a specific directory and return current directory after execution
+#' Perform Operations in a Specified Directory and Return to the Original Directory
 #'
-#' @param dir directory to operate.
-#' @param expr expression.
-#' @return result for expression
+#' This function allows you to perform operations in a specified directory and then
+#' return to the original directory. It is useful when you need to work with files or
+#' directories that are located in a specific location, but you want to return to the
+#' original working directory after the operation is complete.
+#'
+#' @param dir The directory path in which to operate. If the directory does not exist,
+#'   it will be created recursively.
+#' @param expr An R expression to be evaluated within the specified directory.
+#'
+#' @return The result of evaluating the expression within the specified directory.
 #' @export
 workIn <- function(dir, expr) {
   .tmp <- getwd()

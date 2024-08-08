@@ -28,21 +28,6 @@ download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_
     return(eset[[1]]@phenoData@data)
   }
 
-  # if (nrow(exp) == 0L) {
-  #   message(sprintf("%s seems not array data; Trying to download supplementary files.", geo))
-
-  #   stub <- gsub("\\d{1,3}$", "nnn", geo, perl = TRUE)
-  #   mirror <- sprintf("https://ftp.ncbi.nlm.nih.gov/geo/series/%s/%s/suppl/", stub, geo)
-  #   h <- rvest::read_html(mirror)
-  #   nodes <- rvest::html_nodes(h, "a")
-  #   a <- rvest::html_attr(nodes, "href")
-  #   index <- ifelse(!is.null(filter_regex), grep(pattern = filter_regex, a), grep(pattern = ".gz|xls|csv", a))
-  #   destfile_url <- paste0(mirror, a[index])
-  #   Map(download.file, destfile_url, a[index])
-
-  #   return(eset[[1]]@phenoData@data)
-  # }
-
   gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = ".")
   gpl <- GEOquery::Table(gpl)
   setDT(gpl)

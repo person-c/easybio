@@ -2,20 +2,22 @@
 % Please edit documentation in R/misc.R
 \name{groupStatI}
 \alias{groupStatI}
-\title{Summary by group according to the index.}
+\title{Perform Summary Analysis by Group Using an Index}
 \usage{
 groupStatI(f, x, idx)
 }
 \arguments{
-\item{f}{function.}
+\item{f}{A function that takes a single argument and returns a summary of the data.}
 
-\item{x}{data}
+\item{x}{A data frame or matrix containing the data to be summarized.}
 
-\item{idx}{group index.}
+\item{idx}{A vector of indices or group names that define the groups.}
 }
 \value{
-summary data by group
+A data frame or matrix containing the summary statistics for each group.
 }
 \description{
-Summary by group according to the index.
+This function applies a specified function to each group defined by an index,
+and returns a summary of the results. It is useful for summarizing data by
+group when the groups are defined by an index rather than a named column.
 }

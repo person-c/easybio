@@ -2,22 +2,24 @@
 % Please edit documentation in R/misc.R
 \name{groupStat}
 \alias{groupStat}
-\title{Summary by group according to the regex.}
+\title{Perform Summary Analysis by Group Using Regular Expressions}
 \usage{
 groupStat(f, x, xname = names(x), patterns)
 }
 \arguments{
-\item{f}{function.}
+\item{f}{A function that takes a single argument and returns a summary of the data.}
 
-\item{x}{data}
+\item{x}{A data frame or matrix containing the data to be summarized.}
 
-\item{xname}{names of x.}
+\item{xname}{A character vector containing the names of the variables in \code{x}.}
 
-\item{patterns}{regex to group.}
+\item{patterns}{A character vector of regular expressions that define the groups.}
 }
 \value{
-summary data by group
+A data frame or matrix containing the summary statistics for each group.
 }
 \description{
-Summary by group according to the regex.
+This function applies a specified function to each group defined by a regular expression
+pattern applied to the names of a data object. It is useful for summarizing data when
+groups are defined by a pattern in the names rather than a specific column or index.
 }
