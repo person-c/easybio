@@ -28,5 +28,4 @@ Suggests:
     fgsea,
     edgeR
 biocViews: limma, edgeR, fgsea, GEOquery
-VignetteBuilder: knitr
 Language: en-US
