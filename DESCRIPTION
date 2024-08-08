@@ -19,15 +19,15 @@ Depends:
 LazyData: true
 Suggests: 
     e1071,
-    edgeR,
-    fgsea,
-    GEOquery,
     knitr,
     patchwork,
     rmarkdown,
     ggrepel,
     Seurat,
-    httr2
-biocViews: limma
+    httr2,
+    GEOquery, 
+    fgsea,
+    edgeR
+biocViews: limma, edgeR, fgsea, GEOquery
 VignetteBuilder: knitr
 Language: en-US
