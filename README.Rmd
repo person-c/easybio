@@ -22,7 +22,7 @@ You can install the development version of easybio from [GitHub](https://github.
 
 ```{r, eval = FALSE}
 # install.packages("BiocManger")
-BiocManger::install("snowGlint/easybio")
+BiocManger::install("person-c/easybio")
 ```
 
 To know how to use this package, please see the [wiki](https://github.com/snowGlint/easybio/wiki).
