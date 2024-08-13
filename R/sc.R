@@ -53,11 +53,12 @@ finsert <- function(
   while (itor < length(x)) {
     v[x[[itor + 1]] + 1] <- x[[itor + 2]]
 
-    maxL <- 1
-    maxL <- max(x[[itor + 1]], maxL)
-
     itor <- itor + 3
   }
+
+  clIdx <- which(sapply(x, is.numeric))
+  maxL <- max(unlist(x[clIdx]))
+
   if (!missing(len) && len > maxL + 1) v <- append(v, rep(NA_character_, len - maxL - 1))
   v[is.na(v)] <- na
 

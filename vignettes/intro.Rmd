@@ -1,0 +1,145 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(easybio)
+```
+
+## Annotate single cell cluster by CellMarker2.0 database
+
+```{r}
+head(exampleMarker)
+```
+
+```{r}
+(marker <- matchCellMarker2(marker = exampleMarker, n = 50, spc = 'Human')[, head(.SD, 2), by=cluster])
+```
+
+Behind this function:
+
+- First, it will match the top 50 genes in cluster 8 in cellMarker2 database.
+- Next, the cell count encountered will be caculated for each matched cell, and print the result to help you check the possible cell type for the cluster.
+- Finaly, for the top2 cell encounterd, it will return its corresponding top marker in cellMarker2 database with a list for later dotPot visulization.
+
+Check marker's dot plot for similar clusters:
+
+```{r,eval=FALSE}
+cls <- list(
+  c(1, 5, 7), 
+  c(8),
+  c(3),
+  c(0,2, 4, 6)
+)
+plotSeuratDot(seuratObject, cls, marker = marker, n = 50, spc = 'Human', topcellN = 2)
+```
+
+```{r}
+cl2cell <- finsert(
+  expression(
+  c(1, 5) == "Monocyte",
+  c(7) == "DC",
+  c(8) == "megakaryocyte",
+  c(3) == "B.cell",
+  c(0, 2) == "Naive.CD8.T.cell",
+  c(4) == "Cytotoxic.T.Cell",
+  c(6) == "Natural.killer.cell",
+), len = 9)
+cl2cell
+```
+
+Also, you can get marker directly.
+
+```{r}
+get_marker(spc = 'Human', cell = c('Monocyte', 'Neutrophil'), number = 5, min.count = 1)
+```
+
+## From GEO to limma‐voom RNA seq work flow
+
+#### GEO data download
+
+Please use the `downlod_geo` to download the GEO dataset.
+
+```r
+x <- download_geo('gseid')
+```
+
+It will return a list with count data, sample data and genes data.
+
+#### Limma-voom workflow for RNA-seq workflow
+
+There are there function designed to this workflow.
+
+```r
+x <- dgeList(count, sample.info, feature.info)
+x <- dprocess.DGEList(x, group.column, min.count)
+x <- limmaFit(x, group.column)
+```
+
+See details behind this in [RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
+
+Then, visualize the differential genes by `plotVolcano`
+
+```r
+# See the helppage to learn the arguments.
+?plotVolcano
+```
+
+## GSEA
+
+The original function is from `fgsea` package, I make a little changes to make it look nicer.
+
+```{r}
+library(fgsea)
+library(easybio)
+
+data(examplePathways)
+data(exampleRanks)
+```
+
+Run fgsea.
+
+```{r,fig.width=4, fig.height=2.7}
+fgseaRes <- fgsea(pathways = examplePathways, 
+                  stats    = exampleRanks,
+                  minSize  = 15,
+                  maxSize  = 500)
+plotGSEA(
+  fgseaRes, 
+  pathways = examplePathways, 
+  pwayname = "5991130_Programmed_Cell_Death", 
+  stats = exampleRanks, 
+  save = TRUE
+)
+```
+
+For best visualization, save the plot.
+
+## Over Representaion analysis
+
+Run ORA.
+
+```{r}
+foraRes <- fora(examplePathways, genes=tail(names(exampleRanks), 200), universe=names(exampleRanks))
+```
+
+View the result.
+
+```{r, fig.width=8}
+# fix the pathway postion in y axis by  padj
+foraRes[, pathway := factor(pathway, levels = rev(pathway))]
+
+plotORA(data = foraRes[1:8], x = -log10(padj), y = pathway, size = overlap, fill = 'constant')
+```
