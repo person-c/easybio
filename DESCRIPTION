@@ -1,0 +1,31 @@
+Package: easybio
+Title: Bioinformatics Toolbox for Common Analyses
+Version: 1.0
+Authors@R: 
+    person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
+Description: This package provides a collection of functions for performing common bioinformatics.
+URL: https://github.com/person-c/easybio
+BugReports: https://github.com/person-c/easybio/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    data.table,
+    ggplot2,
+    limma
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Suggests: 
+    knitr,
+    patchwork,
+    rmarkdown,
+    ggrepel,
+    Seurat,
+    httr2,
+    GEOquery,
+    fgsea,
+    edgeR,
+biocViews: limma, GEOquery, edgeR, fgsea
+Language: en-US

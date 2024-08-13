@@ -1,0 +1,12 @@
+^easybio\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^README\.html$
+^doc$
+^Meta$
+^\.github$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+.lintr
+^data-raw$
