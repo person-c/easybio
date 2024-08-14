@@ -7,6 +7,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+This package is crafted to provide a collection of helper functions that aid in bioinformatics analysis.It does not perform independent analyses. Feel free to contact me if you have any requests for new functions or suggestions for improvement.
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -18,7 +20,7 @@ knitr::opts_chunk$set(
 library(easybio)
 ```
 
-## Annotate single cell cluster by CellMarker2.0 database
+## Annotate Single Cell Clusters Using the CellMarker2.0 Database
 
 ```{r}
 head(exampleMarker)
@@ -30,11 +32,10 @@ head(exampleMarker)
 
 Behind this function:
 
-- First, it will match the top 50 genes in cluster 8 in cellMarker2 database.
-- Next, the cell count encountered will be caculated for each matched cell, and print the result to help you check the possible cell type for the cluster.
-- Finaly, for the top2 cell encounterd, it will return its corresponding top marker in cellMarker2 database with a list for later dotPot visulization.
+- First, it matches the top 50 genes in each cluster with the CellMarker2 database.
+- Next, it calculates the cell count for each matched cell type and prints the result to help you identify the possible cell type for the cluster.
 
-Check marker's dot plot for similar clusters:
+Visualize marker dot plots for similar clusters:
 
 ```{r,eval=FALSE}
 cls <- list(
@@ -45,6 +46,13 @@ cls <- list(
 )
 plotSeuratDot(seuratObject, cls, marker = marker, n = 50, spc = 'Human', topcellN = 2)
 ```
+
+Behind this function:
+
+- It searches for potential cell markers from the result of matchCellMarker2.
+- Next, it invokes `Seurat::DotPlot` to generate the corresponding dot plot. The resulting plot will be saved in the directory ‘tmp_check_marker’.
+
+Construct the named vector for your annotation:
 
 ```{r}
 cl2cell <- finsert(
@@ -60,27 +68,25 @@ cl2cell <- finsert(
 cl2cell
 ```
 
-Also, you can get marker directly.
+You can also directly obtain markers:
 
 ```{r}
 get_marker(spc = 'Human', cell = c('Monocyte', 'Neutrophil'), number = 5, min.count = 1)
 ```
 
-## From GEO to limma‐voom RNA seq work flow
+#### Downloading GEO Data
 
-#### GEO data download
-
-Please use the `downlod_geo` to download the GEO dataset.
+To download the GEO dataset, please utilize the `download_geo` function.
 
 ```r
 x <- download_geo('gseid')
 ```
 
-It will return a list with count data, sample data and genes data.
+This function will yield a list containing count data, sample information, and gene data.
 
-#### Limma-voom workflow for RNA-seq workflow
+#### limma-voom Workflow for RNA-Seq Analysis
 
-There are there function designed to this workflow.
+Three functions have been crafted for this workflow.
 
 ```r
 x <- dgeList(count, sample.info, feature.info)
@@ -88,18 +94,19 @@ x <- dprocess.DGEList(x, group.column, min.count)
 x <- limmaFit(x, group.column)
 ```
 
-See details behind this in [RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
+For a comprehensive understanding of this process, refer to the article [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
 
-Then, visualize the differential genes by `plotVolcano`
+Subsequently, visualize the differentially expressed genes using the `plotVolcano` function.
 
 ```r
-# See the helppage to learn the arguments.
+# Consult the help page to familiarize yourself with the arguments.
 ?plotVolcano
+
 ```
 
-## GSEA
+## Gene Set Enrichment Analysis (GSEA)
 
-The original function is from `fgsea` package, I make a little changes to make it look nicer.
+The core function is derived from the fgsea package, with slight modifications applied to enhance its visual appeal.
 
 ```{r}
 library(fgsea)
@@ -109,7 +116,7 @@ data(examplePathways)
 data(exampleRanks)
 ```
 
-Run fgsea.
+Execute the fgsea analysis.
 
 ```{r,fig.width=4, fig.height=2.7}
 fgseaRes <- fgsea(pathways = examplePathways, 
@@ -125,20 +132,20 @@ plotGSEA(
 )
 ```
 
-For best visualization, save the plot.
+To achieve optimal visualization, the plot is saved for review.
 
-## Over Representaion analysis
+## Over-Representation Analysis
 
-Run ORA.
+Perform the Over-Representation Analysis (ORA).
 
 ```{r}
 foraRes <- fora(examplePathways, genes=tail(names(exampleRanks), 200), universe=names(exampleRanks))
 ```
 
-View the result.
+Examine the results.
 
-```{r, fig.width=8}
-# fix the pathway postion in y axis by  padj
+```{r, fig.width=8, fig.height=2}
+# Adjust the pathway position on the y-axis based on the adjusted p-value (padj)
 foraRes[, pathway := factor(pathway, levels = rev(pathway))]
 
 plotORA(data = foraRes[1:8], x = -log10(padj), y = pathway, size = overlap, fill = 'constant')
