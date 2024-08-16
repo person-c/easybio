@@ -23,11 +23,11 @@ library(easybio)
 ## Annotate Single Cell Clusters Using the CellMarker2.0 Database
 
 ```{r}
-head(exampleMarker)
+head(pbmc.markers)
 ```
 
 ```{r}
-(marker <- matchCellMarker2(marker = exampleMarker, n = 50, spc = 'Human')[, head(.SD, 2), by=cluster])
+(marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = 'Human')[, head(.SD, 2), by=cluster])
 ```
 
 Behind this function:

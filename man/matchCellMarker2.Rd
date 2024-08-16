@@ -29,10 +29,10 @@ on their average log2 fold change and adjusted p-values.
 }
 \examples{
 # Example usage:
-# Match the top 50 markers from the exampleMarker dataset with the Human
+# Match the top 50 markers from the pbmc.markers dataset with the Human
 # species in the cellMarker2 dataset.
 library(easybio)
-data(exampleMarker)
-matched_markers <- matchCellMarker2(exampleMarker, n = 50, spc = "Human")
+data(pbmc.markers)
+matched_markers <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
 print(matched_markers)
 }

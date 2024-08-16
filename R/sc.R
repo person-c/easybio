@@ -128,11 +128,11 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
 #'
 #' @examples
 #' # Example usage:
-#' # Match the top 50 markers from the exampleMarker dataset with the Human
+#' # Match the top 50 markers from the pbmc.markers dataset with the Human
 #' # species in the cellMarker2 dataset.
 #' library(easybio)
-#' data(exampleMarker)
-#' matched_markers <- matchCellMarker2(exampleMarker, n = 50, spc = "Human")
+#' data(pbmc.markers)
+#' matched_markers <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
 #' print(matched_markers)
 matchCellMarker2 <- function(marker, n, spc) {
   . <- markerWith <- NULL
@@ -182,8 +182,8 @@ matchCellMarker2 <- function(marker, n, spc) {
 #' # Example usage:
 #' # Check the top 50 markers for clusters 1, 4, and 7 in the Human species.
 #' library(easybio)
-#' data(exampleMarker)
-#' verified_markers <- check_marker(exampleMarker, n = 50, spc = "Human", cl = c(1, 4, 7))
+#' data(pbmc.markers)
+#' verified_markers <- check_marker(pbmc.markers, n = 50, spc = "Human", cl = c(1, 4, 7))
 #' print(verified_markers)
 check_marker <- function(marker, n, spc, cl = c(), topcellN = 2, cis = FALSE) {
   . <- NULL

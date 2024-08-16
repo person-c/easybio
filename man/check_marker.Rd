@@ -36,7 +36,7 @@ and to specify whether to consider cis or trans interactions.
 # Example usage:
 # Check the top 50 markers for clusters 1, 4, and 7 in the Human species.
 library(easybio)
-data(exampleMarker)
-verified_markers <- check_marker(exampleMarker, n = 50, spc = "Human", cl = c(1, 4, 7))
+data(pbmc.markers)
+verified_markers <- check_marker(pbmc.markers, n = 50, spc = "Human", cl = c(1, 4, 7))
 print(verified_markers)
 }
