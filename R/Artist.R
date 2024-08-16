@@ -1,4 +1,4 @@
-#' @title Reductor Class
+#' @title See What are Expected to See
 #'
 #' @description
 #' The base class to plot.

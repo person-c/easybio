@@ -2,7 +2,7 @@
 % Please edit documentation in R/Artist.R
 \name{Artist}
 \alias{Artist}
-\title{Reductor Class}
+\title{See What are Expected to See}
 \description{
 The base class to plot.
 }
