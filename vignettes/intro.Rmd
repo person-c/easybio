@@ -22,6 +22,8 @@ library(easybio)
 
 ## Annotate Single Cell Clusters Using the CellMarker2.0 Database
 
+An example script  for this workflow can be finded with `system.file(package = 'easybio', 'example-single-cell.R') |> file.show()`
+
 ```{r}
 head(pbmc.markers)
 ```
