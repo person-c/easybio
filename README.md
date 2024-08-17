@@ -4,6 +4,7 @@
 # easybio
 
 <!-- badges: start -->
+
 [![R-CMD-check](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
@@ -16,7 +17,7 @@ BiocManger::install("person-c/easybio")
 ```
 
 To know how to use this package, please see the
-[wiki](https://github.com/snowGlint/easybio/wiki).
+[wiki](https://github.com/person-c/easybio/wiki).
 
 ## Coding Principles Reminders
 
