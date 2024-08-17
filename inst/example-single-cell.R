@@ -6,7 +6,7 @@ untar("pbmc.tar.gz")
 
 library(Seurat)
 library(easybio)
-savedir <- setSavedir(file.path("extdata", "example-single-cell"))
+savedir <- setSavedir("extdata", "example-single-cell")
 
 x <- Read10X(data.dir = "filtered_gene_bc_matrices/hg19/")
 pbmc <- CreateSeuratObject(counts = x, project = "pbmc3k", min.cells = 3, min.features = 200)
@@ -24,11 +24,11 @@ pbmc <- FindClusters(pbmc, resolution = 0.5)
 
 pbmc <- RunUMAP(pbmc, dims = 1:10)
 DimPlot(pbmc, reduction = "umap", label = TRUE)
-ggplot2::ggsave(file.path(savedir, "UMAP_Raw.png"))
+ggplot2::ggsave(file.path(savedir, "UMAP_Raw.png"), width = 4.62, height = 3.26)
 
 
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
-data.table::fwrite(pbmc.markers, file.path(savedir, "exampleMarker.csv"))
+data.table::fwrite(pbmc.markers, file.path(savedir, "pbmc.markers.csv"))
 
 markerTop50Matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
 cls <- list(
@@ -57,9 +57,10 @@ cl2cell <- finsert(
 
 pbmc@meta.data[["anno"]] <- cl2cell[as.character(Idents(pbmc))]
 DimPlot(pbmc, reduction = "umap", label = TRUE, group.by = "anno")
-ggplot2::ggsave(file.path(savedir, "UMAP_Anno.png"))
+ggplot2::ggsave(file.path(savedir, "UMAP_Anno.png"), width = 6.35, height = 4.51)
 
-usethis::use_data(pbmc.markers, compress = "xz")
+usethis::use_data(pbmc.markers, compress = "xz", overwrite = TRUE)
 
 fdel <- list.files(pattern = "tar", full.names = TRUE)
 file.remove(fdel)
+unlink("filtered_gene_bc_matrices/", recursive = TRUE)

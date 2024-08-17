@@ -1,9 +1,9 @@
 Package: easybio
-Title: A General-Purpose Package for Aiding in Bioinformation
+Title: Single-Cell Annotation Using CellMark2 Database
 Version: 1.0
 Authors@R: 
     person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
-Description: Provide a collection of helper functions for performing common bioinformation analyses.
+Description: This package provides a comprehensive and user-friendly interface for single-cell annotation based on the CellMark2 database. This package streamlines the process of assigning biological labels to single cells, enhancing the analysis of single-cell RNA sequencing data. Features include efficient querying, integrated visualization. Ideal for researchers in the field of single-cell biology and transcriptomics.
 URL: https://github.com/person-c/easybio
 BugReports: https://github.com/person-c/easybio/issues
 License: MIT + file LICENSE
