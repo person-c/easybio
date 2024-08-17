@@ -1,5 +1,5 @@
 Package: easybio
-Title: A General-Purpose Package for Aiding in bioinformation
+Title: A General-Purpose Package for Aiding in Bioinformation
 Version: 1.0
 Authors@R: 
     person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
