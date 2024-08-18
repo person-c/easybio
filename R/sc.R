@@ -259,3 +259,14 @@ plotSeuratDot <- function(srt, cls, ...) {
 
   invisible(tmpdir)
 }
+
+
+.get_marker_weight <- function(spc, cell = character(), min.count = 0, power = 2) {
+  . <- NULL
+  species <- cell_name <- N <- marker <- NULL
+
+  marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)]
+  marker <- marker[, .(N = .N), by = .(cell_name, marker)]
+  marker[, let(weight = N^power / sum(N^power)), by = cell_name]
+  marker
+}
