@@ -261,6 +261,8 @@ plotSeuratDot <- function(srt, cls, ...) {
 }
 
 
+# Used for future
+# Assign weight for different markers
 .get_marker_weight <- function(spc, cell = character(), min.count = 0, power = 2) {
   . <- NULL
   species <- cell_name <- N <- marker <- NULL
@@ -269,4 +271,11 @@ plotSeuratDot <- function(srt, cls, ...) {
   marker <- marker[, .(N = .N), by = .(cell_name, marker)]
   marker[, let(weight = N^power / sum(N^power)), by = cell_name]
   marker
+}
+
+# Find markers for similar clusters
+.findMarkers <- function(SeuratObject, cls = list()) {
+  lapply(cls, function(x) {
+    Seurat::FindMarkers(SeuratObject, ident.1 = x, group.by = "seurat_clusters")
+  })
 }
