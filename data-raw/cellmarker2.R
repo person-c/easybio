@@ -1,6 +1,6 @@
 ## code to prepare `MSigDB` dataset goes here
-
-download.file("http://117.50.127.228/CellMarker/CellMarker_download_files/file/Cell_marker_Seq.xlsx", "data-raw/Cell_marker_Seq.xlsx")
+url <- "http://bio-bigdata.hrbmu.edu.cn/CellMarker/CellMarker_download_files/file/Cell_marker_Seq.xlsx"
+download.file(url, "data-raw/Cell_marker_Seq.xlsx", mode = "wb")
 
 x <- readxl::read_xlsx("data-raw/Cell_marker_Seq.xlsx")
 cellMarker2 <- data.table::setDT(x)
@@ -11,4 +11,4 @@ cellMarker2[species == "Mouse", let(Symbol = gsub("(^[[:alpha:]])", "\\U\\1", to
 cellMarker2[, let(Symbol = fcoalesce(Symbol, marker))]
 setnames(cellMarker2, c("marker", "Symbol"), c("raw_marker", "marker"))
 usethis::use_data(cellMarker2, internal = TRUE, overwrite = TRUE)
-file.remove("data-raw/Cell_marker_Seq.xlsx")
+# file.remove("data-raw/Cell_marker_Seq.xlsx")

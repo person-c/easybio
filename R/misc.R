@@ -189,8 +189,13 @@ workIn <- function(dir, expr) {
   if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
   setwd(dir)
 
-  res <- eval(substitute(expr))
-  setwd(.tmp)
+  res <- tryCatch(
+    {
+      res <- eval(substitute(expr))
+    },
+    error = function(e) setwd(.tmp)
+  )
 
+  setwd(.tmp)
   res
 }
