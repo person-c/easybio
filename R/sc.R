@@ -280,7 +280,6 @@ plotMarker <- function(mkr = character()) {
     geom_point(aes(size = N, color = N)) +
     scale_x_discrete(guide = guide_axis(angle = 60)) +
     theme_bw()
-  print(p)
   p
 }
 
