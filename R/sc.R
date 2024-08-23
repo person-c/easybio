@@ -260,6 +260,55 @@ plotSeuratDot <- function(srt, cls, ...) {
   invisible(tmpdir)
 }
 
+#' Plot Marker's Distribution in Different Tissues and Cell
+#'
+#' This function generates dot plots for the marker according to its reported time in the
+#' CellMarker2.0 database.
+#'
+#' @param mkr character, marker name.
+#'
+#' @return The function returns ggplot2 object.
+#' @import ggplot2
+#' @import data.table
+#' @export
+plotMarker <- function(mkr = character()) {
+  . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
+  tmp <- cellMarker2[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
+  tmp <- tmp[, .N, by = .(cell_name, tissue_class)]
+
+  p <- ggplot(tmp, aes(x = cell_name, y = tissue_class)) +
+    geom_point(aes(size = N, color = N)) +
+    scale_x_discrete(guide = guide_axis(angle = 60)) +
+    theme_bw()
+  print(p)
+
+  tmp
+}
+
+#' Plot Possible cell's Distribution from Function matchCellMarker2()
+#'
+#' This function generates dot plots for the cell according to its reported time in the
+#' CellMarker2.0 database.
+#'
+#' @param marker result from matchCellMarker2()
+#' @param min.uniqueN minimal marker gene matched.
+#'
+#' @return The function returns a ggplot2 object.
+#' @import ggplot2
+#' @import data.table
+#' @export
+plotPossibleCell <- function(marker, min.uniqueN = 2) {
+  cluster <- cell_name <- N <- NULL
+  p <- ggplot(marker[uniqueN > min.uniqueN], aes(x = cluster, y = cell_name)) +
+    geom_point(aes(size = N, color = N)) +
+    scale_x_discrete(guide = guide_axis(angle = 60)) +
+    theme_bw()
+
+  print(p)
+}
+
+
+
 
 # Used for future
 # Assign weight for different markers
