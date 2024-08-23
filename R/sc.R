@@ -281,8 +281,6 @@ plotMarker <- function(mkr = character()) {
     scale_x_discrete(guide = guide_axis(angle = 60)) +
     theme_bw()
   print(p)
-
-  tmp
 }
 
 #' Plot Possible cell's Distribution from Function matchCellMarker2()
