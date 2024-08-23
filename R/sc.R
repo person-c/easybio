@@ -271,7 +271,7 @@ plotSeuratDot <- function(srt, cls, ...) {
 #' @import ggplot2
 #' @import data.table
 #' @export
-plotMarker <- function(mkr = character()) {
+plotMarkerDistribution <- function(mkr = character()) {
   . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
   tmp <- cellMarker2[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
   tmp <- tmp[, .N, by = .(cell_name, tissue_class)]
@@ -279,7 +279,16 @@ plotMarker <- function(mkr = character()) {
   p <- ggplot(tmp, aes(x = cell_name, y = tissue_class)) +
     geom_point(aes(size = N, color = N)) +
     scale_x_discrete(guide = guide_axis(angle = 60)) +
-    theme_bw()
+    scale_color_distiller(direction = 1) +
+    theme_classic() +
+    theme(
+      axis.line = element_line(colour = "gray60"),
+      axis.ticks = element_line(colour = "gray60"),
+      text = element_text(family = "sans"),
+      axis.text.y = element_text(face = "italic"),
+      axis.text.x = element_text(face = "italic"),
+      axis.title = element_blank()
+    )
   p
 }
 
