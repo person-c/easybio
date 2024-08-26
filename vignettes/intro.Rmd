@@ -32,6 +32,10 @@ head(pbmc.markers)
 (marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = 'Human')[, head(.SD, 2), by=cluster])
 ```
 
+```{r, fig.width=8, fig.height=6}
+plotPossibleCell(marker)
+```
+
 Behind this function:
 
 - First, it matches the top 50 genes in each cluster with the CellMarker2 database.
@@ -74,6 +78,13 @@ You can also directly obtain markers:
 
 ```{r}
 get_marker(spc = 'Human', cell = c('Monocyte', 'Neutrophil'), number = 5, min.count = 1)
+```
+
+or Check a marker's distribution
+
+```{r,fig.width=8, fig.height=7}
+tmp <- easybio::plotMarkerDistribution(mkr = 'CD68')
+tmp
 ```
 
 #### Downloading GEO Data
