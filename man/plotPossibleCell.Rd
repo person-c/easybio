@@ -2,19 +2,19 @@
 % Please edit documentation in R/sc.R
 \name{plotPossibleCell}
 \alias{plotPossibleCell}
-\title{Plot Possible cell's Distribution from Function matchCellMarker2()}
+\title{Plot Possible Cell Distribution Based on matchCellMarker2() Results}
 \usage{
 plotPossibleCell(marker, min.uniqueN = 2)
 }
 \arguments{
-\item{marker}{result from matchCellMarker2()}
+\item{marker}{data.table, the result from the \code{matchCellMarker2()} function.}
 
-\item{min.uniqueN}{minimal marker gene matched.}
+\item{min.uniqueN}{integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.}
 }
 \value{
-The function returns a ggplot2 object.
+A ggplot2 object representing the distribution of possible cell types.
 }
 \description{
-This function generates dot plots for the cell according to its reported time in the
-CellMarker2.0 database.
+This function creates a dot plot to visualize the distribution of possible cell types
+based on the results from the \code{matchCellMarker2()} function, utilizing data from the CellMarker2.0 database.
 }

@@ -31,11 +31,14 @@
 }
 
 
-#' Uniprot Id mapping.
+#' Map UniProt IDs to Other Identifiers
 #'
-#' @param ... request body.
+#' This function maps UniProt IDs to other identifiers using UniProt's ID mapping service.
+#' It sends a request to the UniProt API to perform the mapping and retrieves the results in a tabular format.
 #'
-#' @return data.table
+#' @param ... Parameters to be passed in the request body.
+#'
+#' @return A `data.table` containing the mapped identifiers.
 #' @import data.table
 #' @export
 #' @examples

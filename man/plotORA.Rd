@@ -2,23 +2,25 @@
 % Please edit documentation in R/ora.R
 \name{plotORA}
 \alias{plotORA}
-\title{Visualization of ORA test.}
+\title{Visualization of ORA Test Results}
 \usage{
 plotORA(data, x, y, size, fill, flip = FALSE)
 }
 \arguments{
-\item{data}{ORA result.}
+\item{data}{A data frame containing the ORA results to be visualized.}
 
-\item{x}{aesthetic x.}
+\item{x}{The column in \code{data} to map to the x-axis.}
 
-\item{y}{aesthetic y.}
+\item{y}{The column in \code{data} to map to the y-axis.}
 
-\item{size}{point size aethetic.}
+\item{size}{The column in \code{data} to map to the size of the points.}
 
-\item{fill}{aesthetic fill. Use constant value for one categroy.}
+\item{fill}{The column in \code{data} to map to the fill color of the bars or points.
+Use a constant value for a single category.}
 
-\item{flip}{Wheather to flip plot.}
+\item{flip}{A logical value indicating whether to flip the axes of the plot. Default is \code{FALSE}.}
 }
 \description{
-Visualization of ORA test.
+The \code{plotORA} function visualizes the results of an ORA (Over-Representation Analysis) test.
+It generates a plot with customizable aesthetics for x, y, point size, and fill, with an option to flip the axes.
 }

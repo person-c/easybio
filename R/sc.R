@@ -260,17 +260,20 @@ plotSeuratDot <- function(srt, cls, ...) {
   invisible(tmpdir)
 }
 
-#' Plot Marker's Distribution in Different Tissues and Cell
+#' Plot Distribution of a Marker Across Tissues and Cell Types
 #'
-#' This function generates dot plots for the marker according to its reported time in the
-#' CellMarker2.0 database.
+#' This function creates a dot plot displaying the distribution of a specified marker across
+#' different tissues and cell types, based on data from the CellMarker2.0 database.
 #'
-#' @param mkr character, marker name.
+#' @param mkr character, the name of the marker to be plotted.
 #'
-#' @return The function returns ggplot2 object.
+#' @return A ggplot2 object representing the distribution of the marker.
 #' @import ggplot2
 #' @import data.table
+#'
 #' @export
+#' @examples
+#' plotMarkerDistribution("CD14")
 plotMarkerDistribution <- function(mkr = character()) {
   . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
   tmp <- cellMarker2[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
@@ -280,42 +283,77 @@ plotMarkerDistribution <- function(mkr = character()) {
     geom_point(aes(size = N, color = N)) +
     scale_x_discrete(guide = guide_axis(angle = 60)) +
     scale_color_distiller(direction = 1) +
-    theme_classic() +
-    theme(
-      axis.line = element_line(colour = "gray60"),
-      axis.ticks = element_line(colour = "gray60"),
-      text = element_text(family = "sans"),
-      axis.text.y = element_text(face = "italic"),
-      axis.text.x = element_text(face = "italic"),
-      axis.title = element_blank()
-    )
-  p
+    theme_publication()
 }
 
-#' Plot Possible cell's Distribution from Function matchCellMarker2()
+#' Plot Possible Cell Distribution Based on matchCellMarker2() Results
 #'
-#' This function generates dot plots for the cell according to its reported time in the
-#' CellMarker2.0 database.
+#' This function creates a dot plot to visualize the distribution of possible cell types
+#' based on the results from the `matchCellMarker2()` function, utilizing data from the CellMarker2.0 database.
 #'
-#' @param marker result from matchCellMarker2()
-#' @param min.uniqueN minimal marker gene matched.
+#' @param marker data.table, the result from the `matchCellMarker2()` function.
+#' @param min.uniqueN integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.
 #'
-#' @return The function returns a ggplot2 object.
+#' @return A ggplot2 object representing the distribution of possible cell types.
 #' @import ggplot2
 #' @import data.table
 #' @export
 plotPossibleCell <- function(marker, min.uniqueN = 2) {
   cluster <- cell_name <- N <- NULL
-  p <- ggplot(marker[uniqueN > min.uniqueN], aes(x = cluster, y = cell_name)) +
+  p <- ggplot(marker[uniqueN > min.uniqueN], aes(x = cell_name, y = cluster)) +
     geom_point(aes(size = N, color = N)) +
     scale_x_discrete(guide = guide_axis(angle = 60)) +
-    theme_bw()
-
-  print(p)
+    scale_color_distiller(direction = 1) +
+    theme_publication()
+  p
 }
 
 
 
+.tuneParameters <- function(srt, resolution, N, spc) {
+  cluster <- NULL
+  srt <- suppressMessages(Seurat::FindClusters(srt, resolution = resolution))
+  srt.markers <- Seurat::FindAllMarkers(srt, only.pos = TRUE)
+
+  markerMatched <- matchCellMarker2(marker = srt.markers, n = N, spc = spc)
+  cl2cell <- markerMatched[, head(.SD, 1), by = cluster][, 1:4]
+  cl2cell <- setNames(cl2cell[["cell_name"]], as.character(cl2cell[["cluster"]]))
+  srt@meta.data[["CellMarker2.0"]] <- cl2cell[as.character(Seurat::Idents(srt))]
+
+  p <- Seurat::DimPlot(srt,
+    reduction = "umap",
+    label = TRUE, label.size = 1,
+    pt.size = 0.6, repel = TRUE,
+    group.by = "CellMarker2.0"
+  ) +
+    labs(title = sprintf("resolution: %s N: %s", resolution, N)) +
+    guides(color = guide_legend(override.aes = list(size = 0.5))) +
+    theme_publication(base_size = 8)
+}
+#' Optimize Resolution and Gene Number Parameters for Cell Type Annotation
+#'
+#' This function tunes the `resolution` parameter in `Seurat::FindClusters()` and the number of top differential genes (`N`) to obtain different cell type annotation results. The function generates UMAP plots for each parameter combination, allowing for a comparison of how different settings affect the clustering and annotation.
+#'
+#' @param srt Seurat object, the input data object to be analyzed.
+#' @param resolution numeric vector, a vector of resolution values to be tested in `Seurat::FindClusters()`.
+#' @param N integer vector, a vector of values indicating the number of top differential genes to be used for matching in `matchCellMarker2()`.
+#' @param spc character, the species parameter for the `matchCellMarker2()` function, specifying the organism.
+#'
+#' @return A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.
+#' @import ggplot2
+#' @import data.table
+#' @export
+tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
+  parameters <- CJ(resolution = resolution, N = N)
+
+  parameterPlot <- Map(
+    f = function(x, y) .tuneParameters(srt, x, y, spc),
+    x = parameters[["resolution"]],
+    y = parameters[["N"]]
+  )
+
+  parameterPlot
+}
 
 # Used for future
 # Assign weight for different markers

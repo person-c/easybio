@@ -2,16 +2,17 @@
 % Please edit documentation in R/prepare.R
 \name{prepare_tcga}
 \alias{prepare_tcga}
-\title{TCGA helper function: prepare TCGA data for limma or survival analysis.}
+\title{Prepare TCGA Data for Analysis}
 \usage{
 prepare_tcga(data)
 }
 \arguments{
-\item{data}{data from TCGA biolinks.}
+\item{data}{A \code{SummarizedExperiment} object containing TCGA data, typically obtained from TCGA Biolinks.}
 }
 \value{
-list
+A list.
 }
 \description{
-TCGA helper function: prepare TCGA data for limma or survival analysis.
+This function prepares TCGA data for downstream analyses such as differential expression analysis with \code{limma} or survival analysis.
+It extracts and processes the necessary information from the TCGA data object, separating tumor and non-tumor samples.
 }

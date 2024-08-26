@@ -2,18 +2,19 @@
 % Please edit documentation in R/uniprot.R
 \name{uniprot_id_map}
 \alias{uniprot_id_map}
-\title{Uniprot Id mapping.}
+\title{Map UniProt IDs to Other Identifiers}
 \usage{
 uniprot_id_map(...)
 }
 \arguments{
-\item{...}{request body.}
+\item{...}{Parameters to be passed in the request body.}
 }
 \value{
-data.table
+A \code{data.table} containing the mapped identifiers.
 }
 \description{
-Uniprot Id mapping.
+This function maps UniProt IDs to other identifiers using UniProt's ID mapping service.
+It sends a request to the UniProt API to perform the mapping and retrieves the results in a tabular format.
 }
 \examples{
 uniprot_id_map(

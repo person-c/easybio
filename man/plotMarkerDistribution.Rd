@@ -2,17 +2,20 @@
 % Please edit documentation in R/sc.R
 \name{plotMarkerDistribution}
 \alias{plotMarkerDistribution}
-\title{Plot Marker's Distribution in Different Tissues and Cell}
+\title{Plot Distribution of a Marker Across Tissues and Cell Types}
 \usage{
 plotMarkerDistribution(mkr = character())
 }
 \arguments{
-\item{mkr}{character, marker name.}
+\item{mkr}{character, the name of the marker to be plotted.}
 }
 \value{
-The function returns ggplot2 object.
+A ggplot2 object representing the distribution of the marker.
 }
 \description{
-This function generates dot plots for the marker according to its reported time in the
-CellMarker2.0 database.
+This function creates a dot plot displaying the distribution of a specified marker across
+different tissues and cell types, based on data from the CellMarker2.0 database.
+}
+\examples{
+plotMarkerDistribution("CD14")
 }

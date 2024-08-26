@@ -1,16 +1,21 @@
-#' download GEO data
+#' @title Download and Process GEO Data
 #'
-#' A function to download GEO data and convert it to a standard expression if existed;
-#' It will try to download the supplementary tabular data if no expression data is checked.
+#' @description
+#' This function downloads gene expression data from the Gene Expression Omnibus (GEO) database.
+#' It retrieves either the expression matrix or the supplementary tabular data if the expression data is not available.
+#' The function also allows for the conversion of probe identifiers to gene symbols and can combine multiple probes into a single symbol.
 #'
-#' @param geo GSE ID.
-#' @param dir download directory.
-#' @param combine whether to combine probes.
-#' @param method ways to process many probes to one symbol(max or mean).
-#' @param filter_regex regex keywords to decide what kind of supplementary file
-#' to download.
+#' @param geo A character string specifying the GEO Series ID (e.g., "GSE12345").
+#' @param dir A character string specifying the directory where files should be downloaded. Default is the current working directory (`"."`).
+#' @param combine A logical value indicating whether to combine multiple probes into a single gene symbol. Default is `TRUE`.
+#' @param method A character string specifying the method to use for combining probes into a single gene symbol. Options are `"max"` (take the maximum value) or `"mean"` (compute the average). Default is `"max"`.
+#' @param filter_regex A character string specifying a regular expression to filter the supplementary files for download. Default is `NULL`, which means no filtering is applied.
 #'
-#' @return a list containing expression matrix and metadata.
+#' @return A list containing:
+#' \item{data}{A data frame of the expression matrix.}
+#' \item{sample}{A data frame of the sample metadata.}
+#' \item{feature}{A data frame of the feature metadata, which includes gene symbols if combining probes.}
+#'
 #' @importFrom utils download.file
 #' @import data.table
 #' @export
@@ -66,11 +71,14 @@ download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_
   return(list(data = exp2, sample = pd, feature = gpl2))
 }
 
-#' TCGA helper function: prepare TCGA data for limma or survival analysis.
+#' Prepare TCGA Data for Analysis
 #'
-#' @param data data from TCGA biolinks.
+#' This function prepares TCGA data for downstream analyses such as differential expression analysis with `limma` or survival analysis.
+#' It extracts and processes the necessary information from the TCGA data object, separating tumor and non-tumor samples.
 #'
-#' @return list
+#' @param data A `SummarizedExperiment` object containing TCGA data, typically obtained from TCGA Biolinks.
+#'
+#' @return A list.
 #' @import data.table
 #' @export
 prepare_tcga <- function(data) {

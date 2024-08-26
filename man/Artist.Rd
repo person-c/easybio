@@ -2,9 +2,12 @@
 % Please edit documentation in R/Artist.R
 \name{Artist}
 \alias{Artist}
-\title{See What are Expected to See}
+\title{Visualization Artist for Custom Plots}
 \description{
-The base class to plot.
+The \code{Artist} class provides a collection of methods to create various types of plots using \code{ggplot2}.
+It includes methods for generating dumbbell plots, bubble plots, divergence bar charts, lollipop plots,
+contour plots, scatter plots with ellipses, donut plots, and pie charts. Each method is designed
+to map data to specific aesthetics and apply additional customizations.
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -24,7 +27,10 @@ The base class to plot.
 \if{html}{\out{<a id="method-Artist-dumbbbell"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-dumbbbell}{}}}
 \subsection{Method \code{dumbbbell()}}{
-dumbbbell plot
+Create a dumbbell plot
+
+This method generates a dumbbell plot using the provided data, mapping the specified columns
+to the x-axis, y-axis, and color aesthetic.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$dumbbbell(data, x, y, col, ...)}\if{html}{\out{</div>}}
 }
@@ -32,24 +38,30 @@ dumbbbell plot
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{x}}{map to x-axis}
+\item{\code{x}}{The column in \code{data} to map to the x-axis.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{col}}{map to col}
+\item{\code{col}}{The column in \code{data} to map to the color aesthetic.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the dumbbell plot.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-bubble"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-bubble}{}}}
 \subsection{Method \code{bubble()}}{
-bubble plot
+Create a bubble plot
+
+This method generates a bubble plot where points are mapped to the x and y axes, with their
+size and color representing additional variables.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$bubble(data, x, y, size, col, ...)}\if{html}{\out{</div>}}
 }
@@ -57,26 +69,32 @@ bubble plot
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{x}}{map to x-axis}
+\item{\code{x}}{The column in \code{data} to map to the x-axis.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{size}}{map to size}
+\item{\code{size}}{The column in \code{data} to map to the size of the points.}
 
-\item{\code{col}}{map to col}
+\item{\code{col}}{The column in \code{data} to map to the color of the points.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the bubble plot.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-barchart_divergence"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-barchart_divergence}{}}}
 \subsection{Method \code{barchart_divergence()}}{
-divergence barchart
+Create a divergence bar chart
+
+This method generates a divergence bar chart where bars are colored based on their
+positive or negative value.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$barchart_divergence(data, group, y, fill, ...)}\if{html}{\out{</div>}}
 }
@@ -84,24 +102,30 @@ divergence barchart
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{group}}{map to group}
+\item{\code{group}}{The column in \code{data} representing the grouping variable.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{fill}}{map to fill}
+\item{\code{fill}}{The column in \code{data} to map to the fill color of the bars.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the divergence bar chart.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-lollipop"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-lollipop}{}}}
 \subsection{Method \code{lollipop()}}{
-lollipot plot
+Create a lollipop plot
+
+This method generates a lollipop plot, where points are connected to a baseline by vertical
+segments, with customizable colors and labels.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$lollipop(data, x, y, ...)}\if{html}{\out{</div>}}
 }
@@ -109,22 +133,28 @@ lollipot plot
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{x}}{map to x-axis}
+\item{\code{x}}{The column in \code{data} to map to the x-axis.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the lollipop plot.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-contour"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-contour}{}}}
 \subsection{Method \code{contour()}}{
-contour
+Create a contour plot
+
+This method generates a contour plot that includes filled and outlined density contours,
+with data points overlaid.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$contour(data, x, y, ...)}\if{html}{\out{</div>}}
 }
@@ -132,22 +162,28 @@ contour
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{x}}{map to x-axis}
+\item{\code{x}}{The column in \code{data} to map to the x-axis.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the contour plot.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-scatter_ellipses"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-scatter_ellipses}{}}}
 \subsection{Method \code{scatter_ellipses()}}{
-scatter plot with ellipses
+Create a scatter plot with ellipses
+
+This method generates a scatter plot where data points are colored by group, with ellipses
+representing the confidence intervals for each group.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$scatter_ellipses(data, x, y, col, ...)}\if{html}{\out{</div>}}
 }
@@ -155,24 +191,30 @@ scatter plot with ellipses
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{x}}{map to x-axis}
+\item{\code{x}}{The column in \code{data} to map to the x-axis.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{col}}{map to col}
+\item{\code{col}}{The column in \code{data} to map to the color aesthetic.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the scatter plot with ellipses.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-donut"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-donut}{}}}
 \subsection{Method \code{donut()}}{
-donut plot
+Create a donut plot
+
+This method generates a donut plot, which is a variation of a pie chart with a hole in the center.
+The sections of the donut represent the proportion of categories in the data.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$donut(data, x, y, fill, ...)}\if{html}{\out{</div>}}
 }
@@ -180,40 +222,48 @@ donut plot
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{x}}{map to x-axis}
+\item{\code{x}}{The column in \code{data} to map to the x-axis.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{fill}}{map to fill}
+\item{\code{fill}}{The column in \code{data} to map to the fill color of the sections.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the donut plot.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-pie"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-pie}{}}}
 \subsection{Method \code{pie()}}{
-pie plot
+Create a pie chart
+
+This method generates a pie chart where sections represent the proportion of categories in the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$pie(data, y, fill)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$pie(data, y, fill, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{data}
+\item{\code{data}}{A data frame containing the data to be plotted.}
 
-\item{\code{y}}{map to y-axis}
+\item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{fill}}{map to fill}
+\item{\code{fill}}{The column in \code{data} to map to the fill color of the sections.}
 
-\item{\code{...}}{additional aesthetics properties mapping}
+\item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot object representing the pie chart.
 }
 }
 \if{html}{\out{<hr>}}

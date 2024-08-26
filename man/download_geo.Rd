@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare.R
 \name{download_geo}
 \alias{download_geo}
-\title{download GEO data}
+\title{Download and Process GEO Data}
 \usage{
 download_geo(
   geo,
@@ -13,21 +13,24 @@ download_geo(
 )
 }
 \arguments{
-\item{geo}{GSE ID.}
+\item{geo}{A character string specifying the GEO Series ID (e.g., "GSE12345").}
 
-\item{dir}{download directory.}
+\item{dir}{A character string specifying the directory where files should be downloaded. Default is the current working directory (\code{"."}).}
 
-\item{combine}{whether to combine probes.}
+\item{combine}{A logical value indicating whether to combine multiple probes into a single gene symbol. Default is \code{TRUE}.}
 
-\item{method}{ways to process many probes to one symbol(max or mean).}
+\item{method}{A character string specifying the method to use for combining probes into a single gene symbol. Options are \code{"max"} (take the maximum value) or \code{"mean"} (compute the average). Default is \code{"max"}.}
 
-\item{filter_regex}{regex keywords to decide what kind of supplementary file
-to download.}
+\item{filter_regex}{A character string specifying a regular expression to filter the supplementary files for download. Default is \code{NULL}, which means no filtering is applied.}
 }
 \value{
-a list containing expression matrix and metadata.
+A list containing:
+\item{data}{A data frame of the expression matrix.}
+\item{sample}{A data frame of the sample metadata.}
+\item{feature}{A data frame of the feature metadata, which includes gene symbols if combining probes.}
 }
 \description{
-A function to download GEO data and convert it to a standard expression if existed;
-It will try to download the supplementary tabular data if no expression data is checked.
+This function downloads gene expression data from the Gene Expression Omnibus (GEO) database.
+It retrieves either the expression matrix or the supplementary tabular data if the expression data is not available.
+The function also allows for the conversion of probe identifiers to gene symbols and can combine multiple probes into a single symbol.
 }

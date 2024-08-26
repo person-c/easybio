@@ -7,16 +7,17 @@
 plotGSEA(fgseaRes, pathways, pwayname, stats, save = FALSE)
 }
 \arguments{
-\item{fgseaRes}{GSEA result from fgsea.}
+\item{fgseaRes}{A data table containing the GSEA results from the \code{fgsea} package.}
 
-\item{pathways}{all pathways.}
+\item{pathways}{A list of all pathways used in the GSEA analysis.}
 
-\item{pwayname}{pathway name you want to show.}
+\item{pwayname}{The name of the pathway to visualize.}
 
-\item{stats}{rank vector.}
+\item{stats}{A numeric vector representing the ranked statistics.}
 
-\item{save}{Wheather to save plot.}
+\item{save}{A logical value indicating whether to save the plot as a PDF file. Default is \code{FALSE}.}
 }
 \description{
-Visualization of GSEA Result from fgsea
+The \code{plotGSEA} function visualizes the results of a GSEA (Gene Set Enrichment Analysis) using data from
+the \code{fgsea} package. It generates a composite plot that includes an enrichment plot and a ranked metric plot.
 }

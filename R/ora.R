@@ -46,9 +46,14 @@ plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize 
     )
 }
 
-#' Visualization of GSEA rank stats.
+#' @title Visualization of GSEA Rank Statistics
 #'
-#' @param stats rank data.
+#' @description
+#' The `plotRank` function visualizes the ranked statistics of a GSEA (Gene Set Enrichment Analysis) analysis.
+#' The function creates a plot where the x-axis represents the rank of each gene, and the y-axis shows
+#' the corresponding ranked list metric.
+#'
+#' @param stats A numeric vector containing the ranked statistics from a GSEA analysis.
 #'
 #' @import data.table
 #' @import ggplot2
@@ -65,14 +70,17 @@ plotRank <- function(stats) {
 }
 
 
-#' Visualization of GSEA Result from fgsea
+#' @title Visualization of GSEA Result from fgsea
 #'
-#' @param fgseaRes GSEA result from fgsea.
-#' @param pathways all pathways.
-#' @param pwayname pathway name you want to show.
-#' @param stats rank vector.
-#' @param save Wheather to save plot.
+#' @description
+#' The `plotGSEA` function visualizes the results of a GSEA (Gene Set Enrichment Analysis) using data from
+#' the `fgsea` package. It generates a composite plot that includes an enrichment plot and a ranked metric plot.
 #'
+#' @param fgseaRes A data table containing the GSEA results from the `fgsea` package.
+#' @param pathways A list of all pathways used in the GSEA analysis.
+#' @param pwayname The name of the pathway to visualize.
+#' @param stats A numeric vector representing the ranked statistics.
+#' @param save A logical value indicating whether to save the plot as a PDF file. Default is `FALSE`.
 #'
 #' @import data.table
 #' @import ggplot2
@@ -99,14 +107,19 @@ plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
   p3
 }
 
-#' Visualization of ORA test.
+#' @title Visualization of ORA Test Results
 #'
-#' @param data ORA result.
-#' @param x aesthetic x.
-#' @param y aesthetic y.
-#' @param size point size aethetic.
-#' @param fill aesthetic fill. Use constant value for one categroy.
-#' @param flip Wheather to flip plot.
+#' @description
+#' The `plotORA` function visualizes the results of an ORA (Over-Representation Analysis) test.
+#' It generates a plot with customizable aesthetics for x, y, point size, and fill, with an option to flip the axes.
+#'
+#' @param data A data frame containing the ORA results to be visualized.
+#' @param x The column in `data` to map to the x-axis.
+#' @param y The column in `data` to map to the y-axis.
+#' @param size The column in `data` to map to the size of the points.
+#' @param fill The column in `data` to map to the fill color of the bars or points.
+#'        Use a constant value for a single category.
+#' @param flip A logical value indicating whether to flip the axes of the plot. Default is `FALSE`.
 #'
 #' @import ggplot2
 #' @export
