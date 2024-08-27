@@ -9,6 +9,9 @@ plotRank(stats)
 \arguments{
 \item{stats}{A numeric vector containing the ranked statistics from a GSEA analysis.}
 }
+\value{
+ggplot2 object
+}
 \description{
 The \code{plotRank} function visualizes the ranked statistics of a GSEA (Gene Set Enrichment Analysis) analysis.
 The function creates a plot where the x-axis represents the rank of each gene, and the y-axis shows

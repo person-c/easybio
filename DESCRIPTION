@@ -3,7 +3,7 @@ Title: Single-Cell Annotation Using 'CellMarker2.0' Database
 Version: 1.0
 Authors@R: 
     person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
-Description: Comprehensive interface for single-cell annotation with `CellMarker2.0`. Streamlines biological label assignment in RNA seq data, featuring efficient querying and visualization. 
+Description: Comprehensive interface for single-cell annotation with 'CellMarker2.0'<http://bio-bigdata.hrbmu.edu.cn/CellMarker/>. Streamlines biological label assignment in RNA seq data, featuring efficient querying and visualization. 
 URL: https://github.com/person-c/easybio
 BugReports: https://github.com/person-c/easybio/issues
 License: MIT + file LICENSE

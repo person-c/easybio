@@ -2,7 +2,7 @@
 % Please edit documentation in R/ora.R
 \name{plotGSEA}
 \alias{plotGSEA}
-\title{Visualization of GSEA Result from fgsea}
+\title{Visualization of GSEA Result from \code{\link[fgsea:fgsea]{fgsea::fgsea()}}}
 \usage{
 plotGSEA(fgseaRes, pathways, pwayname, stats, save = FALSE)
 }
@@ -16,6 +16,9 @@ plotGSEA(fgseaRes, pathways, pwayname, stats, save = FALSE)
 \item{stats}{A numeric vector representing the ranked statistics.}
 
 \item{save}{A logical value indicating whether to save the plot as a PDF file. Default is \code{FALSE}.}
+}
+\value{
+ggplot2 object.
 }
 \description{
 The \code{plotGSEA} function visualizes the results of a GSEA (Gene Set Enrichment Analysis) using data from

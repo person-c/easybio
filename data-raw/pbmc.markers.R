@@ -1,8 +1,13 @@
-# The data are downloaded from "https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz"
+setwd("data-raw")
+
+fn <- "https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz"
+download.file(fn, "pbmc.tar.gz")
+untar("pbmc.tar.gz", list = TRUE)
+untar("pbmc.tar.gz")
+
 
 library(Seurat)
 library(easybio)
-
 x <- Read10X(data.dir = "filtered_gene_bc_matrices/hg19/")
 pbmc <- CreateSeuratObject(counts = x, project = "pbmc3k", min.cells = 3, min.features = 200)
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
@@ -19,16 +24,13 @@ pbmc <- FindClusters(pbmc, resolution = 0.5)
 
 pbmc <- RunUMAP(pbmc, dims = 1:10)
 DimPlot(pbmc, reduction = "umap", label = TRUE)
+ggplot2::ggsave("UMAP_Raw.png", width = 4.62, height = 3.26)
+
 
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
+data.table::fwrite(pbmc.markers, "pbmc.markers.csv")
 
 markerTop50Matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
-
-# You can just use the top matched cell as the annotation
-cl2cell <- markerTop50Matched[, head(.SD, 1), by = .(cluster)][[, .(cluster, cell_name)]]
-cl2cell <- setNames(cl2cell[["cell_name"]], cl2cell[["cluster"]])
-
-# or recheck the dot plot for similar clusters
 cls <- list(
   c(1, 5, 7),
   c(8),
@@ -36,9 +38,8 @@ cls <- list(
   c(0, 2, 4, 6)
 )
 
-srtDotPlot <- plotsSeuratDot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
+dotplotList <- plotSeuratDot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
 
-# According to the srtDotplot
 cl2cell <- finsert(
   expression(
     c(3) == "B cell",
@@ -53,3 +54,9 @@ cl2cell <- finsert(
 
 pbmc@meta.data[["anno"]] <- cl2cell[as.character(Idents(pbmc))]
 DimPlot(pbmc, reduction = "umap", label = TRUE, group.by = "anno")
+ggplot2::ggsave("UMAP_Anno.png", width = 6.35, height = 4.51)
+
+usethis::use_data(pbmc.markers, compress = "xz", overwrite = TRUE)
+fdel <- list.files(pattern = "tar", full.names = TRUE)
+file.remove(fdel)
+unlink("filtered_gene_bc_matrices/", recursive = TRUE)

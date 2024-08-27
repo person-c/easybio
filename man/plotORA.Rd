@@ -20,6 +20,9 @@ Use a constant value for a single category.}
 
 \item{flip}{A logical value indicating whether to flip the axes of the plot. Default is \code{FALSE}.}
 }
+\value{
+ggplot2 object.
+}
 \description{
 The \code{plotORA} function visualizes the results of an ORA (Over-Representation Analysis) test.
 It generates a plot with customizable aesthetics for x, y, point size, and fill, with an option to flip the axes.

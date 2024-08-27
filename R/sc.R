@@ -153,7 +153,7 @@ matchCellMarker2 <- function(marker, n, spc) {
   marker[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
   marker[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
   setcolorder(marker, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
-  marker[]
+  marker
 }
 
 #' Verify Markers for Specific Clusters Using matchCellMarker
@@ -220,20 +220,16 @@ check_marker <- function(marker, n, spc, cl = c(), topcellN = 2, cis = FALSE) {
 #' @import ggplot2
 #' @export
 plotSeuratDot <- function(srt, cls, ...) {
-  tmpdir <- "tmp_check_marker"
-  if (!dir.exists(tmpdir)) {
-    message("Creating tmp_check_marker directory...please check all result in ths directory")
-    dir.create(tmpdir)
-  }
-
-  lapply(cls, \(cl) {
+  dotplotList <- lapply(cls, \(cl) {
     features <- check_marker(..., cl = cl)
+
     if (anyDuplicated(unlist(features)) > 0) {
       features <- unique(list2dt(features), by = "value")
       warning("Duplicated markers are removed!")
 
       features <- split(features[["value"]], features[["name"]])
     }
+
     Seurat::DotPlot(srt, features = features) +
       scale_x_discrete(
         guide = guide_axis(
@@ -246,18 +242,10 @@ plotSeuratDot <- function(srt, cls, ...) {
         panel.background = element_rect(fill = "white"),
         strip.text = element_text(size = 8, angle = 30, vjust = 0.1, hjust = 0)
       )
-
-
-    ggsave(
-      width = 10, height = 8,
-      file.path(
-        tmpdir,
-        paste0(paste0("clusters_", paste0(cl, collapse = "_")), ".pdf")
-      )
-    )
   })
 
-  invisible(tmpdir)
+  names(dotplotList) <- paste0("clusters_", paste0(cl, collapse = "_"))
+  dotplotList
 }
 
 #' Plot Distribution of a Marker Across Tissues and Cell Types

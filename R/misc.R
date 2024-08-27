@@ -185,17 +185,11 @@ setSavedir <- function(...) {
 #' @return The result of evaluating the expression within the specified directory.
 #' @export
 workIn <- function(dir, expr) {
-  .tmp <- getwd()
+  oldwd <- getwd()
+  on.exit(setwd(oldwd))
   if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
   setwd(dir)
 
-  res <- tryCatch(
-    {
-      res <- eval(substitute(expr))
-    },
-    error = function(e) setwd(.tmp)
-  )
-
-  setwd(.tmp)
+  res <- eval(substitute(expr))
   res
 }

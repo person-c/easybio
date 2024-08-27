@@ -8,6 +8,7 @@
 #'
 #' @return A ggplot2 theme object that can be applied to ggplot2 plots.
 #' @import ggplot2
+#' @return ggplot2 theme.
 #' @export
 #'
 #' @examples

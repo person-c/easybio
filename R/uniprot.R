@@ -63,8 +63,6 @@ uniprot_id_map <- function(...) {
     text <- httr2::req_perform(httr2::request(url)) |> httr2::resp_body_string()
     resultsTable <- fread(text)
 
-    print(resultsTable)
-
     return(resultsTable)
   }
 

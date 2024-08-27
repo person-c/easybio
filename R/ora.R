@@ -57,6 +57,7 @@ plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize 
 #'
 #' @import data.table
 #' @import ggplot2
+#' @return ggplot2 object
 #' @export
 plotRank <- function(stats) {
   ranks <- y <- NULL
@@ -70,7 +71,7 @@ plotRank <- function(stats) {
 }
 
 
-#' @title Visualization of GSEA Result from fgsea
+#' @title Visualization of GSEA Result from [fgsea::fgsea()]
 #'
 #' @description
 #' The `plotGSEA` function visualizes the results of a GSEA (Gene Set Enrichment Analysis) using data from
@@ -84,6 +85,7 @@ plotRank <- function(stats) {
 #'
 #' @import data.table
 #' @import ggplot2
+#' @return ggplot2 object.
 #' @export
 plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
   . <- NULL
@@ -122,6 +124,7 @@ plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
 #' @param flip A logical value indicating whether to flip the axes of the plot. Default is `FALSE`.
 #'
 #' @import ggplot2
+#' @return ggplot2 object.
 #' @export
 plotORA <- function(data, x, y, size, fill, flip = FALSE) {
   p <- ggplot(
