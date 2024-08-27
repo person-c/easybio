@@ -3,3 +3,8 @@
 0 errors | 0 warnings | 0 note
 
 * This is a new release.
+
+* add link in description
+* return value in  Artist.R `plotGSE` `plotORA`, `plotRank`
+* remove writing in default patt in and return original user's settings in inst/example-single-cell.R; R/misc.R; R/sc.R
+* update doc and vignettes
