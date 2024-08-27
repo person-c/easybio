@@ -244,7 +244,11 @@ plotSeuratDot <- function(srt, cls, ...) {
       )
   })
 
-  names(dotplotList) <- paste0("clusters_", paste0(cl, collapse = "_"))
+  dotplotName <- vapply(cls, \(cl) {
+    paste0("clusters_", paste0(cl, collapse = "_"))
+  }, "character")
+
+  names(dotplotList) <- dotplotName
   dotplotList
 }
 

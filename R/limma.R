@@ -17,13 +17,9 @@
 #' @import data.table
 #' @export
 dgeList <- function(count, sample.info, feature.info) {
-  stopifnot(nrow(count) == nrow(feature.info))
-  stopifnot(ncol(count) == nrow(sample.info))
-  sample.info <- sample.info[order(sample.info[[1]], decreasing = TRUE), , drop = FALSE]
-  count <- count[rownames(feature.info), rownames(sample.info)]
-  x <- edgeR::DGEList(count)
-  x$genes <- feature.info
-  x$samples <- cbind(x$samples, sample.info)
+  stopifnot(rownames(count) == rownames(feature.info))
+  stopifnot(colnames(count) == rownames(sample.info))
+  x <- edgeR::DGEList(count, samples = sample.info, genes = feature.info)
 
   x
 }
@@ -50,7 +46,7 @@ dgeList <- function(count, sample.info, feature.info) {
 #' @import stats
 #' @import utils
 #' @export
-dprocess.DGEList <- function(x, group.column, min.count = 10) {
+dprocess_dgeList <- function(x, group.column, min.count = 10) {
   lcpm <- edgeR::cpm(x, log = TRUE, prior.count = 2)
   # filter low expressed genes
   keep_exprs <- edgeR::filterByExpr(x, group = x$samples[[group.column]], min.count = min.count)
@@ -58,6 +54,9 @@ dprocess.DGEList <- function(x, group.column, min.count = 10) {
 
   nsamples <- ncol(x)
   if (nsamples > 10) nsamples <- sample(ncol(x), 10)
+
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
 
   par(mfrow = c(1, 2))
   plot(density(lcpm[, nsamples[[1]]]), lwd = 2, ylim = c(0, 1), las = 2, main = "", xlab = "")
@@ -165,4 +164,6 @@ plotVolcano <- function(data, data.text, x, y, color, label) {
       show.legend = FALSE
     )
   }
+
+  p
 }

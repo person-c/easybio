@@ -82,29 +82,28 @@ download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_
 #' @import data.table
 #' @export
 prepare_tcga <- function(data) {
-  sample_info <- data@colData
-  sample_info$OS <- fcoalesce(sample_info$days_to_death, sample_info$days_to_last_follow_up)
+  sampleInfo <- as.data.frame(data@colData)
+  sampleInfo[["OS"]] <- fcoalesce(sampleInfo[["days_to_death"]], sampleInfo[["days_to_last_follow_up"]])
 
-  genes_info <- as.data.frame(data@rowRanges)
-  count <- data@assays@data$unstranded
-  rownames(count) <- rownames(genes_info)
-  colnames(count) <- rownames(sample_info)
+  featuresInfo <- as.data.frame(data@rowRanges)
+  expr <- as.data.frame(data@assays@data$unstranded, row.names = rownames(featuresInfo))
+  colnames(expr) <- rownames(sampleInfo)
 
   # tumor smaple data
-  tumor_sample_index <- sample_info$sample_type %ilike% "Tumor"
-  count2 <- count[, tumor_sample_index]
-  sample_info2 <- sample_info[, tumor_sample_index]
+  tumorIdx <- sampleInfo[["sample_type"]] %ilike% "Tumor"
+  expr2 <- expr[, tumorIdx]
+  sampleInfo2 <- sampleInfo[, tumorIdx]
 
-  list(
+  structure(list(
     all = list(
-      count = count,
-      sample_info = sample_info,
-      genes_info = genes_info
+      exprCount = expr,
+      featuresInfo = featuresInfo,
+      sampleInfo = sampleInfo
     ),
     tumor = list(
-      count = count2,
-      sample_info = sample_info2,
-      genes_info = genes_info
+      exprCount = expr2,
+      featuresInfo = featuresInfo,
+      sampleInfo = sampleInfo2
     )
-  )
+  ))
 }

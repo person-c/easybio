@@ -5,3 +5,10 @@
 #' @docType data
 #' @name pbmc.markers
 NULL
+
+#' Example DEGs data from Limma-Voom workflow for TCGA-CHOL project
+#'
+#' The data were obtained by the limma-voom workflow
+#' @docType data
+#' @name CHOL.DEGs
+NULL

@@ -103,7 +103,7 @@ Three functions have been crafted for this workflow.
 
 ```r
 x <- dgeList(count, sample.info, feature.info)
-x <- dprocess.DGEList(x, group.column, min.count)
+x <- dprocess_dgeList(x, group.column, min.count)
 x <- limmaFit(x, group.column)
 ```
 
