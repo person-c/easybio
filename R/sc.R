@@ -276,6 +276,8 @@ plotMarkerDistribution <- function(mkr = character()) {
     scale_x_discrete(guide = guide_axis(angle = 60)) +
     scale_color_distiller(direction = 1) +
     theme_publication()
+
+  p
 }
 
 #' Plot Possible Cell Distribution Based on matchCellMarker2() Results
@@ -297,6 +299,7 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
     scale_x_discrete(guide = guide_axis(angle = 60)) +
     scale_color_distiller(direction = 1) +
     theme_publication()
+
   p
 }
 
@@ -321,6 +324,8 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
     labs(title = sprintf("resolution: %s N: %s", resolution, N)) +
     guides(color = guide_legend(override.aes = list(size = 0.5))) +
     theme_publication(base_size = 8)
+
+  p
 }
 #' Optimize Resolution and Gene Number Parameters for Cell Type Annotation
 #'

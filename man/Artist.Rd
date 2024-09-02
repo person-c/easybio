@@ -3,6 +3,9 @@
 \name{Artist}
 \alias{Artist}
 \title{Visualization Artist for Custom Plots}
+\value{
+The \code{R6} class \link{Artist}.
+}
 \description{
 The \code{Artist} class provides a collection of methods to create various types of plots using \code{ggplot2}.
 It includes methods for generating dumbbell plots, bubble plots, divergence bar charts, lollipop plots,

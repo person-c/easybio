@@ -1,0 +1,93 @@
+---
+title: "Example Workflow for Single Cell Annotation Using CellMarker2.0"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(easybio)
+```
+
+
+An example script  for this workflow can be finded with `system.file(package = 'easybio', 'example-single-cell.R') |> file.show()`
+
+```{r}
+head(pbmc.markers)
+```
+
+```{r}
+(marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = 'Human')[, head(.SD, 2), by=cluster])
+```
+
+```{r, fig.width=7.5, fig.height=6}
+plotPossibleCell(marker)
+```
+
+Behind this function:
+
+- First, it matches the top 50 genes in each cluster with the CellMarker2 database.
+- Next, it calculates the cell count for each matched cell type and prints the result to help you identify the possible cell type for the cluster.
+
+You can just use the top matched cell as the annotation:
+
+```{r}
+cl2cell <- marker[, head(.SD, 1), by = .(cluster)]
+cl2cell <- setNames(cl2cell[["cell_name"]], cl2cell[["cluster"]])
+cl2cell
+```
+
+Visualize marker dot plots for similar clusters:
+
+```{r,eval=FALSE}
+cls <- list(
+  c(1, 5, 7), 
+  c(8),
+  c(3),
+  c(0,2, 4, 6)
+)
+dotplotList <- plotSeuratDot(seuratObject, cls, marker = marker, n = 50, spc = 'Human', topcellN = 2)
+```
+
+Behind this function:
+
+- It searches for potential cell markers from the result of matchCellMarker2.
+- Next, it invokes `Seurat::DotPlot` to generate the corresponding dot plot. The resulting plot will be saved in the directory ‘tmp_check_marker’.
+
+Construct the named vector for your annotation:
+
+```{r}
+cl2cell <- finsert(
+  expression(
+  c(1, 5) == "Monocyte",
+  c(7) == "DC",
+  c(8) == "megakaryocyte",
+  c(3) == "B.cell",
+  c(0, 2) == "Naive.CD8.T.cell",
+  c(4) == "Cytotoxic.T.Cell",
+  c(6) == "Natural.killer.cell",
+), len = 9)
+cl2cell
+```
+
+You can also directly obtain markers:
+
+```{r}
+get_marker(spc = 'Human', cell = c('Monocyte', 'Neutrophil'), number = 5, min.count = 1)
+```
+
+or Check the  distribution of the marker directly.
+
+```{r, fig.width=7.5, fig.height=7}
+plotMarkerDistribution(mkr = "CD68")
+```

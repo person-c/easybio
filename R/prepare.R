@@ -19,7 +19,7 @@
 #' @importFrom utils download.file
 #' @import data.table
 #' @export
-download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_regex = NULL) {
+prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_regex = NULL) {
   . <- ID <- symbol <- gene_assignment <- NULL
 
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
@@ -76,7 +76,7 @@ download_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_
 #' This function prepares TCGA data for downstream analyses such as differential expression analysis with `limma` or survival analysis.
 #' It extracts and processes the necessary information from the TCGA data object, separating tumor and non-tumor samples.
 #'
-#' @param data A `SummarizedExperiment` object containing TCGA data, typically obtained from TCGA Biolinks.
+#' @param data A `SummarizedExperiment` object containing TCGA data, typically obtained from R package `TCGABiolinks`.
 #'
 #' @return A list.
 #' @import data.table
@@ -91,7 +91,11 @@ prepare_tcga <- function(data) {
 
   # tumor smaple data
   tumorIdx <- sampleInfo[["sample_type"]] %ilike% "Tumor"
-  expr2 <- expr[, tumorIdx]
+
+  expr2 <- as.data.frame(data@assays@data$fpkm_unstrand, row.names = rownames(featuresInfo))
+  colnames(expr2) <- rownames(sampleInfo)
+  expr2 <- expr2[, tumorIdx]
+
   sampleInfo2 <- sampleInfo[, tumorIdx]
 
   structure(list(
@@ -101,7 +105,7 @@ prepare_tcga <- function(data) {
       sampleInfo = sampleInfo
     ),
     tumor = list(
-      exprCount = expr2,
+      exprFpkm = expr2,
       featuresInfo = featuresInfo,
       sampleInfo = sampleInfo2
     )

@@ -2,7 +2,7 @@ Package: easybio
 Title: Single-Cell Annotation Using 'CellMarker2.0' Database
 Version: 1.0
 Authors@R: 
-    person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"))
+    person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0004-8315-5899"))
 Description: Comprehensive interface for single-cell annotation with 'CellMarker2.0'<http://bio-bigdata.hrbmu.edu.cn/CellMarker/>. Streamlines biological label assignment in RNA seq data, featuring efficient querying and visualization. 
 URL: https://github.com/person-c/easybio
 BugReports: https://github.com/person-c/easybio/issues
@@ -13,7 +13,8 @@ RoxygenNote: 7.3.2
 Imports: 
     data.table,
     ggplot2,
-    limma
+    limma,
+    R6
 Depends: 
     R (>= 2.10)
 LazyData: true

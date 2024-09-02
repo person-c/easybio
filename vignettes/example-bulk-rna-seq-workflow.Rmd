@@ -1,0 +1,128 @@
+---
+title: "Example Workflow for Bulk RNA-Seq Analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{example-bulk-rna-seq-workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(easybio)
+```
+
+## Limma voom workflow
+
+####  Prepare data
+
+To download and process the GEO dataset, please utilize the `prepare_geo` function. This function will yield a list containing count data, sample information, and gene data.
+
+```r
+x <- prepare_geo('gseid')
+```
+
+To prepare the TCGA RNA seq data from R package `TCGAbiolinks`, use function `prepare_tcga()`. This function will yield a list containing count data for all samples, and unstrand fpkm data for tumor samples with information of samples and features.
+
+
+#### An example workflow for TCGA CHOL project
+
+Three functions have been crafted for this workflow.
+
+```r
+library(TCGAbiolinks)
+library(SummarizedExperiment)
+
+query <- GDCquery(
+  project = "TCGA-CHOL",
+  data.category = "Transcriptome Profiling",
+  data.type = "Gene Expression Quantification"
+)
+GDCdownload(query = query)
+data <- GDCprepare(query = query)
+
+lt <- prepare_tcga(data)
+lt$all$sampleInfo[["group"]] <- fifelse(lt$all$sampleInfo$sample_type %ilike% "Tumor", "Tumor", "Normal")
+
+# limma workflow
+x <- dgeList(lt$all$exprCount, lt$all$sampleInfo, lt$all$featuresInfo)
+x <- dprocess_dgeList(x, "group", 10)
+efit <- limmaFit(x, "group")
+
+CHOL.DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
+```
+
+For a comprehensive understanding of this process, refer to the article [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
+
+Subsequently, visualize the differentially expressed genes using the `plotVolcano` function.
+
+```r
+# Consult the help page to familiarize yourself with the  extra arguments.
+plotVolcano(data = CHOL.DEGs, x = logFC, y = -log10(adj.P.Val))
+?plotVolcano
+```
+
+## Pathway Enrich
+
+You can  download the package `r4msigdb` to get the MSigDB gene set to run pathway enrichment analysis such as GO, KEGG analysis.
+
+```r
+devtools::install("person-c/r4msigdb")
+```
+
+To know more details about this package, please see [r4msigdb](https://github.com/person-c/r4msigdb). To get GO pathways in MSigDB:
+
+```r
+pathwayGO <- r4msigdb::query(species = "Hs", pathway = "^GO(MF)|(BP)|(CC)_")
+```
+
+#### Gene Set Enrichment Analysis (GSEA)
+
+The core function is derived from the `fgsea`` package, with slight modifications applied to enhance its visual appeal.
+
+```{r}
+library(fgsea)
+data(examplePathways)
+data(exampleRanks)
+```
+
+Execute the fgsea analysis.
+
+```{r,fig.width=4, fig.height=2.7}
+fgseaRes <- fgsea(pathways = examplePathways, 
+                  stats    = exampleRanks,
+                  minSize  = 15,
+                  maxSize  = 500)
+plotGSEA(
+  fgseaRes, 
+  pathways = examplePathways, 
+  pwayname = "5991130_Programmed_Cell_Death", 
+  stats = exampleRanks, 
+  save = FALSE
+)
+```
+
+To achieve optimal visualization, the plot is saved for review.
+
+#### Over-Representation Analysis
+
+Perform the Over-Representation Analysis (ORA).
+
+```{r}
+foraRes <- fora(examplePathways, genes=tail(names(exampleRanks), 200), universe=names(exampleRanks))
+```
+
+Examine the results.
+
+```{r, fig.width=8, fig.height=2}
+# Adjust the pathway position on the y-axis based on the adjusted p-value (padj)
+foraRes[, pathway := factor(pathway, levels = rev(pathway))]
+
+plotORA(data = foraRes[1:8], x = -log10(padj), y = pathway, size = overlap, fill = 'constant')
+```

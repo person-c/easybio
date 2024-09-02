@@ -6,7 +6,8 @@
 #' contour plots, scatter plots with ellipses, donut plots, and pie charts. Each method is designed
 #' to map data to specific aesthetics and apply additional customizations.
 #'
-#' @import ggplot2
+#' @import ggplot2 R6
+#' @return The `R6` class [Artist].
 #' @export
 Artist <- R6::R6Class("Artist",
   public = list(

@@ -7,7 +7,7 @@
 prepare_tcga(data)
 }
 \arguments{
-\item{data}{A \code{SummarizedExperiment} object containing TCGA data, typically obtained from TCGA Biolinks.}
+\item{data}{A \code{SummarizedExperiment} object containing TCGA data, typically obtained from R package \code{TCGABiolinks}.}
 }
 \value{
 A list.
