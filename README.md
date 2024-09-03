@@ -20,5 +20,6 @@ To know how to use this package, please see the
 [wiki](https://github.com/person-c/easybio/wiki) or run:
 
 ``` r
-vignette(topic = 'intro', package = 'easybio')
+vignette(topic = "example-bulk-rna-seq-workflow", package = 'easybio')
+vignette(topic = "example-single-cell-annotation", package = "easybio")
 ```

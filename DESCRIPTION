@@ -1,9 +1,9 @@
 Package: easybio
-Title: Single-Cell Annotation Using 'CellMarker2.0' Database
+Title: Comprehensive Single-Cell Annotation and Transcriptomic Analysis Toolkit
 Version: 1.0
 Authors@R: 
     person("Wei", "Cui", email = "m2c.w@outlook.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0004-8315-5899"))
-Description: Comprehensive interface for single-cell annotation with 'CellMarker2.0'<http://bio-bigdata.hrbmu.edu.cn/CellMarker/>. Streamlines biological label assignment in RNA seq data, featuring efficient querying and visualization. 
+Description: Provides a comprehensive toolkit for single-cell annotation with the 'CellMarker2.0' database <http://bio-bigdata.hrbmu.edu.cn/CellMarker/>. Streamlines biological label assignment in single-cell RNA-seq data and facilitates transcriptomic analysis, including preparation of TCGA and GEO datasets, differential expression analysis and visualization of enrichment analysis results. Additional utility functions support various bioinformatics workflows.
 URL: https://github.com/person-c/easybio
 BugReports: https://github.com/person-c/easybio/issues
 License: MIT + file LICENSE
