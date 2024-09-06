@@ -22,5 +22,4 @@ uniprot_id_map(
   from = "UniProtKB_AC-ID",
   to = "UniRef90"
 )
-
 }
