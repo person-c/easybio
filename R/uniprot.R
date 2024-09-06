@@ -1,9 +1,14 @@
 .isJobReady <- function(jobId) {
   url <- paste0("https://rest.uniprot.org/idmapping/status/", jobId)
-  status <- httr2::request(url) |>
-    httr2::req_retry(max_tries = 10, max_seconds = 60) |>
-    httr2::req_perform() |>
-    httr2::resp_body_json()
+  status <- tryCatch(
+    {
+      httr2::request(url) |>
+        httr2::req_retry(max_tries = 10, max_seconds = 60) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json()
+    },
+    error = \(e) list(messages = "error")
+  )
 
   if (any(!is.null(status[["results"]]), !is.null(status[["failedIds"]]))) {
     message("Job completed!")
@@ -38,12 +43,6 @@
 #' @import data.table
 #' @export
 #' @examples
-#' uniprot_id_map(
-#'   ids = "P21802,P12345",
-#'   from = "UniProtKB_AC-ID",
-#'   to = "UniRef90"
-#' )
-#'
 uniprot_id_map <- function(...) {
   submission <- httr2::request("https://rest.uniprot.org/idmapping/run") |>
     httr2::req_body_form(...) |>
