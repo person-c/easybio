@@ -31,6 +31,12 @@ pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 data.table::fwrite(pbmc.markers, "pbmc.markers.csv")
 
 markerTop50Matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
+head(markerTop50Matched)
+
+cl2cell <- markerTop50Matched[, head(.SD, 1), by = .(cluster)]
+cl2cell <- setNames(cl2cell[["cell_name"]], cl2cell[["cluster"]])
+cl2cell
+
 cls <- list(
   c(1, 5, 7),
   c(8),
@@ -38,7 +44,9 @@ cls <- list(
   c(0, 2, 4, 6)
 )
 
+check_marker(pbmc.markers, 50, spc = "Human", cl = c(1, 5, 7))
 dotplotList <- plotSeuratDot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
+ls(dotplotList)
 
 cl2cell <- finsert(
   expression(
