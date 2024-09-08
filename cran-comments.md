@@ -2,9 +2,12 @@
 
 0 errors | 0 warnings | 0 note
 
-* This is a new release.
 
+# easybio 1.0.1(patch)
 
+* Added a `NEWS.md` file to track changes to the package.
+* Avoid error of function `uniprot_id_map()` in latest mac in examples.
+* update vignettes.
 
 ## 20240903 
 
