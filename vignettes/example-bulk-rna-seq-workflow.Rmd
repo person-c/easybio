@@ -14,26 +14,24 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(easybio)
-```
 
-## Limma voom workflow
+## Limma-voom workflow
 
 ####  Prepare data
 
-To download and process the GEO dataset, please utilize the `prepare_geo` function. This function will yield a list containing count data, sample information, and gene data.
+To download and process GEO datasets, use the `prepare_geo()` function. This will generate a list containing count data, sample information, and gene data.
 
-```r
-x <- prepare_geo('gseid')
+```{r}
+library(easybio)
+# x <- prepare_geo('gseid')
 ```
 
-To prepare the TCGA RNA seq data from R package `TCGAbiolinks`, use function `prepare_tcga()`. This function will yield a list containing count data for all samples, and unstrand fpkm data for tumor samples with information of samples and features.
+For preparing TCGA RNA-Seq data using the `TCGAbiolinks`` package, use the `prepare_tcga()` function. This will return a list containing count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
 
 
-#### An example workflow for TCGA CHOL project
+#### Example Workflow: TCGA CHOL Project
 
-Three functions have been crafted for this workflow.
+Three functions are designed for this workflow:
 
 ```r
 library(TCGAbiolinks)
@@ -58,19 +56,19 @@ efit <- limmaFit(x, "group")
 CHOL.DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
 
-For a comprehensive understanding of this process, refer to the article [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
+For a detailed overview of the Limma workflow, refer to the article: [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
 
-Subsequently, visualize the differentially expressed genes using the `plotVolcano` function.
+Next, visualize the differentially expressed genes using the `plotVolcano()` function.
 
 ```r
-# Consult the help page to familiarize yourself with the  extra arguments.
+# View the help page for additional arguments.
 plotVolcano(data = CHOL.DEGs, x = logFC, y = -log10(adj.P.Val))
 ?plotVolcano
 ```
 
-## Pathway Enrich
+## Pathway Enrichment Analysis
 
-You can  download the package `r4msigdb` to get the MSigDB gene set to run pathway enrichment analysis such as GO, KEGG analysis.
+To perform pathway enrichment analysis such as GO and KEGG, download the `r4msigdb` package to access the MSigDB gene set.
 
 ```r
 devtools::install("person-c/r4msigdb")
@@ -84,7 +82,7 @@ pathwayGO <- r4msigdb::query(species = "Hs", pathway = "^GO(MF)|(BP)|(CC)_")
 
 #### Gene Set Enrichment Analysis (GSEA)
 
-The core function is derived from the `fgsea`` package, with slight modifications applied to enhance its visual appeal.
+The core  function is adapted from the `fgsea` package with minor visual enhancements.
 
 ```{r}
 library(fgsea)
@@ -92,7 +90,7 @@ data(examplePathways)
 data(exampleRanks)
 ```
 
-Execute the fgsea analysis.
+Run the GSEA analysis:
 
 ```{r,fig.width=4, fig.height=2.7}
 fgseaRes <- fgsea(pathways = examplePathways, 
@@ -108,17 +106,15 @@ plotGSEA(
 )
 ```
 
-To achieve optimal visualization, the plot is saved for review.
-
 #### Over-Representation Analysis
 
-Perform the Over-Representation Analysis (ORA).
+Conduct Over-Representation Analysis (ORA) using the following approach:
 
 ```{r}
 foraRes <- fora(examplePathways, genes=tail(names(exampleRanks), 200), universe=names(exampleRanks))
 ```
 
-Examine the results.
+Display the results:
 
 ```{r, fig.width=8, fig.height=2}
 # Adjust the pathway position on the y-axis based on the adjusted p-value (padj)

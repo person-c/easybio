@@ -2,7 +2,7 @@
 title: "Example Workflow for Single Cell Annotation Using CellMarker2.0"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteIndexEntry{example-single-cell-annotation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,14 +15,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(easybio)
+You can view an example script for this workflow by running the following command
+
+```r
+file.show(system.file(package = 'easybio', 'example-single-cell.R'))
 ```
 
 
-An example script  for this workflow can be finded with `system.file(package = 'easybio', 'example-single-cell.R') |> file.show()`
+The example marker data from pbmc3k datasets:
 
 ```{r}
+library(easybio)
 head(pbmc.markers)
 ```
 
@@ -34,12 +37,13 @@ head(pbmc.markers)
 plotPossibleCell(marker)
 ```
 
-Behind this function:
+Explanation:
 
-- First, it matches the top 50 genes in each cluster with the CellMarker2 database.
-- Next, it calculates the cell count for each matched cell type and prints the result to help you identify the possible cell type for the cluster.
+- The function matches the top 50 genes in each cluster with the CellMarker2 database.
 
-You can just use the top matched cell as the annotation:
+- It then calculates the cell count for each matched cell type and prints the result, helping you identify possible cell types for the cluster.
+
+To annotate, you can simply use the top-matched cell type:
 
 ```{r}
 cl2cell <- marker[, head(.SD, 1), by = .(cluster)]
@@ -59,12 +63,13 @@ cls <- list(
 dotplotList <- plotSeuratDot(seuratObject, cls, marker = marker, n = 50, spc = 'Human', topcellN = 2)
 ```
 
-Behind this function:
+Explanation:
 
-- It searches for potential cell markers from the result of matchCellMarker2.
-- Next, it invokes `Seurat::DotPlot` to generate the corresponding dot plot. The resulting plot will be saved in the directory ‘tmp_check_marker’.
+- This function searches for potential cell markers from the result of `matchCellMarker2`.
 
-Construct the named vector for your annotation:
+- It then uses `Seurat::DotPlot` to generate corresponding dot plots for similar clusters.
+
+Construct a named vector for  annotation:
 
 ```{r}
 cl2cell <- finsert(
@@ -80,13 +85,13 @@ cl2cell <- finsert(
 cl2cell
 ```
 
-You can also directly obtain markers:
+You can also directly retrieve markers:
 
 ```{r}
 get_marker(spc = 'Human', cell = c('Monocyte', 'Neutrophil'), number = 5, min.count = 1)
 ```
 
-or Check the  distribution of the marker directly.
+or Check the  distribution of the marker directly:
 
 ```{r, fig.width=7.5, fig.height=7}
 plotMarkerDistribution(mkr = "CD68")
