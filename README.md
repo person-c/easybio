@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/easybio)](https://CRAN.R-project.org/package=easybio)
 <!-- badges: end -->
 
 You can install the development version of easybio from
