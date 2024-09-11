@@ -9,7 +9,6 @@
 #' @param dir A character string specifying the directory where files should be downloaded. Default is the current working directory (`"."`).
 #' @param combine A logical value indicating whether to combine multiple probes into a single gene symbol. Default is `TRUE`.
 #' @param method A character string specifying the method to use for combining probes into a single gene symbol. Options are `"max"` (take the maximum value) or `"mean"` (compute the average). Default is `"max"`.
-#' @param filter_regex A character string specifying a regular expression to filter the supplementary files for download. Default is `NULL`, which means no filtering is applied.
 #'
 #' @return A list containing:
 #' \item{data}{A data frame of the expression matrix.}
@@ -19,7 +18,7 @@
 #' @importFrom utils download.file
 #' @import data.table
 #' @export
-prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_regex = NULL) {
+prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   . <- ID <- symbol <- gene_assignment <- NULL
 
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
@@ -29,20 +28,29 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_r
 
 
   if (nrow(exp) == 0L) {
-    warning("No expression data is retrieved; try to download the supplementary file")
-    GEOquery::getGEOSuppFiles(geo)
+    warning("No expression data is retrieved; try to check the supplementary file")
+    # code from GEOquery::getGEOSuppFiles()
+    stub <- gsub("\\d{1,3}$", "nnn", geo, perl = TRUE)
+    url <- sprintf(
+      "https://ftp.ncbi.nlm.nih.gov/geo/series/%s/%s/suppl/",
+      stub, geo
+    )
 
-    suppfiles <- list.files(geo, full.names = TRUE)
-    fIdx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = suppfiles, ignore.case = TRUE)
+    fnames <- try(GEOquery:::getDirListing(url), silent = TRUE)
+    fIdx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = fnames, ignore.case = TRUE)
 
-    if (length(fIdx) == 0L) {
-      message(sprintf("No potential expression data is detected in supplementary files; Please the directory %s"), geo)
+    if (inherits(fnames, "try-error") && length(fIdx) == 0L) {
+      message(sprintf("No potential expression data is detected in supplementary files"))
+      message("Check URL manually if in doubt")
+      message(url)
+
       return(eset[[1]]@phenoData@data)
     }
 
+    message("detect potential expression data: \n", paste0(fnames[fIdx], "\n"))
     message("read potential expression data in supplementary files...")
-    res <- lapply(fIdx, \(x) fread(fIdx))
-    names(res) <- make.names(fIdx)
+    res <- lapply(fIdx, \(x) fread(paste0(url, fnames[[fIdx]])))
+    names(res) <- make.names(fnames[[fIdx]])
     res[["sampleInfo"]] <- eset[[1]]@phenoData@data
 
     return(res)

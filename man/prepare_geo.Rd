@@ -4,13 +4,7 @@
 \alias{prepare_geo}
 \title{Download and Process GEO Data}
 \usage{
-prepare_geo(
-  geo,
-  dir = ".",
-  combine = TRUE,
-  method = "max",
-  filter_regex = NULL
-)
+prepare_geo(geo, dir = ".", combine = TRUE, method = "max")
 }
 \arguments{
 \item{geo}{A character string specifying the GEO Series ID (e.g., "GSE12345").}
@@ -20,8 +14,6 @@ prepare_geo(
 \item{combine}{A logical value indicating whether to combine multiple probes into a single gene symbol. Default is \code{TRUE}.}
 
 \item{method}{A character string specifying the method to use for combining probes into a single gene symbol. Options are \code{"max"} (take the maximum value) or \code{"mean"} (compute the average). Default is \code{"max"}.}
-
-\item{filter_regex}{A character string specifying a regular expression to filter the supplementary files for download. Default is \code{NULL}, which means no filtering is applied.}
 }
 \value{
 A list containing:
