@@ -23,12 +23,13 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_r
   . <- ID <- symbol <- gene_assignment <- NULL
 
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
-  if (length(eset) > 1) warning("There are more than one geo dataset;only the first one extracted")
+  if (length(eset) > 1) warning("There are more than one geo dataset;only the first one will be extracted")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)
   pd <- eset[[1]]@phenoData@data
 
 
   if (nrow(exp) == 0L) {
+    warning("No expression data is retrieved; try to download the supplementary file")
     GEOquery::getGEOSuppFiles(geo)
     return(eset[[1]]@phenoData@data)
   }
