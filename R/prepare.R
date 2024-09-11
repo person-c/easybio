@@ -31,7 +31,21 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_r
   if (nrow(exp) == 0L) {
     warning("No expression data is retrieved; try to download the supplementary file")
     GEOquery::getGEOSuppFiles(geo)
-    return(eset[[1]]@phenoData@data)
+
+    suppfiles <- list.files(geo, full.names = TRUE)
+    fIdx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = suppfiles, ignore.case = TRUE)
+
+    if (length(fIdx) == 0L) {
+      message(sprintf("No potential expression data is detected in supplementary files; Please the directory %s"), geo)
+      return(eset[[1]]@phenoData@data)
+    }
+
+    message("read potential expression data in supplementary files...")
+    res <- lapply(fIdx, \(x) fread(fIdx))
+    names(res) <- make.names(fIdx)
+    res[["sampleInfo"]] <- eset[[1]]@phenoData@data
+
+    return(res)
   }
 
   gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = ".")
