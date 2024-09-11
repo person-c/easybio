@@ -36,6 +36,10 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max", filter_r
   gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = ".")
   gpl <- GEOquery::Table(gpl)
   setDT(gpl)
+  if (!is.character(gpl[["ID"]])) {
+    warning("The gpl annotation data's ID column is not character; Please check the gpl data carefully!")
+    gpl[, let(ID = as.character(ID))]
+  }
   gpl <- gpl[.(rownames(exp)), on = .(ID)]
 
   if (!combine) {
