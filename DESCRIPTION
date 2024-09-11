@@ -28,7 +28,8 @@ Suggests:
     GEOquery,
     fgsea,
     edgeR,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    xml2
 biocViews: limma, GEOquery, edgeR, fgsea
 Language: en-US
 VignetteBuilder: knitr

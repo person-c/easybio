@@ -36,7 +36,15 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
       stub, geo
     )
 
-    fnames <- try(GEOquery:::getDirListing(url), silent = TRUE)
+    fnames <- try(
+      {
+        a <- xml2::read_html(url)
+        grep("^G", xml2::xml_text(xml2::xml_find_all(a, "//a/@href")),
+          value = TRUE
+        )
+      },
+      silent = TRUE
+    )
     fIdx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = fnames, ignore.case = TRUE)
 
     if (inherits(fnames, "try-error") && length(fIdx) == 0L) {
