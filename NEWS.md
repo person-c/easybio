@@ -1,19 +1,19 @@
-# Future
+# Future Developments
 
-* It seems that there is no need to use `GEOquery` package to prepare GEO series data...maybe I can remove this dependency.
-* The `Artist` should have a default field `data` to show a data with different method.
-* All `plot*` function should have more user-customized arguments.
-* A new s3 class like `dgeList`, but will more customized and faster.
+1. It appears that the GEOquery package may not be necessary for preparing GEO series data. We might consider removing this dependency.
+2. The Artist class should have a default data field to display data using various methods.
+3. All plot* functions should be enhanced to allow for greater user customization.
+4. Development of a new S3 class similar to dgeList, which would offer more customization and improved performance.
 
-# Developed
+# Recently Developed Features
 
-* `prepare_geo`: 
-  
-1. convert non-character ID column in gpl data to character to avoid the ID column is like numeric 1, 2, 3, 4...
-2. read potential expression data from supplementary files...
+`prepare_geo` function: 
 
-# easybio 1.0.1
+1. Converts non-character ID columns in gpl data to character to prevent issues with IDs being read as numeric (e.g., 1, 2, 3, 4…).
+2. Reads potential expression data from supplementary files…
 
-* Added a `NEWS.md` file to track changes to the package.
-* Avoid error of function `uniprot_id_map()` in latest mac in examples.
-* update vignettes.
+# easybio 1.0.1 Release Notes
+
+1. Added a NEWS.md file to document changes and updates to the package.
+2. Fixed an error in the uniprot_id_map() function that occurred on the latest macOS in example usage.
+3. Updated vignettes for optimization.

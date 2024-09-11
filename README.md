@@ -24,3 +24,6 @@ To know how to use this package, please see the
 vignette(topic = "example-bulk-rna-seq-workflow", package = 'easybio')
 vignette(topic = "example-single-cell-annotation", package = "easybio")
 ```
+
+To learn The difference between development version and cran version,
+see [NEWS](./NEWS.md)
