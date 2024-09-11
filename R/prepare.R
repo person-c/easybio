@@ -49,7 +49,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
 
     message("detect potential expression data: \n", paste0(fnames[fIdx], "\n"))
     message("read potential expression data in supplementary files...")
-    res <- lapply(fIdx, \(x) fread(paste0(url, fnames[[fIdx]])))
+    res <- lapply(fIdx, \(idx) fread(paste0(url, fnames[[idx]])))
     names(res) <- make.names(fnames[[fIdx]])
     res[["sampleInfo"]] <- eset[[1]]@phenoData@data
 
