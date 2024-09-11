@@ -23,8 +23,7 @@ knitr::opts_chunk$set(
 You can install the development version of easybio from [GitHub](https://github.com/) with:
 
 ```{r, eval = FALSE}
-# install.packages("BiocManger")
-BiocManger::install("person-c/easybio")
+devtools::install("person-c/easybio", build_vignettes = TRUE)
 ```
 
 To know how to use this package, please see the [wiki](https://github.com/person-c/easybio/wiki) or run:

@@ -14,8 +14,7 @@ You can install the development version of easybio from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("BiocManger")
-BiocManger::install("person-c/easybio")
+devtools::install("person-c/easybio", build_vignettes = TRUE)
 ```
 
 To know how to use this package, please see the

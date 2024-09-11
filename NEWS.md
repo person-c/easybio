@@ -1,4 +1,11 @@
-# Development
+# Future
+
+* It seems that there is no need to use `GEOquery` package to prepare GEO series data...maybe I can remove this dependency.
+* The `Artist` should have a default field `data` to show a data with different method.
+* All `plot*` function should have more user-customized arguments.
+* A new s3 class like `dgeList`, but will more customized and faster.
+
+# Developed
 
 * `prepare_geo`: 
   
