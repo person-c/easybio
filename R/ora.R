@@ -127,6 +127,9 @@ plotGSEA <- function(fgseaRes, pathways, pwayname, stats, save = FALSE) {
 #' @return ggplot2 object.
 #' @export
 plotORA <- function(data, x, y, size, fill, flip = FALSE) {
+  isC <- try(is.character(fill), silent = TRUE)
+  if (inherits(isC, "try-error")) isC <- FALSE
+
   p <- ggplot(
     data,
     aes(
@@ -134,7 +137,7 @@ plotORA <- function(data, x, y, size, fill, flip = FALSE) {
       y = {{ y }}
     )
   ) +
-    geom_col(aes(fill = {{ fill }}), width = 0.5, show.legend = !is.character(fill)) +
+    geom_col(aes(fill = {{ fill }}), width = 0.5, show.legend = !isC) +
     geom_point(aes(size = {{ size }})) +
     scale_x_continuous(expand = expansion(add = c(0, 1))) +
     scale_fill_brewer(palette = "Paired") +
