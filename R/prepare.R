@@ -28,7 +28,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
 
 
   if (nrow(exp) == 0L) {
-    warning("No expression data is retrieved; try to check the supplementary file")
+    warning("No expression data is retrieved in series matrix; try to check the supplementary file")
     # code from GEOquery::getGEOSuppFiles()
     stub <- gsub("\\d{1,3}$", "nnn", geo, perl = TRUE)
     url <- sprintf(

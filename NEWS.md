@@ -15,6 +15,10 @@
 `plotORA` function:
 
 1. Fix bug when you map a variable to fill aesthetic parameters, the plot doesn't show legend.
+
+`get_marker` function:
+
+1. add extra messages when you search  undefined cells in database.
   
 # easybio 1.0.1 Release Notes
 

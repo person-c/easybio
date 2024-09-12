@@ -97,6 +97,23 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
   . <- NULL
   species <- cell_name <- N <- marker <- NULL
 
+  is_exists <- cell %chin% unique(cellMarker2[["cell_name"]])
+
+
+  sapply(cell[!is_exists], \(x) {
+    idx <- grep(
+      gsub("\\s+", "", x),
+      gsub("\\s+", "", unique(cellMarker2[["cell_name"]])),
+      ignore.case = TRUE
+    )
+    psblCell <- paste0(unique(cellMarker2[["cell_name"]])[idx], collapse = "\n")
+    message(sprintf("%s doesn't exist in the CellMarker2 database; Maybe you means?\n%s\n", x, psblCell))
+  })
+
+  if (all(!is_exists)) {
+    return(NULL)
+  }
+
   marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)]
   marker <- marker[, .N, by = .(cell_name, marker)]
   marker <- marker[N > min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
