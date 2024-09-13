@@ -121,6 +121,7 @@ prepare_tcga <- function(data) {
   sampleInfo[["OS"]] <- fcoalesce(sampleInfo[["days_to_death"]], sampleInfo[["days_to_last_follow_up"]])
 
   featuresInfo <- as.data.frame(data@rowRanges)
+  rownames(featuresInfo) <- data@rowRanges@ranges@NAMES
   expr <- as.data.frame(data@assays@data$unstranded, row.names = rownames(featuresInfo))
   colnames(expr) <- rownames(sampleInfo)
 
@@ -131,7 +132,7 @@ prepare_tcga <- function(data) {
   colnames(expr2) <- rownames(sampleInfo)
   expr2 <- expr2[, tumorIdx]
 
-  sampleInfo2 <- sampleInfo[, tumorIdx]
+  sampleInfo2 <- sampleInfo[tumorIdx, ]
 
   structure(list(
     all = list(

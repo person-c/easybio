@@ -6,11 +6,73 @@
 #' contour plots, scatter plots with ellipses, donut plots, and pie charts. Each method is designed
 #' to map data to specific aesthetics and apply additional customizations.
 #'
-#' @import ggplot2 R6
+#' @import ggplot2 R6 data.table
 #' @return The `R6` class [Artist].
 #' @export
+#' @examples
+#' cying <- Artist$new(data = mtcars)
+#' cying$plot_scatter(x = wt, y = disp)
+#' cying$plot_box(x = as.character(carb), y = disp)
+#' cying$get_all_result()
+#'
 Artist <- R6::R6Class("Artist",
   public = list(
+    #' @field data Stores the dataset used for plotting.
+    data = NULL,
+    #' @field command recode the command.
+    command = list(),
+    #' @field result record the plot.
+    result = list(),
+    #' @description
+    #' Initializes the Artist class with an optional dataset.
+    #'
+    #' @param data A data frame  containing the dataset to be used for plotting. Default is `NULL`.
+    #' @return An instance of the Artist class.
+    initialize = function(data = NULL) {
+      message("Welcome to the amazing Artist's world, enjoy exploring your data in a new way!")
+      self$data <- data
+    },
+    #' @description
+    #' Get all history result
+    #'
+    #' @return a data.table object
+    get_all_result = function() {
+      data.table(command = self$command, result = self$result)
+    },
+    #' @description
+    #' Creates a scatter plot.
+    #'
+    #' @param data A data frame containing the data to be plotted. Default is `self$data`.
+    #' @param x The column name for the x-axis.
+    #' @param y The column name for the y-axis.
+    #' @param ... Additional aesthetic mappings passed to `aes()`.
+    #' @return A ggplot2 scatter plot.
+    plot_scatter = function(data = self$data, x, y, ...) {
+      p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
+        geom_point()
+
+      self$command <- private$add_in_list(self$command, match.call())
+      self$result <- private$add_in_list(self$result, p)
+
+      p
+    },
+    #' @description
+    #' Creates a box plot.
+    #'
+    #' @param data A data frame or tibble containing the data to be plotted. Default is `self$data`.
+    #' @param x The column name for the x-axis.
+    #' @param ... Additional aesthetic mappings passed to `aes()`.
+    #' @return A ggplot2 box plot.
+    plot_box = function(data = self$data, x, ...) {
+      p <- ggplot(data, aes(x = {{ x }}, ...)) +
+        geom_boxplot()
+
+
+      self$command <- private$add_in_list(self$command, match.call())
+      self$result <- private$add_in_list(self$result, p)
+
+      p
+    },
     #' @description
     #' Create a dumbbell plot
     #'
@@ -24,7 +86,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the dumbbell plot.
-    dumbbbell = function(data, x, y, col, ...) {
+    dumbbbell = function(data = self$data, x, y, col, ...) {
       ggplot(data, aes(x = {{ x }}, y = {{ y }}), ...) +
         geom_line() +
         geom_point(aes(col = {{ col }}), size = 3)
@@ -44,7 +106,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the bubble plot.
-    bubble = function(data, x, y, size, col, ...) {
+    bubble = function(data = self$data, x, y, size, col, ...) {
       ggplot(
         data,
         aes(
@@ -70,7 +132,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the divergence bar chart.
-    barchart_divergence = function(data, group, y, fill, ...) {
+    barchart_divergence = function(data = self$data, group, y, fill, ...) {
       ggplot(
         data,
         aes(
@@ -117,7 +179,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the lollipop plot.
-    lollipop = function(data, x, y, ...) {
+    lollipop = function(data = self$data, x, y, ...) {
       ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_segment(aes(x = {{ x }}, xend = {{ x }}, y = 0, yend = {{ y }}),
           col = "gray", lwd = 1
@@ -141,7 +203,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the contour plot.
-    contour = function(data, x, y, ...) {
+    contour = function(data = self$data, x, y, ...) {
       ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_point() +
         geom_density_2d_filled(alpha = 0.4) +
@@ -161,7 +223,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the scatter plot with ellipses.
-    scatter_ellipses = function(data, x, y, col, ...) {
+    scatter_ellipses = function(data = self$data, x, y, col, ...) {
       ggplot(data, aes(
         x = {{ x }},
         y = {{ y }}, col = {{ col }}, ...
@@ -187,7 +249,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the donut plot.
-    donut = function(data, x, y, fill, ...) {
+    donut = function(data = self$data, x, y, fill, ...) {
       hsize <- 3
       ggplot(data, aes(
         x = {{ x }}, y = {{ y }},
@@ -220,7 +282,7 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return A ggplot object representing the pie chart.
-    pie = function(data, y, fill, ...) {
+    pie = function(data = self$data, y, fill, ...) {
       ggplot(
         data,
         aes(
@@ -242,6 +304,12 @@ Artist <- R6::R6Class("Artist",
           legend.position = "none",
           panel.background = element_rect(fill = "white")
         )
+    }
+  ),
+  private = list(
+    add_in_list = function(x = list(), element) {
+      x[[length(x) + 1]] <- element
+      x
     }
   )
 )
