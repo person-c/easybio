@@ -47,7 +47,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
     )
     fIdx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = fnames, ignore.case = TRUE)
 
-    if (inherits(fnames, "try-error") && length(fIdx) == 0L) {
+    if (inherits(fnames, "try-error") || length(fIdx) == 0L) {
       message(sprintf("No potential expression data is detected in supplementary files"))
       message("Check URL manually if in doubt")
       message(url)
