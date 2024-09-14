@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = 'center'
 )
 ```
 
@@ -28,14 +29,14 @@ library(easybio)
 
 For preparing TCGA RNA-Seq data using the `TCGAbiolinks`` package, use the `prepare_tcga()` function. This will return a list containing count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
 
-
 #### Example Workflow: TCGA CHOL Project
 
-Three functions are designed for this workflow:
+For a detailed overview of the Limma workflow, refer to the article: [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3). Three functions are designed for this workflow:
 
 ```r
 library(TCGAbiolinks)
-library(SummarizedExperiment)
+library(easybio)
+library(data.table)
 
 query <- GDCquery(
   project = "TCGA-CHOL",
@@ -48,41 +49,74 @@ data <- GDCprepare(query = query)
 lt <- prepare_tcga(data)
 lt$all$sampleInfo[["group"]] <- fifelse(lt$all$sampleInfo$sample_type %ilike% "Tumor", "Tumor", "Normal")
 
-# limma workflow
+# limma-voom workflow
 x <- dgeList(lt$all$exprCount, lt$all$sampleInfo, lt$all$featuresInfo)
 x <- dprocess_dgeList(x, "group", 10)
 efit <- limmaFit(x, "group")
+get_attr(efit, "contrast")
 
-CHOL.DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
+CHOL_DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
-
-For a detailed overview of the Limma workflow, refer to the article: [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3).
-
-Next, visualize the differentially expressed genes using the `plotVolcano()` function.
+Set the criteria:
 
 ```r
-# View the help page for additional arguments.
-plotVolcano(data = CHOL.DEGs, x = logFC, y = -log10(adj.P.Val))
-?plotVolcano
+CHOL_DEGs[, let(
+  tumor_vs_normal = fcase(
+    adj.P.Val < 0.05 & logFC > 2, "Up",
+    adj.P.Val < 0.05 & logFC < -2, "Down",
+    default = "Not-Significant"
+  )
+)]
+setDT(CHOL_DEGs, keep.rownames = "rid")
+head(CHOL_DEGs)
 ```
 
-## Pathway Enrichment Analysis
+Visualization of DEGs:
 
-To perform pathway enrichment analysis such as GO and KEGG, download the `r4msigdb` package to access the MSigDB gene set.
-
-```r
-devtools::install("person-c/r4msigdb")
+```{r, fig.dim=c(5, 3)}
+data(CHOL_DEGs)
+plotVolcano(
+  data = CHOL_DEGs,
+  x = logFC,
+  y = -log10(adj.P.Val),
+  color = tumor_vs_normal
+)
 ```
 
-To know more details about this package, please see [r4msigdb](https://github.com/person-c/r4msigdb). To get GO pathways in MSigDB:
+To perform pathway enrichment analysis such as GO and KEGG, download the `r4msigdb` package to access the MSigDB gene set `devtools::install("person-c/r4msigdb")`.
+To know more details about this package, please see [r4msigdb](https://github.com/person-c/r4msigdb).
 
-```r
-pathwayGO <- r4msigdb::query(species = "Hs", pathway = "^GO(MF)|(BP)|(CC)_")
+```{r, fig.dim=c(7, 3)}
+library(data.table)
+# Over Presentation Analysis(ORA)
+pathwayGO <- r4msigdb::query("Hs", pathway = "^GO(BP|CC|MF)_")
+pathwayGO <- setNames(pathwayGO$symbol, pathwayGO$standard_name)
+
+oraRes <- fgsea::fora(
+  pathways = pathwayGO,
+  genes = CHOL_DEGs[.("Up"), gene_name, on = .(tumor_vs_normal)],
+  universe = unique(CHOL_DEGs$gene_name)
+)
+oraRes[, let(
+  category = fcase(
+    pathway %like% "GOBP", "BP",
+    pathway %like% "GOMF", "MF",
+    pathway %like% "GOCC", "CC"
+  )
+)]
+
+oraRes <- oraRes[, .SD[order(padj)], by = .(category)]
+oraRes[, let(pathwayGO = factor(pathway, levels = rev(pathway)))]
+plotORA(
+  data = oraRes[, head(.SD, 5), by = category],
+  x = -log10(padj),
+  y = pathwayGO,
+  size = log10(overlap),
+  fill = category
+)
 ```
 
-#### Gene Set Enrichment Analysis (GSEA)
-
-The core  function is adapted from the `fgsea` package with minor visual enhancements.
+To do GSEA analysis, using `fgsea::fgsea()` function, The core  function is adapted from the `fgsea` package with minor visual enhancements.
 
 ```{r}
 library(fgsea)
@@ -104,21 +138,4 @@ plotGSEA(
   stats = exampleRanks, 
   save = FALSE
 )
-```
-
-#### Over-Representation Analysis
-
-Conduct Over-Representation Analysis (ORA) using the following approach:
-
-```{r}
-foraRes <- fora(examplePathways, genes=tail(names(exampleRanks), 200), universe=names(exampleRanks))
-```
-
-Display the results:
-
-```{r, fig.width=8, fig.height=2}
-# Adjust the pathway position on the y-axis based on the adjusted p-value (padj)
-foraRes[, pathway := factor(pathway, levels = rev(pathway))]
-
-plotORA(data = foraRes[1:8], x = -log10(padj), y = pathway, size = overlap, fill = 'constant')
 ```

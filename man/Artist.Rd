@@ -13,10 +13,16 @@ contour plots, scatter plots with ellipses, donut plots, and pie charts. Each me
 to map data to specific aesthetics and apply additional customizations.
 }
 \examples{
-cying <- Artist$new(data = mtcars)
-cying$plot_scatter(x = wt, y = disp)
-cying$plot_box(x = as.character(carb), y = disp)
-cying$get_all_result()
+library(data.table)
+air <- subset(airquality, Month \%in\% c(5, 6))
+setDT(air)
+cying <- Artist$new(data = air)
+cying$plot_scatter(x = Wind, y = Temp)
+cying$test_wilcox(
+  formula = Ozone ~ Month,
+)
+cying$plot_scatter(x = Wind, y = Temp)
+cying$plot_scatter(f = \(x) x[, z := Wind * Temp], x = Wind, y = z)
 
 }
 \section{Public fields}{
@@ -35,6 +41,7 @@ cying$get_all_result()
 \itemize{
 \item \href{#method-Artist-new}{\code{Artist$new()}}
 \item \href{#method-Artist-get_all_result}{\code{Artist$get_all_result()}}
+\item \href{#method-Artist-test_wilcox}{\code{Artist$test_wilcox()}}
 \item \href{#method-Artist-plot_scatter}{\code{Artist$plot_scatter()}}
 \item \href{#method-Artist-plot_box}{\code{Artist$plot_box()}}
 \item \href{#method-Artist-dumbbbell}{\code{Artist$dumbbbell()}}
@@ -82,12 +89,43 @@ a data.table object
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Artist-test_wilcox"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-test_wilcox}{}}}
+\subsection{Method \code{test_wilcox()}}{
+Conduct wilcox.test
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Artist$test_wilcox(formula, data = self$data, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{formula}}{\code{\link[=wilcox.test]{wilcox.test()}} formula arguments}
+
+\item{\code{data}}{A data frame containing the data to be plotted. Default is \code{self$data}.}
+
+\item{\code{...}}{Additional aesthetic mappings passed to \code{\link[=wilcox.test]{wilcox.test()}}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot2 scatter plot.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-plot_scatter"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-plot_scatter}{}}}
 \subsection{Method \code{plot_scatter()}}{
 Creates a scatter plot.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_scatter(data = self$data, x, y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_scatter(
+  data = self$data,
+  fun = function(x) x,
+  x,
+  y,
+  ...,
+  add = private$is_htest()
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -95,11 +133,15 @@ Creates a scatter plot.
 \describe{
 \item{\code{data}}{A data frame containing the data to be plotted. Default is \code{self$data}.}
 
+\item{\code{fun}}{function to process the \code{self$data}.}
+
 \item{\code{x}}{The column name for the x-axis.}
 
 \item{\code{y}}{The column name for the y-axis.}
 
 \item{\code{...}}{Additional aesthetic mappings passed to \code{aes()}.}
+
+\item{\code{add}}{whether to add the test result.}
 }
 \if{html}{\out{</div>}}
 }

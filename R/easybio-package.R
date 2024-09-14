@@ -10,5 +10,5 @@ NULL
 #'
 #' The data were obtained by the limma-voom workflow
 #' @docType data
-#' @name CHOL.DEGs
+#' @name CHOL_DEGs
 NULL

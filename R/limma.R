@@ -81,7 +81,7 @@ dprocess_dgeList <- function(x, group.column, min.count = 10) {
   title("Normalized data")
   limma::plotMDS(lcpm,
     label = x$samples[[group.column]],
-    col = rleid(x$samples[[group.column]]), dim = c(1, 2)
+    col = as.integer((x$samples[[group.column]])), dim = c(1, 2)
   )
   title("MDS")
 
@@ -105,6 +105,9 @@ dprocess_dgeList <- function(x, group.column, min.count = 10) {
 #' @importFrom limma makeContrasts
 #' @export
 limmaFit <- function(x, group.column) {
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   design <- model.matrix(~ 0 + x$samples[[group.column]])
   colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
 
@@ -113,6 +116,7 @@ limmaFit <- function(x, group.column) {
   all_vs2 <- setNames(as.list(all_vs2), paste0(all_vs[1, ], "vs", all_vs[2, ]))
   contr_matrix <- do.call("makeContrasts", c(all_vs2, levels = list(colnames(design))))
 
+  par(mfrow = c(1, 2))
   v <- limma::voom(x, design, plot = TRUE)
   vfit <- limma::lmFit(v, design)
   vfit <- limma::contrasts.fit(vfit, contrasts = contr_matrix)

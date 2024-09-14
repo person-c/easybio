@@ -10,10 +10,16 @@
 #' @return The `R6` class [Artist].
 #' @export
 #' @examples
-#' cying <- Artist$new(data = mtcars)
-#' cying$plot_scatter(x = wt, y = disp)
-#' cying$plot_box(x = as.character(carb), y = disp)
-#' cying$get_all_result()
+#' library(data.table)
+#' air <- subset(airquality, Month %in% c(5, 6))
+#' setDT(air)
+#' cying <- Artist$new(data = air)
+#' cying$plot_scatter(x = Wind, y = Temp)
+#' cying$test_wilcox(
+#'   formula = Ozone ~ Month,
+#' )
+#' cying$plot_scatter(x = Wind, y = Temp)
+#' cying$plot_scatter(f = \(x) x[, z := Wind * Temp], x = Wind, y = z)
 #'
 Artist <- R6::R6Class("Artist",
   public = list(
@@ -40,20 +46,35 @@ Artist <- R6::R6Class("Artist",
       data.table(command = self$command, result = self$result)
     },
     #' @description
+    #' Conduct wilcox.test
+    #'
+    #' @param formula [wilcox.test()] formula arguments
+    #' @param data A data frame containing the data to be plotted. Default is `self$data`.
+    #' @param ... Additional aesthetic mappings passed to [wilcox.test()].
+    #' @return A ggplot2 scatter plot.
+    test_wilcox = function(formula, data = self$data, ...) {
+      htestRes <- wilcox.test(formula = formula, data = data, ...)
+
+      eval(private$append_htest)
+      htestRes
+    },
+    #' @description
     #' Creates a scatter plot.
     #'
     #' @param data A data frame containing the data to be plotted. Default is `self$data`.
     #' @param x The column name for the x-axis.
     #' @param y The column name for the y-axis.
+    #' @param add whether to add the test result.
+    #' @param fun function to process the `self$data`.
     #' @param ... Additional aesthetic mappings passed to `aes()`.
     #' @return A ggplot2 scatter plot.
-    plot_scatter = function(data = self$data, x, y, ...) {
+    plot_scatter = function(data = self$data, fun = \(x) x, x, y, ..., add = private$is_htest()) {
+      data <- force(fun)(data)
+
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_point()
 
-      self$command <- private$add_in_list(self$command, match.call())
-      self$result <- private$add_in_list(self$result, p)
-
+      eval(private$append_gg)
       p
     },
     #' @description
@@ -307,9 +328,28 @@ Artist <- R6::R6Class("Artist",
     }
   ),
   private = list(
+    append_gg = expression(
+      if (add) p <- p + labs(title = deparse(private$last(self$command))),
+      self$command <- private$add_in_list(self$command, match.call()),
+      self$result <- private$add_in_list(self$result, p)
+    ),
+    append_htest = expression(
+      self$command <- private$add_in_list(self$command, match.call()),
+      self$result <- private$add_in_list(self$result, htestRes)
+    ),
+    last = function(x) {
+      x[[length(x)]]
+    },
     add_in_list = function(x = list(), element) {
       x[[length(x) + 1]] <- element
       x
+    },
+    is_htest = function(x = self$result) {
+      len <- ifelse(
+        length(self$result) == 0L,
+        FALSE,
+        inherits(last(x), "htest")
+      )
     }
   )
 )
