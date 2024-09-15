@@ -255,6 +255,7 @@ plotSeuratDot <- function(srt, cls, ...) {
         )
       ) +
       theme(
+        axis.text = element_text(size = 4),
         plot.background = element_rect(fill = "white"),
         panel.background = element_rect(fill = "white"),
         strip.text = element_text(size = 8, angle = 30, vjust = 0.1, hjust = 0)

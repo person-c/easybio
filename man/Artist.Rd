@@ -7,10 +7,14 @@
 The \code{R6} class \link{Artist}.
 }
 \description{
-The \code{Artist} class provides a collection of methods to create various types of plots using \code{ggplot2}.
-It includes methods for generating dumbbell plots, bubble plots, divergence bar charts, lollipop plots,
-contour plots, scatter plots with ellipses, donut plots, and pie charts. Each method is designed
-to map data to specific aesthetics and apply additional customizations.
+The \code{Artist} class offers a suite of methods designed to create a variety of plots using \code{ggplot2} for
+data exploration. Any methods prefixed with \code{plot_} or \code{test_} will log the command history along with
+their results, allowing you to review all outcomes later via the \code{get_all_results()} method.
+Notably, methods starting with \code{plot_} will check if the result of the preceding command is of the
+\code{htest} class. If so, it will incorporate the previous command and its p-value as the title and subtitle,
+respectively. This class encompasses methods for crafting dumbbell plots, bubble plots, divergence bar charts,
+lollipop plots, contour plots, scatter plots with ellipses, donut plots, and pie charts.
+Each method is tailored to map data to specific visual aesthetics and to apply additional customizations as needed.
 }
 \examples{
 library(data.table)
@@ -42,6 +46,7 @@ cying$plot_scatter(f = \(x) x[, z := Wind * Temp], x = Wind, y = z)
 \item \href{#method-Artist-new}{\code{Artist$new()}}
 \item \href{#method-Artist-get_all_result}{\code{Artist$get_all_result()}}
 \item \href{#method-Artist-test_wilcox}{\code{Artist$test_wilcox()}}
+\item \href{#method-Artist-test_t}{\code{Artist$test_t()}}
 \item \href{#method-Artist-plot_scatter}{\code{Artist$plot_scatter()}}
 \item \href{#method-Artist-plot_box}{\code{Artist$plot_box()}}
 \item \href{#method-Artist-dumbbbell}{\code{Artist$dumbbbell()}}
@@ -113,6 +118,30 @@ A ggplot2 scatter plot.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Artist-test_t"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-test_t}{}}}
+\subsection{Method \code{test_t()}}{
+Conduct wilcox.test
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Artist$test_t(formula, data = self$data, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{formula}}{\code{\link[=t.test]{t.test()}} formula arguments}
+
+\item{\code{data}}{A data frame containing the data to be plotted. Default is \code{self$data}.}
+
+\item{\code{...}}{Additional aesthetic mappings passed to \code{\link[=t.test]{t.test()}}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A ggplot2 scatter plot.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-plot_scatter"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-plot_scatter}{}}}
 \subsection{Method \code{plot_scatter()}}{
@@ -155,7 +184,13 @@ A ggplot2 scatter plot.
 \subsection{Method \code{plot_box()}}{
 Creates a box plot.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_box(data = self$data, x, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_box(
+  data = self$data,
+  fun = function(x) x,
+  x,
+  ...,
+  add = private$is_htest()
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -163,9 +198,13 @@ Creates a box plot.
 \describe{
 \item{\code{data}}{A data frame or tibble containing the data to be plotted. Default is \code{self$data}.}
 
+\item{\code{fun}}{function to process the \code{self$data}.}
+
 \item{\code{x}}{The column name for the x-axis.}
 
 \item{\code{...}}{Additional aesthetic mappings passed to \code{aes()}.}
+
+\item{\code{add}}{whether to add the test result.}
 }
 \if{html}{\out{</div>}}
 }

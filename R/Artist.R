@@ -1,11 +1,14 @@
 #' @title Visualization Artist for Custom Plots
 #'
 #' @description
-#' The `Artist` class provides a collection of methods to create various types of plots using `ggplot2`.
-#' It includes methods for generating dumbbell plots, bubble plots, divergence bar charts, lollipop plots,
-#' contour plots, scatter plots with ellipses, donut plots, and pie charts. Each method is designed
-#' to map data to specific aesthetics and apply additional customizations.
-#'
+#' The `Artist` class offers a suite of methods designed to create a variety of plots using `ggplot2` for
+#' data exploration. Any methods prefixed with `plot_` or `test_` will log the command history along with
+#' their results, allowing you to review all outcomes later via the `get_all_results()` method.
+#' Notably, methods starting with `plot_` will check if the result of the preceding command is of the
+#' `htest` class. If so, it will incorporate the previous command and its p-value as the title and subtitle,
+#' respectively. This class encompasses methods for crafting dumbbell plots, bubble plots, divergence bar charts,
+#' lollipop plots, contour plots, scatter plots with ellipses, donut plots, and pie charts.
+#' Each method is tailored to map data to specific visual aesthetics and to apply additional customizations as needed.
 #' @import ggplot2 R6 data.table
 #' @return The `R6` class [Artist].
 #' @export
@@ -59,6 +62,19 @@ Artist <- R6::R6Class("Artist",
       htestRes
     },
     #' @description
+    #' Conduct wilcox.test
+    #'
+    #' @param formula [t.test()] formula arguments
+    #' @param data A data frame containing the data to be plotted. Default is `self$data`.
+    #' @param ... Additional aesthetic mappings passed to [t.test()].
+    #' @return A ggplot2 scatter plot.
+    test_t = function(formula, data = self$data, ...) {
+      htestRes <- t.test(formula = formula, data = data, ...)
+
+      eval(private$append_htest)
+      htestRes
+    },
+    #' @description
     #' Creates a scatter plot.
     #'
     #' @param data A data frame containing the data to be plotted. Default is `self$data`.
@@ -82,16 +98,17 @@ Artist <- R6::R6Class("Artist",
     #'
     #' @param data A data frame or tibble containing the data to be plotted. Default is `self$data`.
     #' @param x The column name for the x-axis.
+    #' @param add whether to add the test result.
+    #' @param fun function to process the `self$data`.
     #' @param ... Additional aesthetic mappings passed to `aes()`.
     #' @return A ggplot2 box plot.
-    plot_box = function(data = self$data, x, ...) {
+    plot_box = function(data = self$data, fun = \(x) x, x, ..., add = private$is_htest()) {
+      data <- force(fun)(data)
+
       p <- ggplot(data, aes(x = {{ x }}, ...)) +
         geom_boxplot()
 
-
-      self$command <- private$add_in_list(self$command, match.call())
-      self$result <- private$add_in_list(self$result, p)
-
+      eval(private$append_gg)
       p
     },
     #' @description

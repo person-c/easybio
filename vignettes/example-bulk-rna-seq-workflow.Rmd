@@ -15,19 +15,26 @@ knitr::opts_chunk$set(
 )
 ```
 
+This vignette provides a step-by-step guide on how to perform bulk RNA-Seq analysis using the Limma-voom workflow. It is designed to be a comprehensive resource for researchers looking to analyze gene expression data from projects such as TCGA. 
+You can view an example script for this workflow by running the following command
+
+```r
+file.show(system.file(package = 'easybio', 'example-bulk-rna-seq.R'))
+```
+
 
 ## Limma-voom workflow
 
 ####  Prepare data
 
-To download and process GEO datasets, use the `prepare_geo()` function. This will generate a list containing count data, sample information, and gene data.
+For downloading and processing datasets from the Gene Expression Omnibus (GEO), utilize the `prepare_geo()` function. This function will generate a list containing count data, sample information, and gene data.
 
 ```{r}
 library(easybio)
 # x <- prepare_geo('gseid')
 ```
 
-For preparing TCGA RNA-Seq data using the `TCGAbiolinks`` package, use the `prepare_tcga()` function. This will return a list containing count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
+When preparing The Cancer Genome Atlas (TCGA) RNA-Seq data, employ the `prepare_tcga()` function from the TCGAbiolinks package. This function returns a list with count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
 
 #### Example Workflow: TCGA CHOL Project
 
@@ -57,7 +64,16 @@ get_attr(efit, "contrast")
 
 CHOL_DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
-Set the criteria:
+
+```{r, echo=FALSE}
+knitr::include_graphics('limmaFilter.png')
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics("limmaNorm.png")
+```
+
+Set the criteria for differential gene expression:
 
 ```r
 CHOL_DEGs[, let(
@@ -71,7 +87,7 @@ setDT(CHOL_DEGs, keep.rownames = "rid")
 head(CHOL_DEGs)
 ```
 
-Visualization of DEGs:
+Visualize the differentially expressed genes (DEGs) with a volcano plot:
 
 ```{r, fig.dim=c(5, 3)}
 data(CHOL_DEGs)
@@ -83,8 +99,7 @@ plotVolcano(
 )
 ```
 
-To perform pathway enrichment analysis such as GO and KEGG, download the `r4msigdb` package to access the MSigDB gene set `devtools::install("person-c/r4msigdb")`.
-To know more details about this package, please see [r4msigdb](https://github.com/person-c/r4msigdb).
+For pathway enrichment analysis, such as GO and KEGG, download the r4msigdb package to access the MSigDB gene sets. For more details on this package, please see [r4msigdb](https://github.com/person-c/r4msigdb).
 
 ```{r, fig.dim=c(7, 3)}
 library(data.table)
@@ -116,7 +131,7 @@ plotORA(
 )
 ```
 
-To do GSEA analysis, using `fgsea::fgsea()` function, The core  function is adapted from the `fgsea` package with minor visual enhancements.
+To perform Gene Set Enrichment Analysis (GSEA), use the `fgsea::fgsea()` function. The core function is adapted from the fgsea package with minor visual enhancements.
 
 ```{r}
 library(fgsea)
