@@ -1,4 +1,4 @@
-## Future Developments
+## To do
 
 1. **Dependency Review**: Considering the removal of the `GEOquery` package, as it may no longer be necessary for preparing GEO series data.
 2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
