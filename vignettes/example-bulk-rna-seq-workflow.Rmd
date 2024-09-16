@@ -99,9 +99,10 @@ plotVolcano(
 )
 ```
 
-For pathway enrichment analysis, such as GO and KEGG, download the r4msigdb package to access the MSigDB gene sets. For more details on this package, please see [r4msigdb](https://github.com/person-c/r4msigdb).
+For pathway enrichment analysis, such as GO and KEGG, download the `r4msigdb` package to access the MSigDB gene sets. For more details on this package, please see [r4msigdb](https://github.com/person-c/r4msigdb).
 
-```{r, fig.dim=c(7, 3)}
+```{r, eval=FALSE}
+# devtools::install_github('person-c/easybio')
 library(data.table)
 # Over Presentation Analysis(ORA)
 pathwayGO <- r4msigdb::query("Hs", pathway = "^GO(BP|CC|MF)_")
@@ -129,6 +130,10 @@ plotORA(
   size = log10(overlap),
   fill = category
 )
+```
+
+```{r,echo=FALSE}
+knitr::include_graphics('ora.png')
 ```
 
 To perform Gene Set Enrichment Analysis (GSEA), use the `fgsea::fgsea()` function. The core function is adapted from the fgsea package with minor visual enhancements.
