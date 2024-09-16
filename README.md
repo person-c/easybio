@@ -52,4 +52,5 @@ C. Hu, T. Li, Y. Xu, X. Zhang, F. Li, J. Bai, J. Chen, W. Jiang, K.
 Yang, Q. Ou, X. Li, P. Wang, Y. Zhang, CellMarker 2.0: an updated
 database of manually curated cell markers in human/mouse and web tools
 based on scRNA-seq data, Nucleic Acids Research 51 (D1) (2022)
-D870–D876. <doi:10.1093/nar/gkac947>
+D870–D876. <doi:10.1093/nar/gkac947>.
+<https://doi.org/10.1093/nar/gkac947>
