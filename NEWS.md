@@ -1,31 +1,23 @@
-# Future Developments
+## Future Developments
 
-1. It appears that the GEOquery package may not be necessary for preparing GEO series data. We might consider removing this dependency.
-2. All `plot*` functions should be enhanced to allow for greater user customization.
-3. Development of a new S3 class similar to dgeList, which would offer more customization and improved performance.
+1. **Dependency Review**: Considering the removal of the `GEOquery` package, as it may no longer be necessary for preparing GEO series data.
+2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
+3. **New S3 Class**: Development of a new S3 class, similar to `dgeList`, which will offer improved customization and performance.
 
-# Recently Developed Features
+## Version 1.1.0 Changes
 
-enhancements:
+### Enhancements
+- **`Artist` Class**: Now includes a default data argument for data exploration. All commands and results are saved, allowing users to revisit previous analyses.
+- **Bulk RNA-seq Vignettes**: Updated for better usability.
+- **`get_marker()` Updates**: Added extra messages when searching for undefined cells in the database, improving clarity for users.
 
-1. Now, the `Artist`  class has a default data argument which can be used to explore the data in a new way.
-2. The `Artist` class now will save all your command and result, you can recheck those results anytime you want.
+### Bug Fixes
+- **`prepare_geo()` Fix**: Non-character ID columns in GPL data are now converted to character to prevent misinterpretation of numeric IDs. Expression data can now be read directly from supplementary files without needing to download them locally.
+- **`plotORA()` Fix**: Fixed an issue where the plot would fail to display a legend when mapping a variable to the `fill` aesthetic.
 
-`prepare_geo` function: 
 
-1. Converts non-character ID columns in gpl data to character to prevent issues with IDs being read as numeric (e.g., 1, 2, 3, 4…).
-2. Reads potential expression data from supplementary files…
 
-`plotORA` function:
-
-1. Fix bug when you map a variable to fill aesthetic parameters, the plot doesn't show legend.
-
-`get_marker` function:
-
-1. add extra messages when you search  undefined cells in database.
-  
-# easybio 1.0.1 Release Notes
-
-1. Added a NEWS.md file to document changes and updates to the package.
-2. Fixed an error in the `uniprot_id_map()` function that occurred on the latest macOS in example usage.
-3. Updated vignettes for optimization.
+## Version 1.0.1 Changes
+- **NEWS.md File**: Added to document changes and updates.
+- **macOS Compatibility**: Fixed an error in `uniprot_id_map()` on the latest macOS during example usage.
+- **Vignette Optimization**: Vignettes have been updated and optimized for improved performance and usability.

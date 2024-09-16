@@ -1,0 +1,11 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "easybio: an R Package for Single-Cell Annotation with CellMarker2.0",
+  author   = "Wei, Cui",
+  journal  = "bioRxiv",
+  year     = 2024,
+  volume   = "",
+  number   = "",
+  pages    = "",
+  doi      = "10.1101/2024.09.14.609619"
+)

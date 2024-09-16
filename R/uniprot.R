@@ -43,11 +43,13 @@
 #' @import data.table
 #' @export
 #' @examples
+#' \donttest{
 #' uniprot_id_map(
 #'   ids = "P21802,P12345",
 #'   from = "UniProtKB_AC-ID",
 #'   to = "UniRef90"
 #' )
+#' }
 uniprot_id_map <- function(...) {
   submission <- httr2::request("https://rest.uniprot.org/idmapping/run") |>
     httr2::req_body_form(...) |>
