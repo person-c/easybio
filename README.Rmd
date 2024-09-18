@@ -22,9 +22,6 @@ knitr::opts_chunk$set(
 
 
 
-`easybio` provides a comprehensive toolkit for single-cell RNA-seq annotation using the CellMarker2.0 database. It streamlines the process of assigning biological labels in scRNA-seq data, integrating seamlessly with tools like Seurat. While the package includes additional bioinformatics workflows, such as handling TCGA and GEO datasets, differential expression analysis, and enrichment analysis visualization, for details specifically on the single-cell annotation functionality, please refer to the [bioRxiv preprint](https://doi.org/10.1101/2024.09.14.609619).
-
-
 ## Download and Usage
 
 You can install the development version of `easybio` from [GitHub](https://github.com/) with:
