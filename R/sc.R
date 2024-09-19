@@ -166,7 +166,7 @@ matchCellMarker2 <- function(marker, n, spc) {
   marker <- marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
 
-  marker[, let(uniqueN = sapply(markerWith, FUN = \(x) length(unique(x))))]
+  marker[, let(uniqueN = sapply(markerWith, FUN = \(x) uniqueN(x)))]
   marker[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
   marker[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
   setcolorder(marker, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
