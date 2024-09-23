@@ -4,7 +4,13 @@
 \alias{matchCellMarker2}
 \title{Match Markers with cellMarker2 Dataset}
 \usage{
-matchCellMarker2(marker, n, spc)
+matchCellMarker2(
+  marker,
+  n,
+  spc,
+  tissueClass = available_tissue_class(spc),
+  tissueType = available_tissue_type(spc)
+)
 }
 \arguments{
 \item{marker}{A data frame of markers obtained from the \code{FindAllMarkers}
@@ -16,6 +22,10 @@ input markers.}
 
 \item{spc}{A character string specifying the species, which can be either
 'Human' or 'Mouse'.}
+
+\item{tissueClass}{A character specifying the tissue classes, default \code{available_tissue_class(spc)}.}
+
+\item{tissueType}{A character specifying the tissue types, default \code{available_tissue_type(spc)}.}
 }
 \value{
 A data frame containing matched markers from the \code{cellMarker2}

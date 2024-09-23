@@ -4,13 +4,24 @@
 \alias{get_marker}
 \title{Retrieve Markers for Specific Cells from cellMarker2}
 \usage{
-get_marker(spc, cell = character(), number = 5, min.count = 1)
+get_marker(
+  spc,
+  cell = character(),
+  tissueClass = available_tissue_class(spc),
+  tissueType = available_tissue_type(spc),
+  number = 5,
+  min.count = 1
+)
 }
 \arguments{
 \item{spc}{A character string specifying the species, which can be either
 'Human' or 'Mouse'.}
 
 \item{cell}{A character vector of cell types for which to retrieve markers.}
+
+\item{tissueClass}{A character specifying the tissue classes, default \code{available_tissue_class(spc)}.}
+
+\item{tissueType}{A character specifying the tissue types, default \code{available_tissue_type(spc)}.}
 
 \item{number}{An integer specifying the number of top markers to return for
 each cell type.}

@@ -66,6 +66,48 @@ finsert <- function(
   v
 }
 
+#' Retrieve Available Tissue Classes for a Given Species
+#'
+#' This function extracts and returns a unique list of available tissue classes
+#' from the CellMarker2.0 database for a specified species.
+#'
+#' @param spc A character string specifying the species (e.g., "Human" or "mouse").
+#'
+#' @return A character vector of unique tissue classes available for the given species.
+#' If no tissue classes are found, an empty vector is returned.
+#'
+#' @examples
+#' available_tissue_class("Human")
+#' available_tissue_class("mouse")
+#'
+#' @export
+#'
+available_tissue_class <- function(spc) {
+  . <- species <- tissue_class <- NULL
+  tissue_class <- cellMarker2[.(spc), unique(na.omit(tissue_class)), on = .(species)]
+  tissue_class
+}
+
+#' Retrieve Available Tissue Types for a Given Species
+#'
+#' This function extracts and returns a unique list of available tissue types
+#' from the CellMarker2.0 database for a specified species.
+#'
+#' @param spc A character string specifying the species (e.g., "Human" or "mouse").
+#'
+#' @return A character vector of unique tissue types available for the given species.
+#' If no tissue types are found, an empty vector is returned.
+#'
+#' @examples
+#' available_tissue_type("Human")
+#' available_tissue_type("mouse")
+#'
+#' @export
+available_tissue_type <- function(spc) {
+  . <- species <- tissue_type <- NULL
+  tissue_type <- cellMarker2[.(spc), unique(na.omit(tissue_type)), on = .(species)]
+  tissue_type
+}
 
 #' Retrieve Markers for Specific Cells from cellMarker2
 #'
@@ -80,6 +122,8 @@ finsert <- function(
 #'   each cell type.
 #' @param min.count An integer representing the minimum number of times a marker
 #'   must have been reported to be included in the results.
+#' @param tissueClass A character specifying the tissue classes, default `available_tissue_class(spc)`.
+#' @param tissueType A character specifying the tissue types, default `available_tissue_type(spc)`.
 #'
 #' @return A named list where each name corresponds to a cell type and each
 #'   element is a vector of marker names.
@@ -93,12 +137,15 @@ finsert <- function(
 #' library(easybio)
 #' markers <- get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"))
 #' print(markers)
-get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
-  . <- NULL
+get_marker <- function(
+    spc, cell = character(),
+    tissueClass = available_tissue_class(spc),
+    tissueType = available_tissue_type(spc),
+    number = 5, min.count = 1) {
+  . <- tissue_type <- tissue_class <- NULL
   species <- cell_name <- N <- marker <- NULL
 
   is_exists <- cell %chin% unique(cellMarker2[["cell_name"]])
-
 
   sapply(cell[!is_exists], \(x) {
     idx <- grep(
@@ -114,7 +161,10 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
     return(NULL)
   }
 
+  cellMarker2 <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
   marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)]
+
+
   marker <- marker[, .N, by = .(cell_name, marker)]
   marker <- marker[N > min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
   marker <- marker[, .(marker = .(marker)), by = .(cell_name)]
@@ -136,6 +186,8 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
 #'   input markers.
 #' @param spc A character string specifying the species, which can be either
 #'   'Human' or 'Mouse'.
+#' @param tissueClass A character specifying the tissue classes, default `available_tissue_class(spc)`.
+#' @param tissueType A character specifying the tissue types, default `available_tissue_type(spc)`.
 #'
 #' @return A data frame containing matched markers from the `cellMarker2`
 #'   dataset, with additional columns indicating the number of matches and
@@ -151,14 +203,20 @@ get_marker <- function(spc, cell = character(), number = 5, min.count = 1) {
 #' data(pbmc.markers)
 #' matched_markers <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
 #' print(matched_markers)
-matchCellMarker2 <- function(marker, n, spc) {
-  . <- markerWith <- NULL
+matchCellMarker2 <- function(
+    marker, n, spc,
+    tissueClass = available_tissue_class(spc),
+    tissueType = available_tissue_type(spc)) {
+  . <- markerWith <- tissue_class <- tissue_type <- NULL
   species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL
 
   marker <- copy(marker)
   setDT(marker)
 
-  cellMarker2 <- cellMarker2[.(spc), on = .(species)]
+
+  cellMarker2 <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
+  cellMarker2 <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+
   marker <- marker[avg_log2FC > 0 & p_val_adj < 0.05, .SD[order(-avg_log2FC)][1:n], keyby = .(cluster)]
 
   marker <- marker[cellMarker2, on = "gene==marker", nomatch = NULL]
@@ -184,6 +242,8 @@ matchCellMarker2 <- function(marker, n, spc) {
 #'   input markers.
 #' @param spc A character string specifying the species, which can be either
 #'   'Human' or 'Mouse'.
+#' @param tissueClass A character specifying the tissue classes, default `available_tissue_class(spc)`.
+#' @param tissueType A character specifying the tissue types, default `available_tissue_type(spc)`.
 #' @param cl An integer or vector of integers specifying the clusters to check.
 #' @param topcellN An integer specifying the number of top cells to check for
 #'   each cluster.
@@ -202,11 +262,14 @@ matchCellMarker2 <- function(marker, n, spc) {
 #' data(pbmc.markers)
 #' verified_markers <- check_marker(pbmc.markers, n = 50, spc = "Human", cl = c(1, 4, 7))
 #' print(verified_markers)
-check_marker <- function(marker, n, spc, cl = c(), topcellN = 2, cis = FALSE) {
-  . <- NULL
-  cell_name <- cluster <- NULL
+check_marker <- function(
+    marker, n, spc,
+    tissueClass = available_tissue_class(spc),
+    tissueType = available_tissue_type(spc),
+    cl = c(), topcellN = 2, cis = FALSE) {
+  . <- cell_name <- cluster <- NULL
 
-  marker_matched <- matchCellMarker2(marker, n, spc)
+  marker_matched <- matchCellMarker2(marker, n, spc, tissueClass, tissueType)
   marker_matched <- marker_matched[.(factor(cl)), .SD, on = .(cluster)]
 
   if (cis) {
@@ -214,7 +277,14 @@ check_marker <- function(marker, n, spc, cl = c(), topcellN = 2, cis = FALSE) {
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
     topcell <- marker_matched[, head(.SD, topcellN), keyby = .(cluster)][, unique(cell_name)]
-    topmarker <- get_marker(spc, cell = topcell, number = 10, min.count = 0)
+    topmarker <- get_marker(
+      spc,
+      cell = topcell,
+      tissueClass = tissueClass,
+      tissueType = tissueType,
+      number = 10,
+      min.count = 0
+    )
   }
 
   topmarker
