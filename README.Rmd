@@ -30,14 +30,18 @@ You can install the development version of `easybio` from [GitHub](https://githu
 devtools::install("person-c/easybio", build_vignettes = TRUE)
 ```
 
-To know how to use this package, please see the [wiki](https://github.com/person-c/easybio/wiki) or run:
+You can find an example script for single cell annotation workflow by running:
 
 ```r
-vignette(topic = "example-bulk-rna-seq-workflow", package = 'easybio')
-vignette(topic = "example-single-cell-annotation", package = "easybio")
+file.show(system.file(package = "easybio", "example-single-cell.R"))
 ```
 
+or see this article: https://doi.org/10.1101/2024.09.14.609619
+
 To learn the difference between development version and CRAN version, see [NEWS](./NEWS.md)
+
+
+Note: The wiki for this package is outdated.
 
 ## Citation
 
