@@ -19,11 +19,10 @@ You can install the development version of `easybio` from
 devtools::install("person-c/easybio", build_vignettes = TRUE)
 ```
 
-You can find an example script for single cell annotation workflow by
-running:
+To know how to use this package to do single cell annotation, run command:
 
 ``` r
-file.show(system.file(package = "easybio", "example-single-cell.R"))
+vignette(topic = 'example-single-cell-annotation', package = 'easybio')
 ```
 
 or see this article: <https://doi.org/10.1101/2024.09.14.609619>
