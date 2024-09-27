@@ -16,7 +16,7 @@ dot plots.}
 \item{...}{Additional parameters to pass to the \code{check_marker} function.}
 }
 \value{
-The function returns the temporary directory invisibly.
+A list containing multiple DotPlot.
 }
 \description{
 This function generates dot plots for the markers obtained from the

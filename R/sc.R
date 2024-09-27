@@ -303,7 +303,7 @@ check_marker <- function(
 #'   dot plots.
 #' @param ... Additional parameters to pass to the `check_marker` function.
 #'
-#' @return The function returns the temporary directory invisibly.
+#' @return A list containing multiple DotPlot.
 #' @import ggplot2
 #' @export
 plotSeuratDot <- function(srt, cls, ...) {
