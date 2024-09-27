@@ -7,6 +7,7 @@
 # New Developed features
 
 - support argument `tissueType` and `tissueClass`.
+- fix some typo errors in example-single-cell.R
 
 ## Version 1.1.0 Changes
 
