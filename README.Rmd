@@ -22,26 +22,27 @@ knitr::opts_chunk$set(
 
 
 
-## Download and Usage
+## Install and Usage
 
-You can install the development version of `easybio` from [GitHub](https://github.com/) with:
+You can install the development version of `easybio` from
+[GitHub](https://github.com/) with:
 
-```{r, eval = FALSE}
-devtools::install("person-c/easybio", build_vignettes = TRUE)
+``` r
+devtools::install_github("person-c/easybio", build_vignettes = TRUE)
 ```
 
-You can find an example script for single cell annotation workflow by running:
+To know how to use this package to do single cell annotation, run command:
 
-```r
-file.show(system.file(package = "easybio", "example-single-cell.R"))
+``` r
+vignette(topic = 'example-single-cell-annotation', package = 'easybio')
 ```
 
-or see this article: https://doi.org/10.1101/2024.09.14.609619
+or see this article: <https://doi.org/10.1101/2024.09.14.609619>
 
-To learn the difference between development version and CRAN version, see [NEWS](./NEWS.md)
+To learn the difference between development version and CRAN version,
+see [NEWS](./NEWS.md)
 
-
-Note: The wiki for this package is outdated.
+**Note**: The wiki for this package is outdated.
 
 ## Citation
 
