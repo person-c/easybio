@@ -10,33 +10,29 @@
 status](https://www.r-pkg.org/badges/version/easybio)](https://CRAN.R-project.org/package=easybio)
 <!-- badges: end -->
 
-## Install and Usage
-
-You can install the development version of `easybio` from
-[GitHub](https://github.com/) with:
+## Installation and Usage
 
 ``` r
+# stable version in CRAN
+install.packages("easybio")
+
+# latest development version 
 devtools::install_github("person-c/easybio", build_vignettes = TRUE)
 ```
 
-To know how to use this package to do single cell annotation, run
-command:
+To know how to use this package to do single cell annotation, see this
+[vignette](https://cran.r-project.org/web/packages/easybio/vignettes/example-single-cell-annotation.html)
+or <https://doi.org/10.1101/2024.09.14.609619>
 
-``` r
-vignette(topic = 'example-single-cell-annotation', package = 'easybio')
-```
-
-or see this article: <https://doi.org/10.1101/2024.09.14.609619>
+## Stay up-to-date
 
 To learn the difference between development version and CRAN version,
 see [NEWS](./NEWS.md)
 
-**Note**: The wiki for this package is outdated.
-
 ## Citation
 
 If you use the single-cell annotation functionality from `easybio`,
-consider cite:
+consider citing:
 
 - <https://doi.org/10.1101/2024.09.14.609619>
 
