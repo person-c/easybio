@@ -34,13 +34,21 @@ tt <- function() {
 ## Note: the first two examples will give different results
 ## if run by example().
 ff <- function(x) gg(x)
-gg <- function(y) sys.status()
+gg <- function(y) {
+  c(
+    sys.status(),
+    list(
+      sys.functions = list(sys.function(0L), sys.function(-1L))
+    )
+  )
+}
 str(ff(1))
 gg <- function(y) {
   ggg <- function() {
     cat("current frame is", sys.nframe(), "\n")
     cat("parents are", sys.parents(), "\n")
     print(sys.function(0)) # ggg
+    print(sys.function(1))
     print(sys.function(2)) # gg
   }
   if (y > 0) gg(y - 1) else ggg()

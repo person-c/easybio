@@ -43,7 +43,7 @@ check_marker(pbmc.markers, 50, spc = "Human", cl = c(1, 5, 7))
 
 # Check these markers' distribution of possible cell
 srtDotPlot <- plotSeuratDot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
-srtDotPlot[[1]]
+srtDotPlot[[1]] # view other dotPlot `srtDotPlot[2]`, `srtDotPlot[3]`...
 
 # According to the srtDotplot
 cl2cell <- finsert(

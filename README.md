@@ -13,16 +13,12 @@ status](https://www.r-pkg.org/badges/version/easybio)](https://CRAN.R-project.or
 ## Installation and Usage
 
 ``` r
-# stable version in CRAN
-install.packages("easybio")
-
-# latest development version 
-devtools::install_github("person-c/easybio", build_vignettes = TRUE)
+install.packages("easybio", repos = c("https://person-c.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 To know how to use this package to do single cell annotation, see this
 [vignette](https://cran.r-project.org/web/packages/easybio/vignettes/example-single-cell-annotation.html)
-or <https://doi.org/10.1101/2024.09.14.609619>
+or [article](https://doi.org/10.1101/2024.09.14.609619).
 
 ## Stay up-to-date
 
