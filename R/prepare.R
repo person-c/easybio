@@ -21,6 +21,10 @@
 prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   . <- ID <- symbol <- gene_assignment <- NULL
 
+  if (!requireNamespace("GEOquery", quietly = TRUE)) {
+    stop("To get GEO datasets, prepare_geo() requires 'GEOquery' package which cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'.")
+  }
+
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
   if (length(eset) > 1) warning("There are more than one geo dataset;only the first one will be extracted")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)

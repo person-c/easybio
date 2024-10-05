@@ -19,6 +19,10 @@
 dgeList <- function(count, sample.info, feature.info) {
   stopifnot(rownames(count) == rownames(feature.info))
   stopifnot(colnames(count) == rownames(sample.info))
+
+  if (!requireNamespace("edgeR", quietly = TRUE)) {
+    stop("To construct DGEList object, dgeList() requires 'edgeR' package which cannot be found. Please install 'edgeR' using 'BiocManager::install('edgeR')'.")
+  }
   x <- edgeR::DGEList(count, samples = sample.info, genes = feature.info)
 
   x

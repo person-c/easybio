@@ -15,6 +15,9 @@
 #' @import ggplot2
 #' @export
 plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize = 0.2) {
+  if (!requireNamespace("fgsea", quietly = TRUE)) {
+    stop("To get plot data, plotEnrichment2() requires 'fgsea' package which cannot be found. Please install 'fgsea' using 'BiocManager::install('fgsea')'.")
+  }
   pd <- fgsea::plotEnrichmentData(
     pathway = pathways[[pwayname]], stats = stats,
     gseaParam = gseaParam

@@ -13,8 +13,10 @@ RoxygenNote: 7.3.2
 Imports: 
     data.table,
     ggplot2,
+    httr2,
     limma,
-    R6
+    R6,
+    xml2
 Depends: 
     R (>= 2.10)
 LazyData: true
@@ -24,12 +26,10 @@ Suggests:
     rmarkdown,
     ggrepel,
     Seurat,
-    httr2,
     GEOquery,
     fgsea,
     edgeR,
-    testthat (>= 3.0.0),
-    xml2
+    testthat (>= 3.0.0)
 biocViews: limma, GEOquery, edgeR, fgsea
 Language: en-US
 VignetteBuilder: knitr
