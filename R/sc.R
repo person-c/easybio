@@ -49,18 +49,21 @@ finsert <- function(
   x <- rapply(x, eval, classes = "call", how = "replace")
   x <- unlist(x, recursive = FALSE)
   itor <- 1
-  v <- character()
+
+  clIdx <- which(sapply(x, is.numeric))
+  maxL <- max(unlist(x[clIdx]))
+  v <- vector(mode = "character", length = if (!missing(len) && len > (maxL + 1)) len else maxL + 1)
   while (itor < length(x)) {
     v[x[[itor + 1]] + 1] <- x[[itor + 2]]
 
     itor <- itor + 3
   }
 
-  clIdx <- which(sapply(x, is.numeric))
-  maxL <- max(unlist(x[clIdx]))
+  # clIdx <- which(sapply(x, is.numeric))
+  # maxL <- max(unlist(x[clIdx]))
 
-  if (!missing(len) && len > maxL + 1) v <- append(v, rep(NA_character_, len - maxL - 1))
-  v[is.na(v)] <- na
+  # if (!missing(len) && len > maxL + 1) v <- append(v, rep(NA_character_, len - maxL - 1))
+  v[v == ""] <- na
 
   if (setname) names(v) <- as.character(0:(length(v) - 1))
   v
