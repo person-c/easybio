@@ -8,7 +8,7 @@
 #'
 #' @return A data frame or matrix with the new column names.
 #' @export
-setcolnames <- function(object = nm, nm) {
+setcolnames <- function(object, nm) {
   colnames(object) <- nm
   object
 }
@@ -23,7 +23,7 @@ setcolnames <- function(object = nm, nm) {
 #'
 #' @return A data frame or matrix with the new row names.
 #' @export
-setrownames <- function(object = nm, nm) {
+setrownames <- function(object, nm) {
   rownames(object) <- nm
   object
 }
@@ -96,26 +96,18 @@ get_attr <- function(x, attr_name) {
 #' @param nodes A named list where each element is a vector.
 #'
 #' @return A data.table representing the graph, with columns for the node names
-#'   (`node_x` and `node_y`) and the weight of the edge (`weight`).
+#'   (`node_1` and `node_2`) and the weight of the edge (`interWeight`).
 #' @import data.table
 #' @export
 list2graph <- function(nodes) {
-  node_x <- c()
-  node_y <- c()
-  weight <- numeric()
-  for (i in seq_along(nodes)) {
-    j <- i + 1
-    while (j <= length(nodes)) {
-      node_x <- append(node_x, names(nodes[i]))
-      node_y <- append(node_y, names(nodes[j]))
-      weight <- append(weight, intersect(nodes[[i]], nodes[[i]]) |> length())
+  comb2 <- combn(names(nodes), m = 2, simplify = FALSE)
+  inter <- lapply(comb2, \(x) length(intersect(nodes[[x[[1]]]], nodes[[x[[2]]]])))
 
-      j <- j + 1
-    }
-  }
-
-  net <- data.table(node_x = node_x, node_y = node_y, weight = weight)
-  net
+  data.table(
+    node1 = sapply(comb2, \(x) x[[1]]),
+    node2 = sapply(comb2, \(x) x[[2]]),
+    interWeight = as.integer(inter)
+  )
 }
 
 

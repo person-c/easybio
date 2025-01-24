@@ -112,6 +112,9 @@ limmaFit <- function(x, group.column) {
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
 
+
+  makeContrasts <- limma::makeContrasts()
+
   design <- model.matrix(~ 0 + x$samples[[group.column]])
   colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
 

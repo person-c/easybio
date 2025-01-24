@@ -4,7 +4,7 @@
 \alias{setcolnames}
 \title{Rename Column Names of a Data Frame or Matrix}
 \usage{
-setcolnames(object = nm, nm)
+setcolnames(object, nm)
 }
 \arguments{
 \item{object}{A data frame or matrix whose column names will be renamed.}

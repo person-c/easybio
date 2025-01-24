@@ -41,7 +41,7 @@ cls <- list(
 # marker of possible cell for cluster 1, 4, 7
 check_marker(pbmc.markers, 50, spc = "Human", cl = c(1, 5, 7))
 
-# Check these markers' distribution of possible cell
+# Check these markers' expression
 srtDotPlot <- plotSeuratDot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
 srtDotPlot[[1]] # view other dotPlot `srtDotPlot[2]`, `srtDotPlot[3]`...
 

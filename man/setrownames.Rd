@@ -4,7 +4,7 @@
 \alias{setrownames}
 \title{Rename Row Names of a Data Frame or Matrix}
 \usage{
-setrownames(object = nm, nm)
+setrownames(object, nm)
 }
 \arguments{
 \item{object}{A data frame or matrix whose row names will be renamed.}

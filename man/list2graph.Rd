@@ -11,7 +11,7 @@ list2graph(nodes)
 }
 \value{
 A data.table representing the graph, with columns for the node names
-(\code{node_x} and \code{node_y}) and the weight of the edge (\code{weight}).
+(\code{node_1} and \code{node_2}) and the weight of the edge (\code{interWeight}).
 }
 \description{
 This function creates a graph from a named list, where the edges are determined
