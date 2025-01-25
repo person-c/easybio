@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{groupStatI}
 \alias{groupStatI}
-\title{Perform Summary Analysis by Group Using an Index}
+\title{Perform Summary Analysis by Group Using an column Index}
 \usage{
 groupStatI(f, x, idx)
 }
@@ -11,13 +11,17 @@ groupStatI(f, x, idx)
 
 \item{x}{A data frame or matrix containing the data to be summarized.}
 
-\item{idx}{A vector of indices or group names that define the groups.}
+\item{idx}{A list of indices or group names that define the column groups.}
 }
 \value{
 A data frame or matrix containing the summary statistics for each group.
 }
 \description{
-This function applies a specified function to each group defined by an index,
+This function applies a specified function to each group defined by an column index,
 and returns a summary of the results. It is useful for summarizing data by
-group when the groups are defined by an index rather than a named column.
+group when the groups are defined by an  column index.
+}
+\examples{
+library(easybio)
+groupStatI(f = \(x) x + 1, x = mtcars, idx = list(c(1, 10), 2))
 }

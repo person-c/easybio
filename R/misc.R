@@ -45,29 +45,40 @@ list2dt <- function(x) {
 }
 
 
-#' Split a Matrix into Smaller Submatrices by Column
+#' Split a Matrix into Smaller Sub-matrices by Column or Row
 #'
-#' This function splits a matrix into multiple smaller matrices by column.
+#' This function splits a matrix into multiple smaller matrices by column or row.
 #' It is useful for processing large matrices in chunks, such as when performing
 #' analysis on a single computer with limited memory.
 #'
 #' @param matrix A numeric or logical matrix to be split.
-#' @param chunk_size The number of columns to include in each smaller matrix.
+#' @param chunk_size The number of columns or rows to include in each smaller matrix.
+#' @param column  Divided by column(default is `TRUE`)
 #'
 #' @return A list of smaller matrices, each with `chunk_size` columns.
 #' @export
-split_matrix <- function(matrix, chunk_size) {
-  chunk_number <- ifelse(ncol(matrix) %% chunk_size == 0,
-    ncol(matrix) / chunk_size - 1,
-    floor(ncol(matrix) / chunk_size)
+#' @examples
+#' library(easybio)
+#' split_matrix(mtcars, chunk_size = 2)
+#' split_matrix(mtcars, chunk_size = 5, column = FALSE)
+split_matrix <- function(matrix, chunk_size, column = TRUE) {
+  n <- ifelse(column, ncol(matrix), nrow(matrix))
+  chunk_number <- ifelse(n %% chunk_size == 0,
+    n / chunk_size - 1,
+    floor(n / chunk_size)
   )
   message(sprintf("matrix was divided to %f chunks", chunk_number + 1))
   start_end <- lapply(0:chunk_number, function(x) {
     c(1, chunk_size) + (chunk_size * x)
   })
-  start_end[[chunk_number + 1]][[2]] <- ncol(matrix)
-  start_end
-  matrix_divided <- lapply(start_end, function(x) matrix[, x[[1]]:x[[2]]])
+  start_end[[chunk_number + 1]][[2]] <- n
+  matrix_divided <- lapply(start_end, function(x) {
+    if (column) {
+      matrix[, x[[1]]:x[[2]], drop = FALSE]
+    } else {
+      matrix[x[[1]]:x[[2]], , drop = FALSE]
+    }
+  })
 
   matrix_divided
 }
@@ -111,18 +122,21 @@ list2graph <- function(nodes) {
 }
 
 
-#' Perform Summary Analysis by Group Using an Index
+#' Perform Summary Analysis by Group Using an column Index
 #'
-#' This function applies a specified function to each group defined by an index,
+#' This function applies a specified function to each group defined by an column index,
 #' and returns a summary of the results. It is useful for summarizing data by
-#' group when the groups are defined by an index rather than a named column.
+#' group when the groups are defined by an  column index.
 #'
 #' @param f A function that takes a single argument and returns a summary of the data.
 #' @param x A data frame or matrix containing the data to be summarized.
-#' @param idx A vector of indices or group names that define the groups.
+#' @param idx A list of indices or group names that define the column groups.
 #'
 #' @return A data frame or matrix containing the summary statistics for each group.
 #' @export
+#' @examples
+#' library(easybio)
+#' groupStatI(f = \(x) x + 1, x = mtcars, idx = list(c(1, 10), 2))
 groupStatI <- function(f, x, idx) {
   sapply(idx, \(.x) force(f)(x[.x]), simplify = FALSE)
 }
@@ -140,6 +154,9 @@ groupStatI <- function(f, x, idx) {
 #'
 #' @return A data frame or matrix containing the summary statistics for each group.
 #' @export
+#' @examples
+#' library(easybio)
+#' groupStat(f = \(x) x + 1, x = mtcars, patterns = list("mp", "t"))
 groupStat <- function(f, x, xname = names(x), patterns) {
   idx <- lapply(patterns, \(.x) which(xname %like% .x))
   groupStatI(f, x, idx)

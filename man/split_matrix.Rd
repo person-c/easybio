@@ -2,20 +2,27 @@
 % Please edit documentation in R/misc.R
 \name{split_matrix}
 \alias{split_matrix}
-\title{Split a Matrix into Smaller Submatrices by Column}
+\title{Split a Matrix into Smaller Sub-matrices by Column or Row}
 \usage{
-split_matrix(matrix, chunk_size)
+split_matrix(matrix, chunk_size, column = TRUE)
 }
 \arguments{
 \item{matrix}{A numeric or logical matrix to be split.}
 
-\item{chunk_size}{The number of columns to include in each smaller matrix.}
+\item{chunk_size}{The number of columns or rows to include in each smaller matrix.}
+
+\item{column}{Divided by column(default is \code{TRUE})}
 }
 \value{
 A list of smaller matrices, each with \code{chunk_size} columns.
 }
 \description{
-This function splits a matrix into multiple smaller matrices by column.
+This function splits a matrix into multiple smaller matrices by column or row.
 It is useful for processing large matrices in chunks, such as when performing
 analysis on a single computer with limited memory.
+}
+\examples{
+library(easybio)
+split_matrix(mtcars, chunk_size = 2)
+split_matrix(mtcars, chunk_size = 5, column = FALSE)
 }

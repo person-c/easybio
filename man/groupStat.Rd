@@ -23,3 +23,7 @@ This function applies a specified function to each group defined by a regular ex
 pattern applied to the names of a data object. It is useful for summarizing data when
 groups are defined by a pattern in the names rather than a specific column or index.
 }
+\examples{
+library(easybio)
+groupStat(f = \(x) x + 1, x = mtcars, patterns = list("mp", "t"))
+}
