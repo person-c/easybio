@@ -8,6 +8,7 @@
 [![R-CMD-check](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/person-c/easybio/actions/workflows/check-standard.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/easybio)](https://CRAN.R-project.org/package=easybio)
+[![R-CMD-check](https://github.com/snowGlint/easybio/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/snowGlint/easybio/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Installation and Usage
@@ -23,7 +24,7 @@ or [article](https://doi.org/10.1101/2024.09.14.609619).
 ## Stay up-to-date
 
 To learn the difference between development version and CRAN version,
-see [NEWS](./NEWS.md)
+see [NEWS](./NEWS.md).
 
 ## Citation
 
