@@ -14,7 +14,7 @@ groupStatI(f, x, idx)
 \item{idx}{A list of indices or group names that define the column groups.}
 }
 \value{
-A data frame or matrix containing the summary statistics for each group.
+A list containing the summary statistics for each group.
 }
 \description{
 This function applies a specified function to each group defined by an column index,

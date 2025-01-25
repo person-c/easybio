@@ -14,7 +14,7 @@ split_matrix(matrix, chunk_size, column = TRUE)
 \item{column}{Divided by column(default is \code{TRUE})}
 }
 \value{
-A list of smaller matrices, each with \code{chunk_size} columns.
+A list of smaller matrices, each with \code{chunk_size} columns or rows.
 }
 \description{
 This function splits a matrix into multiple smaller matrices by column or row.

@@ -18,3 +18,7 @@ long data.table. The list is first flattened into a single vector, and then
 the data.table is created with two columns: one for the name of the original
 list element and another for the value.
 }
+\examples{
+library(easybio)
+list2dt(list(a = c(1, 1), b = c(2, 2)))
+}

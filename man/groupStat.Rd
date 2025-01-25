@@ -13,10 +13,10 @@ groupStat(f, x, xname = names(x), patterns)
 
 \item{xname}{A character vector containing the names of the variables in \code{x}.}
 
-\item{patterns}{A character vector of regular expressions that define the groups.}
+\item{patterns}{A list of regular expressions that define the groups.}
 }
 \value{
-A data frame or matrix containing the summary statistics for each group.
+A list containing the summary statistics for each group.
 }
 \description{
 This function applies a specified function to each group defined by a regular expression

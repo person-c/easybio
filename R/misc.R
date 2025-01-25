@@ -40,6 +40,9 @@ setrownames <- function(object, nm) {
 #' @return A long data.table with two columns: 'name' and 'value'.
 #' @importFrom data.table data.table
 #' @export
+#' @examples
+#' library(easybio)
+#' list2dt(list(a = c(1, 1), b = c(2, 2)))
 list2dt <- function(x) {
   data.table(name = rep(names(x), sapply(x, length)), value = unlist(x))
 }
@@ -55,7 +58,7 @@ list2dt <- function(x) {
 #' @param chunk_size The number of columns or rows to include in each smaller matrix.
 #' @param column  Divided by column(default is `TRUE`)
 #'
-#' @return A list of smaller matrices, each with `chunk_size` columns.
+#' @return A list of smaller matrices, each with `chunk_size` columns or rows.
 #' @export
 #' @examples
 #' library(easybio)
@@ -132,7 +135,7 @@ list2graph <- function(nodes) {
 #' @param x A data frame or matrix containing the data to be summarized.
 #' @param idx A list of indices or group names that define the column groups.
 #'
-#' @return A data frame or matrix containing the summary statistics for each group.
+#' @return A list containing the summary statistics for each group.
 #' @export
 #' @examples
 #' library(easybio)
@@ -150,9 +153,9 @@ groupStatI <- function(f, x, idx) {
 #' @param f A function that takes a single argument and returns a summary of the data.
 #' @param x A data frame or matrix containing the data to be summarized.
 #' @param xname A character vector containing the names of the variables in `x`.
-#' @param patterns A character vector of regular expressions that define the groups.
+#' @param patterns A list of regular expressions that define the groups.
 #'
-#' @return A data frame or matrix containing the summary statistics for each group.
+#' @return A list containing the summary statistics for each group.
 #' @export
 #' @examples
 #' library(easybio)
