@@ -4,7 +4,7 @@
 2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
 3. **New S3 Class**: Development of a new S3 class, similar to `dgeList`, which will offer improved customization and performance.
 
-# New Developed features
+# Version 1.1.1 Changes
 
 - support argument `tissueType` and `tissueClass` in single cell related function.
 - fix some typo errors in example-single-cell.R

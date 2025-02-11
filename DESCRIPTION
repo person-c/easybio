@@ -14,7 +14,6 @@ Imports:
     data.table,
     ggplot2,
     httr2,
-    limma,
     R6,
     xml2
 Depends: 
