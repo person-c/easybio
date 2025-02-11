@@ -25,6 +25,7 @@ Suggests:
     rmarkdown,
     ggrepel,
     Seurat,
+    limma,
     GEOquery,
     fgsea,
     edgeR,
