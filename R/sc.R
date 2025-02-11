@@ -59,10 +59,6 @@ finsert <- function(
     itor <- itor + 3
   }
 
-  # clIdx <- which(sapply(x, is.numeric))
-  # maxL <- max(unlist(x[clIdx]))
-
-  # if (!missing(len) && len > maxL + 1) v <- append(v, rep(NA_character_, len - maxL - 1))
   v[v == ""] <- na
 
   if (setname) names(v) <- as.character(0:(length(v) - 1))
@@ -74,14 +70,14 @@ finsert <- function(
 #' This function extracts and returns a unique list of available tissue classes
 #' from the CellMarker2.0 database for a specified species.
 #'
-#' @param spc A character string specifying the species (e.g., "Human" or "mouse").
+#' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
 #'
 #' @return A character vector of unique tissue classes available for the given species.
 #' If no tissue classes are found, an empty vector is returned.
 #'
 #' @examples
 #' available_tissue_class("Human")
-#' available_tissue_class("mouse")
+#' available_tissue_class("Mouse")
 #'
 #' @export
 #'
@@ -96,14 +92,14 @@ available_tissue_class <- function(spc) {
 #' This function extracts and returns a unique list of available tissue types
 #' from the CellMarker2.0 database for a specified species.
 #'
-#' @param spc A character string specifying the species (e.g., "Human" or "mouse").
+#' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
 #'
 #' @return A character vector of unique tissue types available for the given species.
 #' If no tissue types are found, an empty vector is returned.
 #'
 #' @examples
 #' available_tissue_type("Human")
-#' available_tissue_type("mouse")
+#' available_tissue_type("Mouse")
 #'
 #' @export
 available_tissue_type <- function(spc) {
@@ -200,7 +196,7 @@ get_marker <- function(
 #'
 #' @examples
 #' # Example usage:
-#' # Match the top 50 markers from the pbmc.markers dataset with the Human
+#' # Match the top 50 differential genes from the pbmc.markers dataset with the Human
 #' # species in the cellMarker2 dataset.
 #' library(easybio)
 #' data(pbmc.markers)

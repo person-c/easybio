@@ -4,7 +4,7 @@
 \alias{groupStat}
 \title{Perform Summary Analysis by Group Using Regular Expressions}
 \usage{
-groupStat(f, x, xname = names(x), patterns)
+groupStat(f, x, xname = colnames(x), patterns)
 }
 \arguments{
 \item{f}{A function that takes a single argument and returns a summary of the data.}

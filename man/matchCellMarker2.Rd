@@ -39,7 +39,7 @@ on their average log2 fold change and adjusted p-values.
 }
 \examples{
 # Example usage:
-# Match the top 50 markers from the pbmc.markers dataset with the Human
+# Match the top 50 differential genes from the pbmc.markers dataset with the Human
 # species in the cellMarker2 dataset.
 library(easybio)
 data(pbmc.markers)

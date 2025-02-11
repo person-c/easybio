@@ -43,7 +43,7 @@
 #' @import data.table
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' uniprot_id_map(
 #'   ids = "P21802,P12345",
 #'   from = "UniProtKB_AC-ID",

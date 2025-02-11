@@ -9,6 +9,9 @@
 #' @return A data frame or matrix with the new column names.
 #' @export
 setcolnames <- function(object, nm) {
+  if (length(nm) != ncol(object)) {
+    stop("Length of 'nm' must equal the number of columns of 'object'")
+  }
   colnames(object) <- nm
   object
 }
@@ -24,6 +27,9 @@ setcolnames <- function(object, nm) {
 #' @return A data frame or matrix with the new row names.
 #' @export
 setrownames <- function(object, nm) {
+  if (length(nm) != nrow(object)) {
+    stop("Length of 'nm' must equal the number of rows of 'object'")
+  }
   rownames(object) <- nm
   object
 }
@@ -70,7 +76,7 @@ split_matrix <- function(matrix, chunk_size, column = TRUE) {
     n / chunk_size - 1,
     floor(n / chunk_size)
   )
-  message(sprintf("matrix was divided to %f chunks", chunk_number + 1))
+  message(sprintf("matrix was divided to %d chunks", chunk_number + 1))
   start_end <- lapply(0:chunk_number, function(x) {
     c(1, chunk_size) + (chunk_size * x)
   })
@@ -160,7 +166,7 @@ groupStatI <- function(f, x, idx) {
 #' @examples
 #' library(easybio)
 #' groupStat(f = \(x) x + 1, x = mtcars, patterns = list("mp", "t"))
-groupStat <- function(f, x, xname = names(x), patterns) {
+groupStat <- function(f, x, xname = colnames(x), patterns) {
   idx <- lapply(patterns, \(.x) which(xname %like% .x))
   groupStatI(f, x, idx)
 }

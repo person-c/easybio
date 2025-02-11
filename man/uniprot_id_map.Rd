@@ -17,7 +17,7 @@ This function maps UniProt IDs to other identifiers using UniProt's ID mapping s
 It sends a request to the UniProt API to perform the mapping and retrieves the results in a tabular format.
 }
 \examples{
-\donttest{
+\dontrun{
 uniprot_id_map(
   ids = "P21802,P12345",
   from = "UniProtKB_AC-ID",

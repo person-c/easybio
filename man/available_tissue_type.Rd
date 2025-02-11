@@ -7,7 +7,7 @@
 available_tissue_type(spc)
 }
 \arguments{
-\item{spc}{A character string specifying the species (e.g., "Human" or "mouse").}
+\item{spc}{A character string specifying the species (e.g., "Human" or "Mouse").}
 }
 \value{
 A character vector of unique tissue types available for the given species.
@@ -19,6 +19,6 @@ from the CellMarker2.0 database for a specified species.
 }
 \examples{
 available_tissue_type("Human")
-available_tissue_type("mouse")
+available_tissue_type("Mouse")
 
 }

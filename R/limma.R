@@ -112,7 +112,9 @@ limmaFit <- function(x, group.column) {
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
 
-
+  if (!requireNamespace("limma", quietly = TRUE)) {
+    stop("To fit linear model, limmaFit) requires 'limma' package which cannot be found. Please install 'limma' using 'BiocManager::install('limma')'.")
+  }
   makeContrasts <- limma::makeContrasts()
 
   design <- model.matrix(~ 0 + x$samples[[group.column]])
