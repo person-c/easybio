@@ -71,25 +71,17 @@ list2dt <- function(x) {
 #' split_matrix(mtcars, chunk_size = 2)
 #' split_matrix(mtcars, chunk_size = 5, column = FALSE)
 split_matrix <- function(matrix, chunk_size, column = TRUE) {
-  n <- ifelse(column, ncol(matrix), nrow(matrix))
-  chunk_number <- ifelse(n %% chunk_size == 0,
-    n / chunk_size - 1,
-    floor(n / chunk_size)
-  )
-  message(sprintf("matrix was divided to %d chunks", chunk_number + 1))
-  start_end <- lapply(0:chunk_number, function(x) {
-    c(1, chunk_size) + (chunk_size * x)
-  })
-  start_end[[chunk_number + 1]][[2]] <- n
-  matrix_divided <- lapply(start_end, function(x) {
-    if (column) {
-      matrix[, x[[1]]:x[[2]], drop = FALSE]
-    } else {
-      matrix[x[[1]]:x[[2]], , drop = FALSE]
-    }
-  })
+  n <- if (column) ncol(matrix) else nrow(matrix)
+  starts <- seq(1, n, by = chunk_size)
+  ends <- pmin(starts + chunk_size - 1, n)
+  num_chunks <- length(starts)
+  message(sprintf("Matrix was divided into %d chunks", num_chunks))
 
-  matrix_divided
+  lapply(seq_len(num_chunks), function(i) {
+    s <- starts[i]
+    e <- ends[i]
+    if (column) matrix[, s:e, drop = FALSE] else matrix[s:e, , drop = FALSE]
+  })
 }
 
 #' Retrieve Attributes from an R Object
