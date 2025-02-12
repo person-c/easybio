@@ -198,10 +198,11 @@ get_marker <- function(
 #' # Example usage:
 #' # Match the top 50 differential genes from the pbmc.markers dataset with the Human
 #' # species in the cellMarker2 dataset.
+#' \dontrun{
 #' library(easybio)
 #' data(pbmc.markers)
-#' matched_markers <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
-#' print(matched_markers)
+#' matchCellMarker2(pbmc.markers, n = 50, spc = "Human")[]
+#' }
 matchCellMarker2 <- function(
     marker, n, spc,
     tissueClass = available_tissue_class(spc),
@@ -257,10 +258,11 @@ matchCellMarker2 <- function(
 #' @examples
 #' # Example usage:
 #' # Check the top 50 markers for clusters 1, 4, and 7 in the Human species.
+#' \dontrun{
 #' library(easybio)
 #' data(pbmc.markers)
-#' verified_markers <- check_marker(pbmc.markers, n = 50, spc = "Human", cl = c(1, 4, 7))
-#' print(verified_markers)
+#' check_marker(pbmc.markers, n = 50, spc = "Human", cl = c(1, 4, 7))
+#' }
 check_marker <- function(
     marker, n, spc,
     tissueClass = available_tissue_class(spc),
@@ -352,7 +354,9 @@ plotSeuratDot <- function(srt, cls, ...) {
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' plotMarkerDistribution("CD14")
+#' }
 plotMarkerDistribution <- function(mkr = character()) {
   . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
   tmp <- cellMarker2[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]

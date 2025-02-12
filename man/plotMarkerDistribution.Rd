@@ -17,5 +17,7 @@ This function creates a dot plot displaying the distribution of a specified mark
 different tissues and cell types, based on data from the CellMarker2.0 database.
 }
 \examples{
+\dontrun{
 plotMarkerDistribution("CD14")
+}
 }

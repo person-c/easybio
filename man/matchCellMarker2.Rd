@@ -41,8 +41,9 @@ on their average log2 fold change and adjusted p-values.
 # Example usage:
 # Match the top 50 differential genes from the pbmc.markers dataset with the Human
 # species in the cellMarker2 dataset.
+\dontrun{
 library(easybio)
 data(pbmc.markers)
-matched_markers <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
-print(matched_markers)
+matchCellMarker2(pbmc.markers, n = 50, spc = "Human")[]
+}
 }
