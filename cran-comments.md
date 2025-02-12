@@ -2,6 +2,11 @@
 
 0 errors | 0 warnings | 0 note
 
+# Version 1.1.1(minor changes)
+
+- support filter tissue type or tissue Class in single cell annotation
+- fix some typo errors in example-single-cell vignettes.
+- update some miscellaneous functions.
 
 # Version 1.1.0(minor changes)
 
