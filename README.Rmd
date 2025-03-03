@@ -32,6 +32,8 @@ install.packages("easybio", repos = c("https://person-c.r-universe.dev", "https:
 To know how to use this package to do single cell annotation, see the [article](https://doi.org/10.1101/2024.09.14.609619).
 
 
+参考这个[视频](https://www.bilibili.com/video/BV1Gk9BYTEz9/)。
+
 ##  Stay up-to-date
 
 To learn the difference between development version and CRAN version, see [NEWS](./NEWS.md).

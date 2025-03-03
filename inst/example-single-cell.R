@@ -1,4 +1,6 @@
 # The data are downloaded from "https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz"
+fs::file_show(system.file(package = "easybio", "example-single-cell.R"))
+
 
 library(Seurat)
 library(easybio)
@@ -6,8 +8,9 @@ library(easybio)
 x <- Read10X(data.dir = "filtered_gene_bc_matrices/hg19/")
 pbmc <- CreateSeuratObject(counts = x, project = "pbmc3k", min.cells = 3, min.features = 200)
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
-
 pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 5)
+
+
 pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 1e4)
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
 all.genes <- rownames(pbmc)
@@ -23,7 +26,7 @@ DimPlot(pbmc, reduction = "umap", label = TRUE)
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 
 markerTop50Matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
-markerTop50Matched
+markerTop50Matched[] |> head()
 
 # You can just use the top matched cell as the annotation
 cl2cell <- markerTop50Matched[, head(.SD, 1), by = .(cluster)][, .(cluster, cell_name)]
@@ -60,3 +63,9 @@ cl2cell <- finsert(
 cl2cell
 pbmc@meta.data[["anno"]] <- cl2cell[as.character(Idents(pbmc))]
 DimPlot(pbmc, reduction = "umap", label = TRUE, group.by = "anno")
+
+
+# Query
+get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
+
+plotMarkerDistribution(mkr = "CD68")
