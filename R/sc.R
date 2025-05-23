@@ -217,7 +217,7 @@ matchCellMarker2 <- function(
   cellMarker2 <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
   cellMarker2 <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
 
-  marker <- marker[avg_log2FC > 0 & p_val_adj < 0.05, .SD[order(-avg_log2FC)][1:n], keyby = .(cluster)]
+  marker <- marker[avg_log2FC > 0 & p_val_adj < 0.05, .SD[order(p_val_adj,-abs(pct.1- pct.2))][1:n], keyby = .(cluster)]
 
   marker <- marker[cellMarker2, on = "gene==marker", nomatch = NULL]
   marker <- marker[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
