@@ -1,9 +1,11 @@
 ---
-title: "Example Workflow for Single Cell Annotation Using CellMarker2.0"
-output: rmarkdown::html_vignette
+title: Example Workflow for Single Cell Annotation Using CellMarker2.0
+author: "[cw](https://cying.org)"
+date: "`{r} Sys.Date()`"
+output: html
 vignette: >
-  %\VignetteIndexEntry{example-single-cell-annotation}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{litedown::vignette}
+  %\VignetteIndexEntry{Example Workflow for Single Cell Annotation Using CellMarker2.0}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -30,7 +32,7 @@ head(pbmc.markers)
 ```
 
 ```{r}
-(marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = 'Human')[, head(.SD, 2), by=cluster])
+(marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")[, head(.SD, 2), by = cluster])
 ```
 
 ```{r, fig.width=7.5, fig.height=6}
@@ -55,12 +57,12 @@ Visualize marker dot plots for similar clusters:
 
 ```{r,eval=FALSE}
 cls <- list(
-  c(1, 5, 7), 
+  c(1, 5, 7),
   c(8),
   c(3),
-  c(0,2, 4, 6)
+  c(0, 2, 4, 6)
 )
-dotplotList <- plotSeuratDot(seuratObject, cls, marker = pbmc.markers, n = 50, spc = 'Human', topcellN = 2)
+dotplotList <- plotSeuratDot(seuratObject, cls, marker = pbmc.markers, n = 50, spc = "Human", topcellN = 2)
 ```
 
 Explanation:
@@ -74,21 +76,23 @@ Construct a named vector for  annotation:
 ```{r}
 cl2cell <- finsert(
   expression(
-  c(1, 5) == "Monocyte",
-  c(7) == "DC",
-  c(8) == "megakaryocyte",
-  c(3) == "B.cell",
-  c(0, 2) == "Naive.CD8.T.cell",
-  c(4) == "Cytotoxic.T.Cell",
-  c(6) == "Natural.killer.cell",
-), len = 9)
+    c(1, 5) == "Monocyte",
+    c(7) == "DC",
+    c(8) == "megakaryocyte",
+    c(3) == "B.cell",
+    c(0, 2) == "Naive.CD8.T.cell",
+    c(4) == "Cytotoxic.T.Cell",
+    c(6) == "Natural.killer.cell",
+  ),
+  len = 9
+)
 cl2cell
 ```
 
 You can also directly retrieve markers:
 
 ```{r}
-get_marker(spc = 'Human', cell = c('Monocyte', 'Neutrophil'), number = 5, min.count = 1)
+get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
 ```
 
 or Check the  distribution of the marker directly:

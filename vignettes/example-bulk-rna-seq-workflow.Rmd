@@ -1,9 +1,11 @@
 ---
-title: "Example Workflow for Bulk RNA-Seq Analysis"
-output: rmarkdown::html_vignette
+title: Example Workflow for Bulk RNA-Seq Analysis
+author: "[cw](https://cying.org)"
+date: "`{r} Sys.Date()`"
+output: html
 vignette: >
-  %\VignetteIndexEntry{example-bulk-rna-seq-workflow}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{litedown::vignette}
+  %\VignetteIndexEntry{Example Workflow for Bulk RNA-Seq Analysis}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -11,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.align = 'center'
+  fig.align = "center"
 )
 ```
 
@@ -66,7 +68,7 @@ CHOL_DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
 
 ```{r, echo=FALSE}
-knitr::include_graphics('limmaFilter.png')
+knitr::include_graphics("limmaFilter.png")
 ```
 
 ```{r, echo=FALSE}
@@ -133,7 +135,7 @@ plotORA(
 ```
 
 ```{r,echo=FALSE}
-knitr::include_graphics('ora.png')
+knitr::include_graphics("ora.png")
 ```
 
 To perform Gene Set Enrichment Analysis (GSEA), use the `fgsea::fgsea()` function. The core function is adapted from the fgsea package with minor visual enhancements.
@@ -147,15 +149,17 @@ data(exampleRanks)
 Run the GSEA analysis:
 
 ```{r,fig.width=4, fig.height=2.7}
-fgseaRes <- fgsea(pathways = examplePathways, 
-                  stats    = exampleRanks,
-                  minSize  = 15,
-                  maxSize  = 500)
+fgseaRes <- fgsea(
+  pathways = examplePathways,
+  stats = exampleRanks,
+  minSize = 15,
+  maxSize = 500
+)
 plotGSEA(
-  fgseaRes, 
-  pathways = examplePathways, 
-  pwayname = "5991130_Programmed_Cell_Death", 
-  stats = exampleRanks, 
+  fgseaRes,
+  pathways = examplePathways,
+  pwayname = "5991130_Programmed_Cell_Death",
+  stats = exampleRanks,
   save = FALSE
 )
 ```

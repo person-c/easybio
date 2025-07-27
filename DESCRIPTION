@@ -20,9 +20,9 @@ Depends:
     R (>= 4.1.0)
 LazyData: true
 Suggests: 
+    litedown,
     knitr,
     patchwork,
-    rmarkdown,
     ggrepel,
     Seurat,
     limma,
@@ -32,5 +32,5 @@ Suggests:
     testthat (>= 3.0.0)
 biocViews: limma, GEOquery, edgeR, fgsea
 Language: en-US
-VignetteBuilder: knitr
+VignetteBuilder: litedown
 Config/testthat/edition: 3
