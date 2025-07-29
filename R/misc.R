@@ -203,3 +203,45 @@ workIn <- function(dir, expr) {
   res <- eval(substitute(expr))
   res
 }
+
+#' Extract Unique Elements from a Column with Optional Filtering
+#'
+#' Retrieves the unique, non-missing values from a specified column of a data frame.
+#' An optional expression can be provided to filter the rows of the data frame
+#' before extracting the values.
+#'
+#' @param data A data frame from which to extract values.
+#' @param col_name A single string specifying the name of the target column.
+#' @param subset An optional logical expression used to subset the data frame.
+#'   This expression is evaluated in the context of the `data`, so columns can be
+#'   referred to by their names directly (e.g., `Sepal.Length > 5`).
+#'
+#' @return A vector containing the unique, non-NA values from the specified
+#'   column after the optional filtering has been applied.
+#'
+#' @export
+#'
+#' @examples
+#' # Example 1: Get all unique species from the iris dataset
+#' available_ele(iris, "Species")
+#'
+#' # Example 2: Get unique species for flowers with Sepal.Length > 7
+#' available_ele(iris, "Species", subset = Sepal.Length > 7)
+#'
+#' # Example 3: Get unique carb values for cars with 6 cylinders
+#' available_ele(mtcars, "carb", subset = cyl == 6)
+available_ele <- function(data, col_name, subset) {
+  assert_data_frame(data)
+  assert_string(col_name)
+  assert_subset(col_name, choices = names(data))
+
+  if (!missing(subset)) {
+    subset_expr <- substitute(subset)
+    row_idx <- eval(subset_expr, envir = data, enclos = parent.frame())
+
+    data <- data[row_idx & !is.na(row_idx), , drop = FALSE]
+  }
+
+  values <- data[[col_name]]
+  unique(na.omit(values))
+}
