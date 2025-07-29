@@ -1,3 +1,13 @@
+#' @keywords internal
+"_PACKAGE"
+
+# The following block is used by usethis to automatically manage
+# roxygen namespace tags. Modify with care!
+## usethis namespace: start
+#' @importFrom checkmate assert_data_frame assert_string assert_subset
+## usethis namespace: end
+NULL
+
 #' Example marker data from Seurat::FindAllMarkers()
 #'
 #' The data were obtained by the seurat PBMC workflow.
