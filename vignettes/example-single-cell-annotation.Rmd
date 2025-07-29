@@ -82,7 +82,7 @@ cl2cell <- finsert(
     c(3) == "B.cell",
     c(0, 2) == "Naive.CD8.T.cell",
     c(4) == "Cytotoxic.T.Cell",
-    c(6) == "Natural.killer.cell",
+    c(6) == "Natural.killer.cell"
   ),
   len = 9
 )
