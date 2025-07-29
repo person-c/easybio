@@ -1,68 +1,60 @@
-#' Insert Specific Values into a Character Vector at Defined Positions
+#' Create a Vector from an Index-to-Label Map
 #'
-#' This function constructs a character vector of a specified length, inserting
-#' given values at positions determined by numeric indices. It is designed for
-#' single cell annotation tasks, where specific annotations need to be placed
-#' at certain positions in a vector.
+#' Constructs a character vector by mapping labels to specified 0-based numeric
+#' indices. This is a utility function often used in single-cell analysis to
+#' assign cell type annotations to cluster IDs.
 #'
-#' @param x An expression defining the value to insert and the positions at which
-#'   to insert them. The expression should be a list of logical comparisons,
-#'   where the left side is a numeric vector of positions and the right side is
-#'   the corresponding character value to insert.
-#' @param len The desired length of the output character vector. If the specified
-#'   positions exceed this length, the vector will be padded with the `na` value.
-#' @param setname A logical value indicating whether to set names for the elements
-#'   of the vector. If `TRUE`, names are set as character representations of the
-#'   positions from 0 to the length of the vector minus one.
-#' @param na The default value to use for positions not specified in `x`. This
-#'   value is also used to pad the vector if its length exceeds the positions
-#'   specified in `x`.
+#' @param x The mapping of indices to labels. This can be provided in two formats:
+#'   \itemize{
+#'     \item A \code{list} of formulas, e.g., \code{list(c(0, 1) ~ "LabelA", 2 ~ "LabelB")}.
+#'     \item An \code{expression} object, e.g., \code{expression(c(0, 1) == "LabelA", 2 == "LabelB")}.
+#'   }
+#' @param len An optional integer specifying the minimum length of the output
+#'   vector. If the highest index in \code{x} is greater than \code{len}, the
+#'   vector will be automatically extended.
+#' @param setname A logical value. If \code{TRUE} (the default), the elements of
+#'   the output vector are named with their corresponding 0-based index (e.g., "0", "1", "2", ...).
+#' @param na The character value used to fill positions that are not specified in
+#'   the mapping. Defaults to "Unknown".
 #'
-#' @return A named character vector with the specified values inserted at given
-#'   positions and padded with the `na` value if necessary.
+#' @return A character vector with the specified labels at the given positions.
+#'   The vector is named with 0-based indices if \code{setname} is \code{TRUE}.
+#'
 #' @export
 #'
 #' @examples
-#' # Example usage:
-#' # Insert "Neutrophil" at positions 0, 1, 3 and "Macrophage" at positions 2, 4, 8
-#' # in a vector of length 10, with "Unknown" as the default value.
-#' library(easybio)
-#' annotated_vector <- finsert(
-#'   x = expression(
-#'     c(0, 1, 3) == "Neutrophil",
-#'     c(2, 4, 8) == "Macrophage"
-#'   ),
-#'   len = 10,
-#'   na = "Unknown"
+#' # --- Example 1: Using the default formula list format ---
+#' # This is the recommended and default usage.
+#' mapping_formula <- list(
+#'   c(0, 1, 3) ~ "Neutrophil",
+#'   c(2, 4, 8) ~ "Macrophage"
 #' )
-#' print(annotated_vector)
+#' finsert(mapping_formula)
+#'
+#' # --- Example 2: Using the expression format for backward compatibility ---
+#' mapping_expr <- expression(
+#'   c(0, 1, 3) == "Neutrophil",
+#'   c(2, 4, 8) == "Macrophage"
+#' )
+#' finsert(mapping_expr, len = 10, na = "Unassigned")
+#'
 finsert <- function(
-    x = expression(
-      c(0, 1, 3) == "Neutrophil",
-      c(2, 4, 8) == "Macrophage"
+    x = list(
+      c(0, 1, 3) ~ "Neutrophil",
+      c(2, 4, 8) ~ "Macrophage"
     ),
     len = integer(),
     setname = TRUE,
     na = "Unknown") {
-  x <- eval(substitute(x))
-  x <- lapply(x, as.list)
-  x <- rapply(x, eval, classes = "call", how = "replace")
-  x <- unlist(x, recursive = FALSE)
-  itor <- 1
+  x <- if (is.expression(x)) lapply(x, .exprs2formula) else x
 
-  clIdx <- which(sapply(x, is.numeric))
-  maxL <- max(unlist(x[clIdx]))
-  v <- vector(mode = "character", length = if (!missing(len) && len > (maxL + 1)) len else maxL + 1)
-  while (itor < length(x)) {
-    v[x[[itor + 1]] + 1] <- x[[itor + 2]]
-
-    itor <- itor + 3
-  }
-
-  v[v == ""] <- na
+  maxL <- max(unlist(sapply(x, \(.x) eval(.x[[2]]), simplify = FALSE)))
+  v <- rep(na, if (!missing(len) && len > (maxL + 1)) len else maxL + 1)
+  invisible(lapply(x, \(.x) v[eval(.x[[2]]) + 1] <<- .x[[3]]))
 
   if (setname) names(v) <- as.character(0:(length(v) - 1))
-  v
+
+  return(v)
 }
 
 #' Retrieve Available Tissue Classes for a Given Species
@@ -460,4 +452,8 @@ tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
   lapply(cls, function(x) {
     Seurat::FindMarkers(SeuratObject, ident.1 = x, group.by = "seurat_clusters")
   })
+}
+
+.exprs2formula <- function(expr) {
+  formula(paste(deparse(expr[[2]]), "~", deparse(expr[[3]])))
 }
