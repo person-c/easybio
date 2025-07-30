@@ -18,7 +18,10 @@ This function extracts and returns a unique list of available tissue classes
 from the CellMarker2.0 database for a specified species.
 }
 \examples{
+# Get all tissue classes for Human
 available_tissue_class("Human")
-available_tissue_class("Mouse")
 
+}
+\seealso{
+\code{\link{available_tissue_type}}, \code{\link{get_marker}}
 }

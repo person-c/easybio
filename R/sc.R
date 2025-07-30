@@ -67,16 +67,18 @@ finsert <- function(
 #' @return A character vector of unique tissue classes available for the given species.
 #' If no tissue classes are found, an empty vector is returned.
 #'
+#' @seealso \code{\link{available_tissue_type}}, \code{\link{get_marker}}
+#'
 #' @examples
+#' # Get all tissue classes for Human
 #' available_tissue_class("Human")
-#' available_tissue_class("Mouse")
 #'
 #' @export
-#'
 available_tissue_class <- function(spc) {
-  . <- species <- tissue_class <- NULL
-  tissue_class <- cellMarker2[.(spc), unique(na.omit(tissue_class)), on = .(species)]
-  tissue_class
+  assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
+
+  species <- NULL
+  available_ele(cellMarker2, "tissue_class", subset = species == spc)
 }
 
 #' Retrieve Available Tissue Types for a Given Species
@@ -89,15 +91,18 @@ available_tissue_class <- function(spc) {
 #' @return A character vector of unique tissue types available for the given species.
 #' If no tissue types are found, an empty vector is returned.
 #'
+#' @seealso \code{\link{available_tissue_class}}, \code{\link{get_marker}}
+#'
 #' @examples
+#' # Get all tissue types for Human
 #' available_tissue_type("Human")
-#' available_tissue_type("Mouse")
 #'
 #' @export
 available_tissue_type <- function(spc) {
-  . <- species <- tissue_type <- NULL
-  tissue_type <- cellMarker2[.(spc), unique(na.omit(tissue_type)), on = .(species)]
-  tissue_type
+  assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
+
+  species <- NULL
+  available_ele(cellMarker2, "tissue_type", subset = species == spc)
 }
 
 #' Retrieve Markers for Specific Cells from cellMarker2
