@@ -16,7 +16,6 @@
 #' \item{feature}{A data frame of the feature metadata, which includes gene symbols if combining probes.}
 #'
 #' @importFrom utils download.file
-#' @import data.table
 #' @export
 prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   . <- ID <- symbol <- gene_assignment <- NULL
@@ -118,7 +117,6 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
 #' @param data A `SummarizedExperiment` object containing TCGA data, typically obtained from R package `TCGABiolinks`.
 #'
 #' @return A list.
-#' @import data.table
 #' @export
 prepare_tcga <- function(data) {
   sampleInfo <- as.data.frame(data@colData)

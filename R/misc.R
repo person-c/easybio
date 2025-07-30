@@ -44,7 +44,6 @@ setrownames <- function(object, nm) {
 #' @param x A named list where each element contains a vector of values.
 #'
 #' @return A long data.table with two columns: 'name' and 'value'.
-#' @importFrom data.table data.table
 #' @export
 #' @examples
 #' library(easybio)
@@ -109,7 +108,6 @@ get_attr <- function(x, attr_name) {
 #'
 #' @return A data.table representing the graph, with columns for the node names
 #'   (`node_1` and `node_2`) and the weight of the edge (`interWeight`).
-#' @import data.table
 #' @export
 list2graph <- function(nodes) {
   comb2 <- combn(names(nodes), m = 2, simplify = FALSE)

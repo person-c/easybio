@@ -123,7 +123,6 @@ available_tissue_type <- function(spc) {
 #'
 #' @return A named list where each name corresponds to a cell type and each
 #'   element is a vector of marker names.
-#' @import data.table
 #' @export
 #'
 #' @examples
@@ -188,7 +187,6 @@ get_marker <- function(
 #' @return A data frame containing matched markers from the `cellMarker2`
 #'   dataset, with additional columns indicating the number of matches and
 #'   ordered symbols.
-#' @import data.table
 #' @export
 #'
 #' @examples
@@ -249,7 +247,6 @@ matchCellMarker2 <- function(
 #'
 #' @return A named list where each name corresponds to a cell type and each
 #'   element is a vector of marker names.
-#' @import data.table
 #' @export
 #'
 #' @examples
@@ -347,7 +344,6 @@ plotSeuratDot <- function(srt, cls, ...) {
 #'
 #' @return A ggplot2 object representing the distribution of the marker.
 #' @import ggplot2
-#' @import data.table
 #'
 #' @export
 #' @examples
@@ -378,7 +374,6 @@ plotMarkerDistribution <- function(mkr = character()) {
 #'
 #' @return A ggplot2 object representing the distribution of possible cell types.
 #' @import ggplot2
-#' @import data.table
 #' @export
 plotPossibleCell <- function(marker, min.uniqueN = 2) {
   cluster <- cell_name <- N <- NULL
@@ -426,7 +421,6 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
 #'
 #' @return A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.
 #' @import ggplot2
-#' @import data.table
 #' @export
 tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
   parameters <- CJ(resolution = resolution, N = N)

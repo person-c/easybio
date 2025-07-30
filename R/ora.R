@@ -11,7 +11,6 @@
 #' @param ticksSize The size of the tick marks. Default is 0.2.
 #'
 #' @return A ggplot object representing the enrichment plot.
-#' @import data.table
 #' @import ggplot2
 #' @export
 plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize = 0.2) {
@@ -58,7 +57,6 @@ plotEnrichment2 <- function(pathways, pwayname, stats, gseaParam = 1, ticksSize 
 #'
 #' @param stats A numeric vector containing the ranked statistics from a GSEA analysis.
 #'
-#' @import data.table
 #' @import ggplot2
 #' @return ggplot2 object
 #' @export
@@ -86,7 +84,6 @@ plotRank <- function(stats) {
 #' @param stats A numeric vector representing the ranked statistics.
 #' @param save A logical value indicating whether to save the plot as a PDF file. Default is `FALSE`.
 #'
-#' @import data.table
 #' @import ggplot2
 #' @return ggplot2 object.
 #' @export

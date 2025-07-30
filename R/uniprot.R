@@ -40,7 +40,6 @@
 #' @param ... Parameters to be passed in the request body.
 #'
 #' @return A `data.table` containing the mapped identifiers.
-#' @import data.table
 #' @export
 #' @examples
 #' \dontrun{
