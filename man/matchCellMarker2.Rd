@@ -104,7 +104,6 @@ custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
 matched_custom <- matchCellMarker2(
   pbmc.markers,
   n = 50,
-  spc = "Human", # Still required by function signature but not used for filtering
   ref = custom_ref_df
 )
 print(matched_custom)

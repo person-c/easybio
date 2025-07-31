@@ -295,7 +295,6 @@ get_marker <- function(
 #' matched_custom <- matchCellMarker2(
 #'   pbmc.markers,
 #'   n = 50,
-#'   spc = "Human", # Still required by function signature but not used for filtering
 #'   ref = custom_ref_df
 #' )
 #' print(matched_custom)
