@@ -235,9 +235,9 @@ get_marker <- function(
 #' @param tissueType A character vector of tissue types to include from the
 #'   `cellMarker2` database. Defaults to all available tissue types for the
 #'   specified species. See `available_tissue_type()`.
-#' @param ref An optional long `data.frame` which must contains column
-#' 'cell_type' and 'marker' to be used as the reference for marker
-#'   matching. If `NULL` (the default), the function uses the built-in `cellMarker2`
+#' @param ref An optional long `data.frame` which must contain 'cell_name'
+#'   and 'marker' columns to be used as the reference for marker matching.
+#'   If `NULL` (the default), the function uses the built-in `cellMarker2`
 #'   dataset, filtered by `spc`, `tissueClass`, and `tissueType`.
 #'
 #' @return A `data.table` where each row represents a potential cell type match for a
@@ -277,6 +277,28 @@ get_marker <- function(
 #'   tissueType = c("Blood", "Bone marrow")
 #' )
 #' print(matched_cells_strict)
+#'
+#' # --- Example with a custom reference ---
+#' # Create a custom reference as a named list.
+#' custom_ref_list <- list(
+#'   "T-cell" = c("CD3D", "CD3E"),
+#'   "B-cell" = c("CD79A", "MS4A1"),
+#'   "Myeloid" = "LYZ"
+#' )
+#'
+#' # Convert the list to a long data.frame compatible with the 'ref' parameter.
+#' custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
+#'
+#' # Run annotation using the custom reference.
+#' # When 'ref' is provided, the internal cellMarker2 database and its filters
+#' # ('spc', 'tissueClass', 'tissueType') are ignored for matching.
+#' matched_custom <- matchCellMarker2(
+#'   pbmc.markers,
+#'   n = 50,
+#'   spc = "Human", # Still required by function signature but not used for filtering
+#'   ref = custom_ref_df
+#' )
+#' print(matched_custom)
 #' }
 matchCellMarker2 <- function(
     marker, n, spc,

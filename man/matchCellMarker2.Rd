@@ -40,9 +40,9 @@ specified species. See \code{available_tissue_class()}.}
 \code{cellMarker2} database. Defaults to all available tissue types for the
 specified species. See \code{available_tissue_type()}.}
 
-\item{ref}{An optional long \code{data.frame} which must contains column
-'cell_type' and 'marker' to be used as the reference for marker
-matching. If \code{NULL} (the default), the function uses the built-in \code{cellMarker2}
+\item{ref}{An optional long \code{data.frame} which must contain 'cell_name'
+and 'marker' columns to be used as the reference for marker matching.
+If \code{NULL} (the default), the function uses the built-in \code{cellMarker2}
 dataset, filtered by \code{spc}, \code{tissueClass}, and \code{tissueType}.}
 }
 \value{
@@ -86,6 +86,28 @@ matched_cells_strict <- matchCellMarker2(
   tissueType = c("Blood", "Bone marrow")
 )
 print(matched_cells_strict)
+
+# --- Example with a custom reference ---
+# Create a custom reference as a named list.
+custom_ref_list <- list(
+  "T-cell" = c("CD3D", "CD3E"),
+  "B-cell" = c("CD79A", "MS4A1"),
+  "Myeloid" = "LYZ"
+)
+
+# Convert the list to a long data.frame compatible with the 'ref' parameter.
+custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
+
+# Run annotation using the custom reference.
+# When 'ref' is provided, the internal cellMarker2 database and its filters
+# ('spc', 'tissueClass', 'tissueType') are ignored for matching.
+matched_custom <- matchCellMarker2(
+  pbmc.markers,
+  n = 50,
+  spc = "Human", # Still required by function signature but not used for filtering
+  ref = custom_ref_df
+)
+print(matched_custom)
 }
 }
 \seealso{
