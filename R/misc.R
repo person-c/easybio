@@ -42,16 +42,18 @@ setrownames <- function(object, nm) {
 #' list element and another for the value.
 #'
 #' @param x A named list where each element contains a vector of values.
+#' @param col_names The colnames of the returned result.
 #'
 #' @return A long data.table with two columns: 'name' and 'value'.
 #' @export
 #' @examples
 #' library(easybio)
 #' list2dt(list(a = c(1, 1), b = c(2, 2)))
-list2dt <- function(x) {
-  data.table(name = rep(names(x), sapply(x, length)), value = unlist(x))
+list2dt <- function(x, col_names = c("name", "value")) {
+  res <- data.table(name = rep(names(x), sapply(x, length)), value = unlist(x))
+  setnames(res, new = col_names)
+  res
 }
-
 
 #' Split a Matrix into Smaller Sub-matrices by Column or Row
 #'
