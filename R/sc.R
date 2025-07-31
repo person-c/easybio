@@ -195,8 +195,8 @@ get_marker <- function(
   # Proceed with only the cell names that exist
   valid_cells <- cell[is_exists]
 
-  cellMarker2_filtered <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
-  marker <- cellMarker2_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
+  cellmarker2_filtered <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  marker <- cellmarker2_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
 
   if (is.null(marker) || nrow(marker) == 0) {
     return(NULL)
