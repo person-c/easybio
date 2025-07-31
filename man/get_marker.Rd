@@ -45,4 +45,6 @@ of markers to retrieve, and a minimum count threshold for marker occurrences.
 library(easybio)
 markers <- get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"))
 print(markers)
+# Example with a typo in cell name
+markers_typo <- get_marker(spc = "Human", cell = c("Macrophae", "Monocyte"))
 }

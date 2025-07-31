@@ -132,6 +132,8 @@ available_tissue_type <- function(spc) {
 #' library(easybio)
 #' markers <- get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"))
 #' print(markers)
+#' # Example with a typo in cell name
+#' markers_typo <- get_marker(spc = "Human", cell = c("Macrophae", "Monocyte"))
 get_marker <- function(
     spc, cell = character(),
     tissueClass = available_tissue_class(spc),
@@ -140,25 +142,65 @@ get_marker <- function(
   . <- tissue_type <- tissue_class <- NULL
   species <- cell_name <- N <- marker <- NULL
 
-  is_exists <- cell %chin% unique(cellMarker2[["cell_name"]])
+  all_cell_names <- available_ele(cellMarker2, "cell_name", subset = species == spc)
+  is_exists <- cell %chin% all_cell_names
 
-  sapply(cell[!is_exists], \(x) {
-    idx <- grep(
-      gsub("\\s+", "", x),
-      gsub("\\s+", "", unique(cellMarker2[["cell_name"]])),
-      ignore.case = TRUE
-    )
-    psblCell <- paste0(unique(cellMarker2[["cell_name"]])[idx], collapse = "\n")
-    message(sprintf("%s doesn't exist in the CellMarker2 database; Maybe you means?\n%s\n", x, psblCell))
-  })
+  not_found_cells <- cell[!is_exists]
+  if (length(not_found_cells) > 0) {
+    suggestions <- vapply(not_found_cells, FUN.VALUE = "character", FUN = function(x) {
+      # 1. Fuzzy match with adist for typos
+      distances <- adist(x, all_cell_names, ignore.case = TRUE, partial = FALSE)
+      min_dist <- min(distances)
+
+      # Heuristic for a "good" match (e.g., distance <= 2)
+      if (min_dist <= 2) {
+        possible_matches <- all_cell_names[which(distances == min_dist)]
+        return(paste(possible_matches, collapse = " or "))
+      }
+
+      # 2. Fallback to grep for partial/substring matches
+      grep_idx <- grep(x, all_cell_names, ignore.case = TRUE)
+      if (length(grep_idx) > 0) {
+        return(paste(all_cell_names[grep_idx], collapse = " or "))
+      }
+
+      return("") # No suggestion found
+    })
+
+    # Format and print message for cells with suggestions
+    has_suggestion <- nchar(suggestions) > 0
+    if (any(has_suggestion)) {
+      msg_lines <- sprintf(
+        "- For '%s', did you mean: %s?",
+        names(suggestions[has_suggestion]),
+        suggestions[has_suggestion]
+      )
+      message("Some cell types not found. Suggestions:\n", paste(msg_lines, collapse = "\n"))
+    }
+
+    # Report cells for which no suggestion could be found
+    if (any(!has_suggestion)) {
+      message(
+        "Could not find any matches for: ",
+        paste(names(suggestions[!has_suggestion]), collapse = ", ")
+      )
+    }
+  }
 
   if (all(!is_exists)) {
+    message("No valid cell types provided to fetch markers. Returning NULL.")
     return(NULL)
   }
 
-  cellMarker2 <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
-  marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)]
+  # Proceed with only the cell names that exist
+  valid_cells <- cell[is_exists]
 
+  cellMarker2_filtered <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  marker <- cellMarker2_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
+
+  if (is.null(marker) || nrow(marker) == 0) {
+    return(NULL)
+  }
 
   marker <- marker[, .N, by = .(cell_name, marker)]
   marker <- marker[N > min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
