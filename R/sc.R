@@ -210,62 +210,110 @@ get_marker <- function(
   marker
 }
 
-#' Match Markers with cellMarker2 Dataset
+#' Annotate Clusters by Matching Markers with the CellMarker2.0 Database
 #'
-#' This function matches markers from the `FindAllMarkers` output with the
-#' `cellMarker2` dataset, filtering by species and selecting the top genes based
-#' on their average log2 fold change and adjusted p-values.
+#' This function takes cluster-specific markers, typically from `Seurat::FindAllMarkers`,
+#' and annotates each cluster with potential cell types by matching these markers
+#' against the CellMarker2.0 database. It first filters and selects the top `n`
+#' marker genes for each cluster based on specified thresholds and then compares
+#' them to the reference database to find the most likely cell type annotations.
 #'
-#' @param marker A data frame of markers obtained from the `FindAllMarkers`
-#'   function, expected to contain columns such as `avg_log2FC`, `p_val_adj`,
-#'   and `gene`.
-#' @param n An integer specifying the top number of genes to match from the
-#'   input markers.
-#' @param spc A character string specifying the species, which can be either
-#'   'Human' or 'Mouse'.
-#' @param tissueClass A character specifying the tissue classes, default `available_tissue_class(spc)`.
-#' @param tissueType A character specifying the tissue types, default `available_tissue_type(spc)`.
+#' @param marker A `data.frame` or `data.table` of markers, usually the output of
+#'   `Seurat::FindAllMarkers`. It must contain columns for `cluster`, `gene`,
+#'   `avg_log2FC`, and `p_val_adj`.
+#' @param n An integer specifying the number of top marker genes to use from each
+#'   cluster for matching. Genes are ranked by `avg_log2FC` after filtering.
+#' @param spc A character string specifying the species, either "Human" or "Mouse".
+#'   This is used to filter the `cellMarker2` database.
+#' @param avg_log2FC_threshold A numeric value setting the minimum average log2 fold
+#'   change for a marker to be considered. Defaults to `0`.
+#' @param p_val_adj_threshold A numeric value setting the maximum adjusted p-value
+#'   for a marker to be considered. Defaults to `0.05`.
+#' @param tissueClass A character vector of tissue classes to include from the
+#'   `cellMarker2` database. Defaults to all available tissue classes for the
+#'   specified species. See `available_tissue_class()`.
+#' @param tissueType A character vector of tissue types to include from the
+#'   `cellMarker2` database. Defaults to all available tissue types for the
+#'   specified species. See `available_tissue_type()`.
+#' @param ref An optional long `data.frame` which must contains column
+#' 'cell_type' and 'marker' to be used as the reference for marker
+#'   matching. If `NULL` (the default), the function uses the built-in `cellMarker2`
+#'   dataset, filtered by `spc`, `tissueClass`, and `tissueType`.
 #'
-#' @return A data frame containing matched markers from the `cellMarker2`
-#'   dataset, with additional columns indicating the number of matches and
-#'   ordered symbols.
+#' @return A `data.table` where each row represents a potential cell type match for a
+#'   cluster. The table is keyed by `cluster` and includes the following columns:
+#'   \item{cluster}{The original cluster ID.}
+#'   \item{cell_name}{The potential cell type annotation from the reference database.}
+#'   \item{uniqueN}{The number of unique marker genes from the cluster that match this cell type.}
+#'   \item{N}{The total number of matches (including duplicates if a gene marks a cell type multiple times in the reference).}
+#'   \item{ordered_symbol}{A list of the matching gene symbols, ordered by their frequency.}
+#'   \item{orderN}{A list of the corresponding frequencies for `ordered_symbol`.}
+#'   \item{markerWith}{A list of all gene symbols from the cluster that matched the cell type.}
+#'
+#' @seealso \code{\link{check_marker}}, \code{\link{plotPossibleCell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
+#'
 #' @export
 #'
 #' @examples
-#' # Example usage:
-#' # Match the top 50 differential genes from the pbmc.markers dataset with the Human
-#' # species in the cellMarker2 dataset.
 #' \dontrun{
 #' library(easybio)
 #' data(pbmc.markers)
-#' matchCellMarker2(pbmc.markers, n = 50, spc = "Human")[]
+#'
+#' # Basic usage: Annotate clusters using the top 50 markers per cluster
+#' matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+#' print(matched_cells)
+#'
+#' # To see the top annotation for each cluster
+#' top_matches <- matched_cells[, .SD[1], by = cluster]
+#' print(top_matches)
+#'
+#' # Advanced usage: Stricter filtering and focus on specific tissues
+#' matched_cells_strict <- matchCellMarker2(
+#'   pbmc.markers,
+#'   n = 30,
+#'   spc = "Human",
+#'   avg_log2FC_threshold = 0.5,
+#'   p_val_adj_threshold = 0.01,
+#'   tissueType = c("Blood", "Bone marrow")
+#' )
+#' print(matched_cells_strict)
 #' }
 matchCellMarker2 <- function(
     marker, n, spc,
+    avg_log2FC_threshold = 0,
+    p_val_adj_threshold = 0.05,
     tissueClass = available_tissue_class(spc),
-    tissueType = available_tissue_type(spc)) {
+    tissueType = available_tissue_type(spc),
+    ref = NULL) {
   . <- markerWith <- tissue_class <- tissue_type <- NULL
   species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL
 
   marker <- copy(marker)
   setDT(marker)
 
+  marker <- marker[
+    avg_log2FC >= avg_log2FC_threshold & p_val_adj <= p_val_adj_threshold,
+    .SD[order(-avg_log2FC)][1:n],
+    keyby = .(cluster)
+  ]
 
-  cellMarker2 <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
-  cellMarker2 <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  if (is.null(ref)) {
+    ref <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
+    ref <- ref[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  }
 
-  marker <- marker[avg_log2FC > 0 & p_val_adj < 0.05, .SD[order(-avg_log2FC)][1:n], keyby = .(cluster)]
-
-  marker <- marker[cellMarker2, on = "gene==marker", nomatch = NULL]
-  marker <- marker[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
-  marker <- marker[N > 0, .SD[order(-N)], keyby = .(cluster)]
+  res <- marker[ref, on = "gene==marker", nomatch = NULL]
+  res <- res[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
+  res <- res[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
 
-  marker[, let(uniqueN = sapply(markerWith, FUN = \(x) uniqueN(x)))]
-  marker[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
-  marker[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
-  setcolorder(marker, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
-  marker
+  res[, let(uniqueN = sapply(markerWith, FUN = \(x) uniqueN(x)))]
+  res[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
+  res[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
+  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
+  res[["markerWith"]] <- NULL
+
+  res
 }
 
 #' Verify Markers for Specific Clusters Using matchCellMarker

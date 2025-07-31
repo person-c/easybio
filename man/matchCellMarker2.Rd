@@ -2,48 +2,92 @@
 % Please edit documentation in R/sc.R
 \name{matchCellMarker2}
 \alias{matchCellMarker2}
-\title{Match Markers with cellMarker2 Dataset}
+\title{Annotate Clusters by Matching Markers with the CellMarker2.0 Database}
 \usage{
 matchCellMarker2(
   marker,
   n,
   spc,
+  avg_log2FC_threshold = 0,
+  p_val_adj_threshold = 0.05,
   tissueClass = available_tissue_class(spc),
-  tissueType = available_tissue_type(spc)
+  tissueType = available_tissue_type(spc),
+  ref = NULL
 )
 }
 \arguments{
-\item{marker}{A data frame of markers obtained from the \code{FindAllMarkers}
-function, expected to contain columns such as \code{avg_log2FC}, \code{p_val_adj},
-and \code{gene}.}
+\item{marker}{A \code{data.frame} or \code{data.table} of markers, usually the output of
+\code{Seurat::FindAllMarkers}. It must contain columns for \code{cluster}, \code{gene},
+\code{avg_log2FC}, and \code{p_val_adj}.}
 
-\item{n}{An integer specifying the top number of genes to match from the
-input markers.}
+\item{n}{An integer specifying the number of top marker genes to use from each
+cluster for matching. Genes are ranked by \code{avg_log2FC} after filtering.}
 
-\item{spc}{A character string specifying the species, which can be either
-'Human' or 'Mouse'.}
+\item{spc}{A character string specifying the species, either "Human" or "Mouse".
+This is used to filter the \code{cellMarker2} database.}
 
-\item{tissueClass}{A character specifying the tissue classes, default \code{available_tissue_class(spc)}.}
+\item{avg_log2FC_threshold}{A numeric value setting the minimum average log2 fold
+change for a marker to be considered. Defaults to \code{0}.}
 
-\item{tissueType}{A character specifying the tissue types, default \code{available_tissue_type(spc)}.}
+\item{p_val_adj_threshold}{A numeric value setting the maximum adjusted p-value
+for a marker to be considered. Defaults to \code{0.05}.}
+
+\item{tissueClass}{A character vector of tissue classes to include from the
+\code{cellMarker2} database. Defaults to all available tissue classes for the
+specified species. See \code{available_tissue_class()}.}
+
+\item{tissueType}{A character vector of tissue types to include from the
+\code{cellMarker2} database. Defaults to all available tissue types for the
+specified species. See \code{available_tissue_type()}.}
+
+\item{ref}{An optional long \code{data.frame} which must contains column
+'cell_type' and 'marker' to be used as the reference for marker
+matching. If \code{NULL} (the default), the function uses the built-in \code{cellMarker2}
+dataset, filtered by \code{spc}, \code{tissueClass}, and \code{tissueType}.}
 }
 \value{
-A data frame containing matched markers from the \code{cellMarker2}
-dataset, with additional columns indicating the number of matches and
-ordered symbols.
+A \code{data.table} where each row represents a potential cell type match for a
+cluster. The table is keyed by \code{cluster} and includes the following columns:
+\item{cluster}{The original cluster ID.}
+\item{cell_name}{The potential cell type annotation from the reference database.}
+\item{uniqueN}{The number of unique marker genes from the cluster that match this cell type.}
+\item{N}{The total number of matches (including duplicates if a gene marks a cell type multiple times in the reference).}
+\item{ordered_symbol}{A list of the matching gene symbols, ordered by their frequency.}
+\item{orderN}{A list of the corresponding frequencies for \code{ordered_symbol}.}
+\item{markerWith}{A list of all gene symbols from the cluster that matched the cell type.}
 }
 \description{
-This function matches markers from the \code{FindAllMarkers} output with the
-\code{cellMarker2} dataset, filtering by species and selecting the top genes based
-on their average log2 fold change and adjusted p-values.
+This function takes cluster-specific markers, typically from \code{Seurat::FindAllMarkers},
+and annotates each cluster with potential cell types by matching these markers
+against the CellMarker2.0 database. It first filters and selects the top \code{n}
+marker genes for each cluster based on specified thresholds and then compares
+them to the reference database to find the most likely cell type annotations.
 }
 \examples{
-# Example usage:
-# Match the top 50 differential genes from the pbmc.markers dataset with the Human
-# species in the cellMarker2 dataset.
 \dontrun{
 library(easybio)
 data(pbmc.markers)
-matchCellMarker2(pbmc.markers, n = 50, spc = "Human")[]
+
+# Basic usage: Annotate clusters using the top 50 markers per cluster
+matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+print(matched_cells)
+
+# To see the top annotation for each cluster
+top_matches <- matched_cells[, .SD[1], by = cluster]
+print(top_matches)
+
+# Advanced usage: Stricter filtering and focus on specific tissues
+matched_cells_strict <- matchCellMarker2(
+  pbmc.markers,
+  n = 30,
+  spc = "Human",
+  avg_log2FC_threshold = 0.5,
+  p_val_adj_threshold = 0.01,
+  tissueType = c("Blood", "Bone marrow")
+)
+print(matched_cells_strict)
 }
+}
+\seealso{
+\code{\link{check_marker}}, \code{\link{plotPossibleCell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
 }
