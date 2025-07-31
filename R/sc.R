@@ -203,7 +203,7 @@ get_marker <- function(
   }
 
   marker <- marker[, .N, by = .(cell_name, marker)]
-  marker <- marker[N > min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
+  marker <- marker[N >= min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
   marker <- marker[, .(marker = .(marker)), by = .(cell_name)]
   marker <- setNames(marker[["marker"]], marker[["cell_name"]])
 
