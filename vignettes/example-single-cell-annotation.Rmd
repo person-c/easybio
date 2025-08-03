@@ -1,102 +1,195 @@
 ---
-title: Example Workflow for Single Cell Annotation Using CellMarker2.0
+title: "Example Workflow for Single-Cell Annotation with easybio"
 author: "[cw](https://cying.org)"
 date: "`{r} Sys.Date()`"
 output: html
 vignette: >
   %\VignetteEngine{litedown::vignette}
-  %\VignetteIndexEntry{Example Workflow for Single Cell Annotation Using CellMarker2.0}
+  %\VignetteIndexEntry{Example Workflow for Single-Cell Annotation with easybio}
   %\VignetteEncoding{UTF-8}
 ---
 
+## Introduction
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+This vignette demonstrates the powerful and intuitive workflow for single-cell RNA-seq annotation provided by the `easybio` package. The process is designed to combine the speed of automated database matching with the reliability of interactive verification and manual curation.
 
-You can view an example script for this workflow by running the following command
+The core workflow follows three logical steps:
 
-```r
-file.show(system.file(package = 'easybio', 'example-single-cell.R'))
-```
+1.  **Automated Annotation**: Use `matchCellMarker2()` to quickly get a list of potential cell types for each cluster based on its marker genes.
+2.  **Verification & Exploration**: Interactively investigate the automated results using `check_marker()` and `plotSeuratDot()` to build confidence in the annotations. This step helps answer two critical questions:
+    *   "**Why** was this annotation made?" (Which of my genes matched the database?)
+    *   "Is this annotation **correct**?" (Are the canonical markers for this cell type expressed in my cluster?)
+3.  **Final Curation**: Based on the evidence gathered, use `finsert()` to assign the final, high-confidence cell type labels.
 
+You can also view the R script for this workflow by running:
+`file.show(system.file(package = 'easybio', 'example-single-cell.R'))`
 
-The example marker data from pbmc3k datasets:
+## Setup
+
+First, let's load the necessary libraries and the example marker data included with `easybio`. This data is derived from the 10x Genomics 3k PBMC dataset.
 
 ```{r}
 library(easybio)
+library(Seurat)
+library(data.table)
+
+# The pbmc.markers dataset is included in easybio
 head(pbmc.markers)
 ```
 
-```{r}
-(marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")[, head(.SD, 2), by = cluster])
-```
+## Step 1: Automated Annotation with `matchCellMarker2`
 
-```{r, fig.width=7.5, fig.height=6}
-plotPossibleCell(marker)
-```
-
-Explanation:
-
-- The function matches the top 50 genes in each cluster with the CellMarker2 database.
-
-- It then calculates the cell count for each matched cell type and prints the result, helping you identify possible cell types for the cluster.
-
-To annotate, you can simply use the top-matched cell type:
+We begin by feeding the cluster markers (from `Seurat::FindAllMarkers`) into `matchCellMarker2()`. This function compares our markers against the CellMarker2.0 database and returns a ranked list of potential cell types for each cluster.
 
 ```{r}
-cl2cell <- marker[, head(.SD, 1), by = .(cluster)]
-cl2cell <- setNames(cl2cell[["cell_name"]], cl2cell[["cluster"]])
-cl2cell
+marker_matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
+
+# Let's look at the top 2 potential cell types for each cluster
+marker_matched[, head(.SD, 2), by = cluster]
 ```
 
-Visualize marker dot plots for similar clusters:
+The output table gives us `uniqueN` (the number of unique matching markers) and `N` (the total number of matches), which helps rank the potential annotations.
 
-```{r,eval=FALSE}
-cls <- list(
-  c(1, 5, 7),
-  c(8),
-  c(3),
-  c(0, 2, 4, 6)
+We can create a quick preliminary annotation by taking the top hit for each cluster.
+
+```{r}
+cl2cell_auto <- marker_matched[, head(.SD, 1), by = .(cluster)]
+cl2cell_auto <- setNames(cl2cell_auto[["cell_name"]], cl2cell_auto[["cluster"]])
+print("Initial automated annotation:")
+cl2cell_auto
+```
+
+We can also get a global view of all possible annotations using `plotPossibleCell`.
+
+```{r}
+#| fig.width=10
+plotPossibleCell(marker_matched[, head(.SD), by = .(cluster)], min.uniqueN = 2)
+```
+
+## Step 2: Verification and Exploration
+
+This is the most critical step. Instead of blindly trusting the automated result, we use `easybio`'s tools to verify it.
+
+### Answering "Why was this annotation made?"
+
+To see the evidence behind an annotation, we use `check_marker()` with `cis = TRUE`. This shows us which of **our own marker genes** from our data matched the database for a given annotation.
+
+```{r}
+# Let's investigate clusters 1, 5, and 7
+local_evidence <- check_marker(marker_matched, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
+print(local_evidence)
+```
+
+### Answering "Is this annotation correct?"
+
+To validate an annotation, we use `check_marker()` with `cis = FALSE` (the default). This fetches the **canonical markers** for the suggested cell type from the database. We can then check if these well-known markers are expressed in our cluster.
+
+```{r}
+canonical_markers <- check_marker(marker_matched, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
+print(canonical_markers)
+```
+
+### Visual Confirmation with `plotSeuratDot`
+
+The best way to check marker expression is visually. `plotSeuratDot` is designed to work seamlessly with `check_marker`.
+
+The entire pipeline from annotation to visualization can be done in a single, elegant pipe:
+
+```{r, fig.width=9, fig.height=5}
+# For this example to be runnable, we need a Seurat object.
+# We'll create a minimal one. In your real workflow, you would use your own srt object.
+marker_genes <- unique(pbmc.markers$gene)
+counts <- matrix(
+  abs(rnorm(length(marker_genes) * 50, mean = 1, sd = 2)),
+  nrow = length(marker_genes),
+  ncol = 50
 )
-dotplotList <- plotSeuratDot(seuratObject, cls, marker = pbmc.markers, n = 50, spc = "Human", topcellN = 2)
+rownames(counts) <- marker_genes
+colnames(counts) <- paste0("cell_", 1:50)
+srt <- CreateSeuratObject(counts = counts)
+# Assign clusters that match the pbmc.markers data
+srt$seurat_clusters <- sample(0:8, 50, replace = TRUE)
+Idents(srt) <- "seurat_clusters"
+
+
+# Now, let's plot the evidence for clusters 1, 5, and 7
+matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human") |>
+  check_marker(cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
+  plotSeuratDot(srt = srt)
 ```
 
-Explanation:
+This dot plot clearly shows the expression of the genes that led to the annotations for clusters 1, 5, and 7, allowing us to confidently assess the results.
 
-- This function searches for potential cell markers from the result of `matchCellMarker2`.
+## Step 3: Final Manual Curation
 
-- It then uses `Seurat::DotPlot` to generate corresponding dot plots for similar clusters.
-
-Construct a named vector for  annotation:
+After reviewing the evidence from the dot plots, we can make our final, informed decision. The `finsert` function provides a convenient way to create the final annotation vector.
 
 ```{r}
-cl2cell <- finsert(
-  expression(
-    c(1, 5) == "Monocyte",
-    c(7) == "DC",
-    c(8) == "megakaryocyte",
-    c(3) == "B.cell",
-    c(0, 2) == "Naive.CD8.T.cell",
-    c(4) == "Cytotoxic.T.Cell",
-    c(6) == "Natural.killer.cell"
+# Based on our exploration, we finalize the annotations
+cl2cell_final <- finsert(
+  list(
+    c(3) ~ "B cell",
+    c(8) ~ "Megakaryocyte",
+    c(7) ~ "DC",
+    c(1, 5) ~ "Monocyte",
+    c(0, 2, 4) ~ "Naive CD8+ T cell",
+    c(6) ~ "Natural killer cell"
   ),
-  len = 9
+  len = 9 # Ensure vector length covers all clusters (0-8)
 )
-cl2cell
+print("Final curated annotation:")
+cl2cell_final
 ```
 
-You can also directly retrieve markers:
+This `cl2cell_final` vector can now be added to your Seurat object's metadata for downstream analysis and plotting.
 
+## Using a Custom Marker Database
+
+For specialized analyses, such as focusing on a specific tissue, working with a non-model organism, or using a proprietary list of markers, you can provide your own custom reference to `matchCellMarker2`.
+
+The reference must be a `data.frame` (or `data.table`) with at least two columns: `cell_name` and `marker`. The easiest way to create this is from a named list.
+
+**Step 1: Create a named list of your custom markers.**
+```{r}
+custom_ref_list <- list(
+  "T-cell" = c("CD3D", "CD3E", "CD3G"),
+  "B-cell" = c("CD79A", "MS4A1"),
+  "Myeloid" = c("LYZ", "CST3", "AIF1")
+)
+print(custom_ref_list)
+```
+
+**Step 2: Convert the list to the required data.frame format.**
+`easybio` provides the `list2dt` helper function for this.
+```{r}
+custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
+head(custom_ref_df)
+```
+
+**Step 3: Run `matchCellMarker2` with the `ref` parameter.**
+When `ref` is provided, the function ignores the `spc`, `tissueClass`, and `tissueType` parameters for matching.
+```{r}
+marker_custom <- matchCellMarker2(
+  marker = pbmc.markers,
+  n = 50,
+  ref = custom_ref_df
+)
+# Note that the cell_name column now contains our custom cell types
+marker_custom[, head(.SD, 2), by = cluster]
+```
+
+## Additional Utilities
+
+`easybio` also provides functions for direct queries.
+
+### `get_marker()`
+Directly retrieve markers for any cell type of interest.
 ```{r}
 get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
 ```
 
-or Check the  distribution of the marker directly:
-
+### `plotMarkerDistribution()`
+Check the distribution of a specific marker across all cell types and tissues in the database.
 ```{r, fig.width=7.5, fig.height=7}
 plotMarkerDistribution(mkr = "CD68")
 ```
