@@ -356,8 +356,8 @@ matchCellMarker2 <- function(
     ),
     cellmarker2_filter = list(
       spc = if (missing(spc)) NULL else spc,
-      tissueClass = tissueClass,
-      tissueType = tissueType
+      tissueClass = if (missing(spc)) NULL else tissueClass,
+      tissueType = if (missing(spc)) NULL else tissueType
     )
   )
 
@@ -442,7 +442,7 @@ check_marker <- function(
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
     if (is.null(filter_args$cellmarker2_filter$spc)) {
-      stop("Please provide the 'spc' argument to `matchCellMarker2` before using `check_marker`.",
+      stop("Please set the 'spc' argument to `matchCellMarker2` before using `check_marker`.",
         call. = FALSE
       )
     }
