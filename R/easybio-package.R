@@ -25,3 +25,16 @@ NULL
 #' @docType data
 #' @name CHOL_DEGs
 NULL
+
+.onAttach <- function(libname, pkgname) {
+  msg <- c(
+    "=================================================================",
+    "easybio has been updated with significant breaking changes.",
+    "The single-cell annotation workflow has been improved.",
+    "",
+    "To learn the new workflow, please run:",
+    '  vignette("example-single-cell-annotation", package = "easybio")',
+    "================================================================="
+  )
+  packageStartupMessage(paste(msg, collapse = "\n"))
+}
