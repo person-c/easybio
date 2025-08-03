@@ -9,13 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.align = "center"
-)
-```
 
 This vignette provides a step-by-step guide on how to perform bulk RNA-Seq analysis using the Limma-voom workflow. It is designed to be a comprehensive resource for researchers looking to analyze gene expression data from projects such as TCGA. 
 You can view an example script for this workflow by running the following command
@@ -27,18 +20,17 @@ file.show(system.file(package = 'easybio', 'example-bulk-rna-seq.R'))
 
 ## Limma-voom workflow
 
-####  Prepare data
+###  Prepare data
 
 For downloading and processing datasets from the Gene Expression Omnibus (GEO), utilize the `prepare_geo()` function. This function will generate a list containing count data, sample information, and gene data.
 
 ```{r}
 library(easybio)
-# x <- prepare_geo('gseid')
 ```
 
 When preparing The Cancer Genome Atlas (TCGA) RNA-Seq data, employ the `prepare_tcga()` function from the TCGAbiolinks package. This function returns a list with count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
 
-#### Example Workflow: TCGA CHOL Project
+### Example Workflow: TCGA CHOL Project
 
 For a detailed overview of the Limma workflow, refer to the article: [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3). Three functions are designed for this workflow:
 
@@ -66,14 +58,10 @@ get_attr(efit, "contrast")
 
 CHOL_DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
+![Filter](./limmaFilter.png)
 
-```{r, echo=FALSE}
-knitr::include_graphics("limmaFilter.png")
-```
 
-```{r, echo=FALSE}
-knitr::include_graphics("limmaNorm.png")
-```
+![Normalization](./limmaNorm.png)
 
 Set the criteria for differential gene expression:
 
@@ -134,9 +122,7 @@ plotORA(
 )
 ```
 
-```{r,echo=FALSE}
-knitr::include_graphics("ora.png")
-```
+![over-presentation](./ora.png)
 
 To perform Gene Set Enrichment Analysis (GSEA), use the `fgsea::fgsea()` function. The core function is adapted from the fgsea package with minor visual enhancements.
 

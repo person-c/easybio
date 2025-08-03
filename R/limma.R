@@ -14,7 +14,6 @@
 #'
 #' @return A `DGEList` object as defined by the edgeR package, which includes the
 #'   count data, sample information, and feature information.
-#' @import data.table
 #' @export
 dgeList <- function(count, sample.info, feature.info) {
   stopifnot(rownames(count) == rownames(feature.info))
@@ -44,7 +43,6 @@ dgeList <- function(count, sample.info, feature.info) {
 #'
 #' @return The function returns a `DGEList` object with low-expressed genes
 #'   filtered out and normalization factors calculated.
-#' @import data.table
 #' @import grDevices
 #' @import graphics
 #' @import stats
@@ -109,7 +107,6 @@ dprocess_dgeList <- function(x, group.column, min.count = 10) {
 #'
 #' @return An `eBayes` object containing the fitted linear model and
 #'   results of the differential expression analysis.
-#' @import data.table
 #' @export
 limmaFit <- function(x, group.column) {
   oldpar <- par(no.readonly = TRUE)

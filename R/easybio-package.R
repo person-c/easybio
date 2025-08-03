@@ -1,3 +1,16 @@
+#' @keywords internal
+"_PACKAGE"
+
+#' @import data.table
+.datatable.aware <- TRUE
+
+# The following block is used by usethis to automatically manage
+# roxygen namespace tags. Modify with care!
+## usethis namespace: start
+#' @importFrom checkmate assert_data_frame assert_string assert_subset
+## usethis namespace: end
+NULL
+
 #' Example marker data from Seurat::FindAllMarkers()
 #'
 #' The data were obtained by the seurat PBMC workflow.
@@ -12,3 +25,16 @@ NULL
 #' @docType data
 #' @name CHOL_DEGs
 NULL
+
+.onAttach <- function(libname, pkgname) {
+  msg <- c(
+    "=================================================================",
+    "easybio has been updated with significant breaking changes.",
+    "The single-cell annotation workflow has been improved.",
+    "",
+    "To learn the new workflow, please run:",
+    '  vignette("example-single-cell-annotation", package = "easybio")',
+    "================================================================="
+  )
+  packageStartupMessage(paste(msg, collapse = "\n"))
+}
