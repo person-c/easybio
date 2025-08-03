@@ -4,18 +4,11 @@
 \alias{check_marker}
 \title{Verify and Explore Cell Type Annotations}
 \usage{
-check_marker(
-  marker,
-  cl = c(),
-  topcellN = 2,
-  cis = FALSE,
-  spc,
-  tissueClass = available_tissue_class(spc),
-  tissueType = available_tissue_type(spc)
-)
+check_marker(marker, cl = c(), topcellN = 2, cis = FALSE)
 }
 \arguments{
-\item{marker}{A \code{data.table} object, which is the result of a call to \code{matchCellMarker2()}.}
+\item{marker}{A \code{data.table} object, which is the result of a call to \code{matchCellMarker2()}.
+This object must contain the attributes set by \code{matchCellMarker2} for the function to work correctly.}
 
 \item{cl}{A numeric or character vector specifying the cluster IDs to be inspected.}
 
@@ -24,15 +17,6 @@ markers for the top \code{topcellN} cell type annotations. Defaults to 2.}
 
 \item{cis}{A logical value that switches the function's mode. See Details.
 Defaults to \code{FALSE}.}
-
-\item{spc}{A character string, either "Human" or "Mouse". This is \strong{required}
-when using the default mode (\code{cis = FALSE}) to query the reference database.}
-
-\item{tissueClass}{A character vector of tissue classes to filter the reference
-database. Used only when \code{cis = FALSE}. Defaults to all available classes.}
-
-\item{tissueType}{A character vector of tissue types to filter the reference
-database. Used only when \code{cis = FALSE}. Defaults to all available types.}
 }
 \value{
 A named list. Each name in the list is a cell type, and each element
@@ -51,9 +35,9 @@ questions:
 \itemize{
 \item \strong{\code{cis = FALSE} (Default): "Is the annotation correct?"}
 This mode answers the question by fetching the \emph{canonical} markers for the
-annotated cell type from the reference database (via \code{get_marker}). The user
-can then plot these canonical markers on their data to see if the expression
-pattern supports the annotation.
+annotated cell type from the reference database (via \code{get_marker}). It automatically
+uses the same filtering criteria (species, tissue, etc.) that were used in the
+original \code{matchCellMarker2} call, ensuring consistency.
 \item \strong{\code{cis = TRUE}: "Why was this annotation made?"}
 This mode answers the question by extracting the \emph{local} markers from the
 user's own data (i.e., the differentially expressed genes from the \code{marker}
@@ -74,7 +58,8 @@ matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
 
 # Question 1: "Is cluster 0 really a CD4-positive T cell?
 # Let's see the canonical markers for it."
-reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1, spc = "Human")
+# Note: We don't need to pass 'spc' here; it's retrieved from matched_cells.
+reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
 print(reference_markers)
 # Now you would typically use these markers in Seurat::DotPlot() or Seurat::FeaturePlot()
 

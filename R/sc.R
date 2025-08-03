@@ -214,7 +214,7 @@ get_marker <- function(
 #'
 #' This function takes cluster-specific markers, typically from `Seurat::FindAllMarkers`,
 #' and annotates each cluster with potential cell types by matching these markers
-#' against the CellMarker2.0 database. It first filters and selects the top `n`
+#' against a reference database. It first filters and selects the top `n`
 #' marker genes for each cluster based on specified thresholds and then compares
 #' them to the reference database to find the most likely cell type annotations.
 #'
@@ -224,31 +224,37 @@ get_marker <- function(
 #' @param n An integer specifying the number of top marker genes to use from each
 #'   cluster for matching. Genes are ranked by `avg_log2FC` after filtering.
 #' @param spc A character string specifying the species, either "Human" or "Mouse".
-#'   This is used to filter the `cellMarker2` database.
+#'   This is used to filter the `cellMarker2` database. This parameter is ignored
+#'   if a custom `ref` is provided.
 #' @param avg_log2FC_threshold A numeric value setting the minimum average log2 fold
 #'   change for a marker to be considered. Defaults to `0`.
 #' @param p_val_adj_threshold A numeric value setting the maximum adjusted p-value
 #'   for a marker to be considered. Defaults to `0.05`.
 #' @param tissueClass A character vector of tissue classes to include from the
 #'   `cellMarker2` database. Defaults to all available tissue classes for the
-#'   specified species. See `available_tissue_class()`.
+#'   specified species. This parameter is ignored if a custom `ref` is provided.
+#'   See `available_tissue_class()`.
 #' @param tissueType A character vector of tissue types to include from the
 #'   `cellMarker2` database. Defaults to all available tissue types for the
-#'   specified species. See `available_tissue_type()`.
+#'   specified species. This parameter is ignored if a custom `ref` is provided.
+#'   See `available_tissue_type()`.
 #' @param ref An optional long `data.frame` which must contain 'cell_name'
 #'   and 'marker' columns to be used as the reference for marker matching.
 #'   If `NULL` (the default), the function uses the built-in `cellMarker2`
-#'   dataset, filtered by `spc`, `tissueClass`, and `tissueType`.
+#'   dataset. When a custom `ref` is provided, the `spc`, `tissueClass`, and
+#'   `tissueType` parameters are ignored for the matching process itself,
+#'   but their original values are saved for provenance.
 #'
 #' @return A `data.table` where each row represents a potential cell type match for a
-#'   cluster. The table is keyed by `cluster` and includes the following columns:
-#'   \item{cluster}{The original cluster ID.}
-#'   \item{cell_name}{The potential cell type annotation from the reference database.}
-#'   \item{uniqueN}{The number of unique marker genes from the cluster that match this cell type.}
-#'   \item{N}{The total number of matches (including duplicates if a gene marks a cell type multiple times in the reference).}
-#'   \item{ordered_symbol}{A list of the matching gene symbols, ordered by their frequency.}
-#'   \item{orderN}{A list of the corresponding frequencies for `ordered_symbol`.}
-#'   \item{markerWith}{A list of all gene symbols from the cluster that matched the cell type.}
+#'   cluster. The table is keyed by `cluster` and includes columns for `cluster`,
+#'   `cell_name`, `uniqueN` (number of unique matching markers), `N` (total matches),
+#'   `ordered_symbol` (matching genes, ordered by frequency), and `orderN` (their frequencies).
+#'
+#'   The returned object also contains important attributes for downstream analysis:
+#'   \item{ref}{The reference data (either from `cellMarker2` or the custom `ref`) used for the annotation.}
+#'   \item{is_custom_ref}{A logical flag indicating if a custom `ref` was used.}
+#'   \item{filter_args}{A list containing the filtering parameters used during the annotation,
+#'   which is essential for the `check_marker` function.}
 #'
 #' @seealso \code{\link{check_marker}}, \code{\link{plotPossibleCell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
 #'
@@ -372,9 +378,9 @@ matchCellMarker2 <- function(
 #' \itemize{
 #'   \item **`cis = FALSE` (Default): "Is the annotation correct?"**
 #'     This mode answers the question by fetching the *canonical* markers for the
-#'     annotated cell type from the reference database (via `get_marker`). The user
-#'     can then plot these canonical markers on their data to see if the expression
-#'     pattern supports the annotation.
+#'     annotated cell type from the reference database (via `get_marker`). It automatically
+#'     uses the same filtering criteria (species, tissue, etc.) that were used in the
+#'     original `matchCellMarker2` call, ensuring consistency.
 #'   \item **`cis = TRUE`: "Why was this annotation made?"**
 #'     This mode answers the question by extracting the *local* markers from the
 #'     user's own data (i.e., the differentially expressed genes from the `marker`
@@ -383,17 +389,12 @@ matchCellMarker2 <- function(
 #' }
 #'
 #' @param marker A `data.table` object, which is the result of a call to `matchCellMarker2()`.
+#'   This object must contain the attributes set by `matchCellMarker2` for the function to work correctly.
 #' @param cl A numeric or character vector specifying the cluster IDs to be inspected.
 #' @param topcellN An integer. For each cluster in `cl`, the function will retrieve
 #'   markers for the top `topcellN` cell type annotations. Defaults to 2.
 #' @param cis A logical value that switches the function's mode. See Details.
 #'   Defaults to `FALSE`.
-#' @param spc A character string, either "Human" or "Mouse". This is **required**
-#'   when using the default mode (`cis = FALSE`) to query the reference database.
-#' @param tissueClass A character vector of tissue classes to filter the reference
-#'   database. Used only when `cis = FALSE`. Defaults to all available classes.
-#' @param tissueType A character vector of tissue types to filter the reference
-#'   database. Used only when `cis = FALSE`. Defaults to all available types.
 #'
 #' @return A named list. Each name in the list is a cell type, and each element
 #'   is a character vector of its corresponding marker genes.
@@ -417,7 +418,8 @@ matchCellMarker2 <- function(
 #'
 #' # Question 1: "Is cluster 0 really a CD4-positive T cell?
 #' # Let's see the canonical markers for it."
-#' reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1, spc = "Human")
+#' # Note: We don't need to pass 'spc' here; it's retrieved from matched_cells.
+#' reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
 #' print(reference_markers)
 #' # Now you would typically use these markers in Seurat::DotPlot() or Seurat::FeaturePlot()
 #'
@@ -427,12 +429,10 @@ matchCellMarker2 <- function(
 #' print(local_markers)
 #' }
 check_marker <- function(
-    marker, cl = c(), topcellN = 2, cis = FALSE,
-    spc,
-    tissueClass = available_tissue_class(spc),
-    tissueType = available_tissue_type(spc)) {
+    marker, cl = c(), topcellN = 2, cis = FALSE) {
   . <- cell_name <- cluster <- NULL
 
+  filter_args <- attr(marker, "filter_args")
   marker <- marker[.(factor(cl)), .SD, on = .(cluster)]
 
   if (cis) {
@@ -441,10 +441,10 @@ check_marker <- function(
   } else {
     topcell <- marker[, head(.SD, topcellN), keyby = .(cluster)][, unique(cell_name)]
     topmarker <- get_marker(
-      spc,
+      spc = filter_args$cellmarker2_filter$spc,
       cell = topcell,
-      tissueClass = tissueClass,
-      tissueType = tissueType,
+      tissueClass = filter_args$cellmarker2_filter$tissueClass,
+      tissueType = filter_args$cellmarker2_filter$tissueType,
       number = 10,
       min.count = 1
     )
