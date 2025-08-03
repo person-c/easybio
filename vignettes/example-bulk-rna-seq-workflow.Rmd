@@ -9,13 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.align = "center"
-)
-```
 
 This vignette provides a step-by-step guide on how to perform bulk RNA-Seq analysis using the Limma-voom workflow. It is designed to be a comprehensive resource for researchers looking to analyze gene expression data from projects such as TCGA. 
 You can view an example script for this workflow by running the following command
@@ -66,14 +59,10 @@ get_attr(efit, "contrast")
 
 CHOL_DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
+![Filter](./limmaFilter.png)
 
-```{r, echo=FALSE}
-knitr::include_graphics("limmaFilter.png")
-```
 
-```{r, echo=FALSE}
-knitr::include_graphics("limmaNorm.png")
-```
+![Normalization](./limmaNorm.png)
 
 Set the criteria for differential gene expression:
 
@@ -134,9 +123,7 @@ plotORA(
 )
 ```
 
-```{r,echo=FALSE}
-knitr::include_graphics("ora.png")
-```
+![over-presentation](./ora.png)
 
 To perform Gene Set Enrichment Analysis (GSEA), use the `fgsea::fgsea()` function. The core function is adapted from the fgsea package with minor visual enhancements.
 
