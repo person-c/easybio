@@ -325,6 +325,8 @@ matchCellMarker2 <- function(
     keyby = .(cluster)
   ]
 
+
+  is_custom_ref <- TRUE
   if (is.null(ref)) {
     ref <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
     ref <- ref[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
