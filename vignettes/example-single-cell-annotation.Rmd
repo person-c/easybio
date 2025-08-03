@@ -22,7 +22,7 @@ The core workflow follows three logical steps:
 3.  **Final Curation**: Based on the evidence gathered, use `finsert()` to assign the final, high-confidence cell type labels.
 
 You can also view the R script for this workflow by running:
-`file.show(system.file(package = 'easybio', 'example-single-cell.R'))`
+`fs::file_show(system.file(package = 'easybio', 'example-single-cell.R'))`
 
 ## Setup
 
