@@ -454,53 +454,79 @@ check_marker <- function(
 }
 
 
-#' Create Dot Plots for Markers from check_marker
+#' Create a Dot Plot to Visualize Marker Gene Expression
 #'
-#' This function generates dot plots for the markers obtained from the
-#' `check_marker` function for specified cluster groups within a Seurat object.
-#' The plots are saved to a temporary directory.
+#' This function generates a `Seurat::DotPlot` to visualize the expression of
+#' specified marker genes across different cell clusters or groups. It is designed
+#' to work with a list of features, such as the output from the `check_marker` function.
 #'
-#' @param srt A Seurat object containing the single-cell data.
-#' @param cls A list containing cluster groups to check. Each element of the list
-#'   should correspond to a cluster or a group of clusters for which to generate
-#'   dot plots.
-#' @param ... Additional parameters to pass to the `check_marker` function.
+#' @param features A named list of character vectors. Each name in the list represents
+#'   a cell type or category, and the corresponding character vector contains the
+#'   marker genes to be plotted for that category. This is typically the output of
+#'   `check_marker()`.
+#' @param srt A Seurat object containing the single-cell expression data.
+#' @param ... Additional arguments passed to `Seurat::DotPlot()`, such as `cols`, `dot.scale`, etc.
 #'
-#' @return A list containing multiple DotPlot.
+#' @return A ggplot2 object representing the dot plot, which can be further customized.
+#'
+#' @seealso \code{\link{check_marker}} to generate the `features` list.
+#'
 #' @import ggplot2
 #' @export
-plotSeuratDot <- function(srt, cls, ...) {
-  dotplotList <- lapply(cls, \(cl) {
-    features <- check_marker(..., cl = cl)
+#'
+#' @examples
+#' \dontrun{
+#' library(easybio)
+#' library(Seurat)
+#' data(pbmc.markers)
+#'
+#' # In a real scenario, 'srt' would be your fully processed Seurat object.
+#' # For this example, we create a minimal Seurat object.
+#' # The expression matrix should contain the marker genes for the plot to be meaningful.
+#' marker_genes <- unique(pbmc.markers$gene)
+#' counts <- matrix(
+#'   abs(rnorm(length(marker_genes) * 50, mean = 1, sd = 2)),
+#'   nrow = length(marker_genes),
+#'   ncol = 50
+#' )
+#' rownames(counts) <- marker_genes
+#' colnames(counts) <- paste0("cell_", 1:50)
+#'
+#' srt <- CreateSeuratObject(counts = counts)
+#' srt$seurat_clusters <- sample(0:3, 50, replace = TRUE)
+#' Idents(srt) <- "seurat_clusters"
+#'
+#' # Step 1: Generate cell type annotations
+#' matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+#'
+#' # Step 2: Get canonical markers for cluster 0's top annotation
+#' reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
+#'
+#' # Step 3: Plot the expression of these markers
+#' if (!is.null(reference_markers) && length(reference_markers) > 0) {
+#'   plotSeuratDot(features = reference_markers, srt = srt)
+#' }
+#' }
+plotSeuratDot <- function(features, srt, ...) {
+  if (anyDuplicated(unlist(features)) > 0) {
+    features <- unique(list2dt(features), by = "value")
+    warning("Duplicated markers are removed!")
 
-    if (anyDuplicated(unlist(features)) > 0) {
-      features <- unique(list2dt(features), by = "value")
-      warning("Duplicated markers are removed!")
+    features <- split(features[["value"]], features[["name"]])
+  }
 
-      features <- split(features[["value"]], features[["name"]])
-    }
-
-    Seurat::DotPlot(srt, features = features) +
-      scale_x_discrete(
-        guide = guide_axis(
-          angle = 60,
-          theme = theme(text = element_text(size = 4))
-        )
-      ) +
-      theme(
-        axis.text = element_text(size = 4),
-        plot.background = element_rect(fill = "white"),
-        panel.background = element_rect(fill = "white"),
-        strip.text = element_text(size = 8, angle = 30, vjust = 0.1, hjust = 0)
+  Seurat::DotPlot(srt, features = features, ...) +
+    scale_x_discrete(
+      guide = guide_axis(
+        angle = 60,
       )
-  })
-
-  dotplotName <- vapply(cls, \(cl) {
-    paste0("clusters_", paste0(cl, collapse = "_"))
-  }, "character")
-
-  names(dotplotList) <- dotplotName
-  dotplotList
+    ) +
+    theme(
+      axis.text = element_text(size = 8),
+      plot.background = element_rect(fill = "white"),
+      panel.background = element_rect(fill = "white"),
+      strip.text = element_text(size = 8, angle = 30, vjust = 0.1, hjust = 0)
+    )
 }
 
 #' Plot Distribution of a Marker Across Tissues and Cell Types
