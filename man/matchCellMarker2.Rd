@@ -7,9 +7,9 @@
 matchCellMarker2(
   marker,
   n,
-  spc,
   avg_log2FC_threshold = 0,
   p_val_adj_threshold = 0.05,
+  spc,
   tissueClass = available_tissue_class(spc),
   tissueType = available_tissue_type(spc),
   ref = NULL
@@ -23,14 +23,14 @@ matchCellMarker2(
 \item{n}{An integer specifying the number of top marker genes to use from each
 cluster for matching. Genes are ranked by \code{avg_log2FC} after filtering.}
 
-\item{spc}{A character string specifying the species, either "Human" or "Mouse".
-This is used to filter the \code{cellMarker2} database.}
-
 \item{avg_log2FC_threshold}{A numeric value setting the minimum average log2 fold
 change for a marker to be considered. Defaults to \code{0}.}
 
 \item{p_val_adj_threshold}{A numeric value setting the maximum adjusted p-value
 for a marker to be considered. Defaults to \code{0.05}.}
+
+\item{spc}{A character string specifying the species, either "Human" or "Mouse".
+This is used to filter the \code{cellMarker2} database.}
 
 \item{tissueClass}{A character vector of tissue classes to include from the
 \code{cellMarker2} database. Defaults to all available tissue classes for the

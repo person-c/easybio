@@ -300,9 +300,10 @@ get_marker <- function(
 #' print(matched_custom)
 #' }
 matchCellMarker2 <- function(
-    marker, n, spc,
+    marker, n,
     avg_log2FC_threshold = 0,
     p_val_adj_threshold = 0.05,
+    spc,
     tissueClass = available_tissue_class(spc),
     tissueType = available_tissue_type(spc),
     ref = NULL) {
@@ -321,6 +322,8 @@ matchCellMarker2 <- function(
   if (is.null(ref)) {
     ref <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
     ref <- ref[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+
+    is_custom_ref <- FALSE
   }
 
   res <- marker[ref, on = "gene==marker", nomatch = NULL]
@@ -333,6 +336,24 @@ matchCellMarker2 <- function(
   res[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
   setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
   res[["markerWith"]] <- NULL
+
+  setattr(res, "ref", ref)
+  setattr(res, "is_custom_ref", is_custom_ref)
+
+  filter_args <- list(
+    marker_filter = c(
+      n = n,
+      avg_log2FC_threshold = avg_log2FC_threshold,
+      p_val_adj_threshold = p_val_adj_threshold
+    ),
+    cellmarker2_filter = list(
+      spc = spc,
+      tissueClass = tissueClass,
+      tissueType = tissueType
+    )
+  )
+
+  setattr(res, "filter_args", filter_args)
 
   res
 }
