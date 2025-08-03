@@ -355,7 +355,7 @@ matchCellMarker2 <- function(
       p_val_adj_threshold = p_val_adj_threshold
     ),
     cellmarker2_filter = list(
-      spc = spc,
+      spc = if (missing(spc)) NULL else spc,
       tissueClass = tissueClass,
       tissueType = tissueType
     )
@@ -441,6 +441,11 @@ check_marker <- function(
     topmarker <- marker[, head(.SD, topcellN), by = .(cluster)]
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
+    if (is.null(filter_args$cellmarker2_filter$spc)) {
+      stop("Please provide the 'spc' argument to `matchCellMarker2` before using `check_marker`.",
+        call. = FALSE
+      )
+    }
     topcell <- marker[, head(.SD, topcellN), keyby = .(cluster)][, unique(cell_name)]
     topmarker <- get_marker(
       spc = filter_args$cellmarker2_filter$spc,
