@@ -20,18 +20,17 @@ file.show(system.file(package = 'easybio', 'example-bulk-rna-seq.R'))
 
 ## Limma-voom workflow
 
-####  Prepare data
+###  Prepare data
 
 For downloading and processing datasets from the Gene Expression Omnibus (GEO), utilize the `prepare_geo()` function. This function will generate a list containing count data, sample information, and gene data.
 
 ```{r}
 library(easybio)
-# x <- prepare_geo('gseid')
 ```
 
 When preparing The Cancer Genome Atlas (TCGA) RNA-Seq data, employ the `prepare_tcga()` function from the TCGAbiolinks package. This function returns a list with count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
 
-#### Example Workflow: TCGA CHOL Project
+### Example Workflow: TCGA CHOL Project
 
 For a detailed overview of the Limma workflow, refer to the article: [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3). Three functions are designed for this workflow:
 
