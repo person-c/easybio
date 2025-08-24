@@ -442,7 +442,10 @@ check_marker <- function(
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
     if (is.null(filter_args$cellmarker2_filter$spc)) {
-      stop("Please set the 'spc' argument to `matchCellMarker2` before using `check_marker`.",
+      stop("
+      Can't find the species information from the 'marker' input. This usually happens when \n
+      1. You didn't set the 'spc' arguments when using `matchCellMarker2`; or \n
+      2. The attributes of the 'marker' input are lost if you have done any operations on it.",
         call. = FALSE
       )
     }
