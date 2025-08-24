@@ -4,7 +4,7 @@
 \alias{plotSeuratDot}
 \title{Create a Dot Plot to Visualize Marker Gene Expression}
 \usage{
-plotSeuratDot(features, srt, ...)
+plotSeuratDot(features, srt, split = FALSE, ...)
 }
 \arguments{
 \item{features}{A named list of character vectors. Each name in the list represents
@@ -13,6 +13,8 @@ marker genes to be plotted for that category. This is typically the output of
 \code{check_marker()}.}
 
 \item{srt}{A Seurat object containing the single-cell expression data.}
+
+\item{split}{Logical, if \code{TRUE}, generates separate dot plots for each cell type in \code{features}}
 
 \item{...}{Additional arguments passed to \code{Seurat::DotPlot()}, such as \code{cols}, \code{dot.scale}, etc.}
 }

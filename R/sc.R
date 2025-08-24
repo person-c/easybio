@@ -475,6 +475,7 @@ check_marker <- function(
 #'   marker genes to be plotted for that category. This is typically the output of
 #'   `check_marker()`.
 #' @param srt A Seurat object containing the single-cell expression data.
+#' @param split Logical, if `TRUE`, generates separate dot plots for each cell type in `features`
 #' @param ... Additional arguments passed to `Seurat::DotPlot()`, such as `cols`, `dot.scale`, etc.
 #'
 #' @return A ggplot2 object representing the dot plot, which can be further customized.
@@ -517,10 +518,31 @@ check_marker <- function(
 #'   plotSeuratDot(features = reference_markers, srt = srt)
 #' }
 #' }
-plotSeuratDot <- function(features, srt, ...) {
+plotSeuratDot <- function(features, srt, split = FALSE, ...) {
+  if (split) {
+    all_plots <- vector("list", length = length(features))
+    for (i in seq_along(features)) {
+      all_plots[[i]] <- Seurat::DotPlot(srt, features = features[i]) +
+        scale_x_discrete(
+          guide = guide_axis(
+            angle = 60,
+          )
+        )
+      xlab("")
+    }
+
+    res <- patchwork::plot_layout(
+      patchwork::wrap_plots(all_plots, ncol = 2),
+      guides = "collect"
+    )
+
+    res
+    return(res)
+  }
+
   if (anyDuplicated(unlist(features)) > 0) {
     features <- unique(list2dt(features), by = "value")
-    warning("Duplicated markers are removed!")
+    warning("Duplicated markers are removed! if you want to keep them, please set `split = TRUE`.")
 
     features <- split(features[["value"]], features[["name"]])
   }
