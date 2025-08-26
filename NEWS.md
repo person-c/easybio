@@ -10,8 +10,10 @@
 - support using custom dataset to annotate and allow user to set the threshold(`matchCellMarker2`).
 - use more convenient input in `finsert`.
 - guess user's typo input (`get_marker`).
-- update docs.
+- update docs and hints.
 - set the minimal `data.table` version to 1.15.0
+- support generating plots for each cell type in `plotSeuratDot`.
+
 
 # Version 1.1.1 Changes
 
