@@ -4,6 +4,15 @@
 2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
 3. **New S3 Class**: Development of a new S3 class, similar to `dgeList`, which will offer improved customization and performance.
 
+# Version 1.2.1 Changes
+
+- make each function do a simple task instead of integrating all to a function(`check_marker`, `plotSeuratDot`).
+- support using custom dataset to annotate and allow user to set the threshold(`matchCellMarker2`).
+- use more convenient input in `finsert`.
+- guess user's typo input (`get_marker`).
+- update docs.
+- set the minimal `data.table` version to 1.15.0
+
 # Version 1.1.1 Changes
 
 - support argument `tissueType` and `tissueClass` in single cell related function.
