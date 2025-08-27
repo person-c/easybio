@@ -1,14 +1,20 @@
 ---
-title: Example Workflow for Bulk RNA-Seq Analysis
+title: "Example Workflow for Bulk RNA-seq Analysis with limma-voom"
 author: "[cw](https://cying.org)"
 date: "`{r} Sys.Date()`"
 output: html
 vignette: >
   %\VignetteEngine{litedown::vignette}
-  %\VignetteIndexEntry{Example Workflow for Bulk RNA-Seq Analysis}
+  %\VignetteIndexEntry{Example Workflow for Bulk RNA-seq Analysis with limma-voom}
   %\VignetteEncoding{UTF-8}
 ---
 
+
+```{r}
+litedown::reactor(warning = FALSE) # vignette setting
+
+library(easybio)
+```
 
 This vignette provides a step-by-step guide on how to perform bulk RNA-Seq analysis using the Limma-voom workflow. It is designed to be a comprehensive resource for researchers looking to analyze gene expression data from projects such as TCGA. 
 You can view an example script for this workflow by running the following command
@@ -24,19 +30,15 @@ file.show(system.file(package = 'easybio', 'example-bulk-rna-seq.R'))
 
 For downloading and processing datasets from the Gene Expression Omnibus (GEO), utilize the `prepare_geo()` function. This function will generate a list containing count data, sample information, and gene data.
 
-```{r}
-library(easybio)
-```
-
-When preparing The Cancer Genome Atlas (TCGA) RNA-Seq data, employ the `prepare_tcga()` function from the TCGAbiolinks package. This function returns a list with count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
-
 ### Example Workflow: TCGA CHOL Project
 
 For a detailed overview of the Limma workflow, refer to the article: [RNA-seq analysis is as easy as 1-2-3 with limma, Glimma and edgeR](https://doi.org/10.12688/f1000research.9005.3). Three functions are designed for this workflow:
 
+When preparing The Cancer Genome Atlas (TCGA) RNA-Seq data, employ the `prepare_tcga()` function from the TCGAbiolinks package. This function returns a list with count data for all samples and unstranded FPKM data for tumor samples, along with sample and feature information.
+
+
 ```r
 library(TCGAbiolinks)
-library(easybio)
 library(data.table)
 
 query <- GDCquery(
@@ -58,6 +60,7 @@ get_attr(efit, "contrast")
 
 CHOL_DEGs <- limma::topTable(fit = efit, coef = 1, number = Inf)
 ```
+
 ![Filter](./limmaFilter.png)
 
 
@@ -91,7 +94,7 @@ plotVolcano(
 
 For pathway enrichment analysis, such as GO and KEGG, download the `r4msigdb` package to access the MSigDB gene sets. For more details on this package, please see [r4msigdb](https://github.com/person-c/r4msigdb).
 
-```{r, eval=FALSE}
+```r
 # devtools::install_github('person-c/easybio')
 library(data.table)
 # Over Presentation Analysis(ORA)
@@ -126,7 +129,7 @@ plotORA(
 
 To perform Gene Set Enrichment Analysis (GSEA), use the `fgsea::fgsea()` function. The core function is adapted from the fgsea package with minor visual enhancements.
 
-```{r}
+```{r, echo=TRUE}
 library(fgsea)
 data(examplePathways)
 data(exampleRanks)
@@ -134,7 +137,7 @@ data(exampleRanks)
 
 Run the GSEA analysis:
 
-```{r,fig.width=4, fig.height=2.7}
+```{r,fig.width=4, fig.height=2.7, echo=TRUE}
 fgseaRes <- fgsea(
   pathways = examplePathways,
   stats = exampleRanks,
