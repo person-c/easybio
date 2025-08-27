@@ -29,6 +29,8 @@ You can also view the R script for this workflow by running:
 First, let's load the necessary libraries and the example marker data included with `easybio`. This data is derived from the 10x Genomics 3k PBMC dataset.
 
 ```{r}
+litedown::reactor(warning = FALSE) # vignette setting
+
 library(easybio)
 library(Seurat)
 library(data.table)
