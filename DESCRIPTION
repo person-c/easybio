@@ -31,10 +31,7 @@ Suggests:
     fgsea,
     edgeR,
     testthat (>= 3.0.0),
-    r4msigdb
 biocViews: limma, GEOquery, edgeR, fgsea
-Remotes:
-    person-c/r4msigdb
 Language: en-US
 VignetteBuilder: litedown
 Config/testthat/edition: 3
