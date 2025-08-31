@@ -30,7 +30,7 @@ NULL
   msg <- c(
     "easybio has been updated with significant breaking changes in single-cell annotation workflow.",
     "To learn the new workflow, please run:",
-    '  vignette("example-single-cell-annotation", package = "easybio")'
+    '  vignette("example-sc-seq-workflow", package = "easybio")'
   )
   packageStartupMessage(paste(msg, collapse = "\n"))
 }
