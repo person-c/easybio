@@ -4,6 +4,10 @@
 2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
 3. **New S3 Class**: Development of a new S3 class, similar to `dgeList`, which will offer improved customization and performance.
 
+# Version 1.2.2 Changes
+
+fix vignette name in package startup message
+
 # Version 1.2.1 Changes
 
 - make each function do a simple task instead of integrating all to a function(`check_marker`, `plotSeuratDot`).
