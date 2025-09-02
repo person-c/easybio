@@ -2,6 +2,19 @@
 
 0 errors | 0 warnings | 0 note
 
+fix: vignette name in package startup message
+fix: remove Remotes field in DESCRIPTION
+
+# Version 1.2.1 Changes
+
+- make each function do a simple task instead of integrating all to a function(`check_marker`, `plotSeuratDot`).
+- support using custom dataset to annotate and allow user to set the threshold(`matchCellMarker2`).
+- use more convenient input in `finsert`.
+- guess user's typo input (`get_marker`).
+- update docs and hints.
+- set the minimal `data.table` version to 1.15.0
+- support generating plots for each cell type in `plotSeuratDot`.
+
 # Version 1.1.1(minor changes)
 
 - support filter tissue type or tissue Class in single cell annotation
