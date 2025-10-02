@@ -22,7 +22,6 @@ Depends:
 LazyData: true
 Suggests: 
     litedown,
-    knitr,
     patchwork,
     ggrepel,
     Seurat,
