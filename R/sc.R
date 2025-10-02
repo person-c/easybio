@@ -522,7 +522,7 @@ plotSeuratDot <- function(features, srt, split = FALSE, ...) {
   if (split) {
     all_plots <- vector("list", length = length(features))
     for (i in seq_along(features)) {
-      all_plots[[i]] <- Seurat::DotPlot(srt, features = features[i]) +
+      all_plots[[i]] <- Seurat::DotPlot(srt, features = features[i], ...) +
         scale_x_discrete(
           guide = guide_axis(
             angle = 60,
