@@ -4,9 +4,13 @@
 2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
 3. **New S3 Class**: Development of a new S3 class, similar to `dgeList`, which will offer improved customization and performance.
 
+# Version 1.2.3 Changes
+
+- dont run `Seurat::DotPlot` in vignette to avoid upstream upgrade's affects
+
 # Version 1.2.2 Changes
 
-fix vignette name in package startup message
+- fix vignette name in package startup message
 
 # Version 1.2.1 Changes
 
@@ -41,6 +45,7 @@ fix vignette name in package startup message
 
 
 # Version 1.0.1 Changes
+
 - **NEWS.md File**: Added to document changes and updates.
 - **macOS Compatibility**: Fixed an error in `uniprot_id_map()` on the latest macOS during example usage.
 - **Vignette Optimization**: Vignettes have been updated and optimized for improved performance and usability.
