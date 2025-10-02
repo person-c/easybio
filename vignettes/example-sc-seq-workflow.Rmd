@@ -97,7 +97,7 @@ The best way to check marker expression is visually. `plotSeuratDot` is designed
 
 The entire pipeline from annotation to visualization can be done in a single, elegant pipe:
 
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=9, fig.height=5, eval=FALSE}
 # For this example to be runnable, we need a Seurat object.
 # We'll create a minimal one. In your real workflow, you would use your own srt object.
 marker_genes <- unique(pbmc.markers$gene)
