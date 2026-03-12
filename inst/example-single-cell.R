@@ -16,6 +16,8 @@
 # fs::file_show(system.file(package = "easybio", "example-single-cell.R"))
 # ------------------------------------------------------------------------------
 
+
+
 # Load necessary libraries
 library(Seurat)
 library(easybio)
@@ -28,6 +30,7 @@ library(easybio)
 # markers will be the input for the `easybio` annotation workflow.
 
 # Load the 10x Genomics dataset
+setwd("data-raw")
 x <- Read10X(data.dir = "filtered_gene_bc_matrices/hg19/")
 
 # Create the Seurat object with initial filtering
@@ -50,7 +53,8 @@ pbmc <- FindClusters(pbmc, resolution = 0.5)
 pbmc <- RunUMAP(pbmc, dims = 1:10)
 
 # Visualize the initial, unannotated clusters
-DimPlot(pbmc, reduction = "umap", label = TRUE)
+tmp <- DimPlot(pbmc, reduction = "umap", label = TRUE)
+print(tmp)
 
 # Find marker genes for each cluster. This is the crucial input for matchCellMarker2.
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
@@ -84,18 +88,18 @@ cl2cell
 # Question 1: "Why did the algorithm make these annotations?"
 # Use `cis = TRUE` to see which of OUR marker genes matched the database,
 # providing the evidence for the annotation.
-check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
+tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
 
 # Question 2: "Are these annotations correct?"
 # Use `cis = FALSE` to retrieve the CANONICAL markers for the suggested cell types
 # from the CellMarker2.0 database. We can then check if these canonical markers
 # are actually expressed in our clusters.
-check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
+tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
 
 # Now, let's visually confirm the expression of the supporting markers using a Dot Plot.
 # We can pipe the results from `check_marker` directly into `plotSeuratDot`.
 # This plot shows the expression of the genes that led to the annotation (from cis = TRUE).
-check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
+tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
   plotSeuratDot(srt = pbmc)
 
 # We can systematically check all interesting cluster groups.
@@ -108,7 +112,7 @@ cls <- list(
 )
 
 # Loop through the list and generate a dot plot for each group to inspect the evidence.
-lapply(cls, \(cl) {
+tmp <- lapply(cls, \(cl) {
   check_marker(marker, cl = cl, topcellN = 2, cis = TRUE) |>
     plotSeuratDot(srt = pbmc) +
     ggplot2::ggtitle(
@@ -116,12 +120,14 @@ lapply(cls, \(cl) {
     )
 })
 
+print(tmp[[1]]) # Show the first plot as an example
+
 # The entire workflow from annotation to visualization can be done in a single pipe:
-matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human") |>
+tmp <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human") |>
   check_marker(cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
   plotSeuratDot(srt = pbmc)
 
-
+print(tmp)
 # ---
 # Step 4: Final Manual Curation and Annotation
 # ---
@@ -149,8 +155,8 @@ cl2cell
 pbmc@meta.data[["anno"]] <- cl2cell[as.character(Idents(pbmc))]
 
 # Visualize the final annotated UMAP.
-DimPlot(pbmc, reduction = "umap", label = TRUE, group.by = "anno")
-
+tmp <- DimPlot(pbmc, reduction = "umap", label = TRUE, group.by = "anno")
+print(tmp)
 
 # ---
 # Additional `easybio` Utility Functions
