@@ -119,15 +119,16 @@ Artist <- R6::R6Class("Artist",
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
     #' @param col The column in `data` to map to the color aesthetic.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    dumbbell = function(data = self$data, x, y, col, ...) {
+    plot_dumbbell = function(data = self$data, x, y, col, add = private$is_htest(), ...) {
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}), ...) +
         geom_line() +
         geom_point(aes(col = {{ col }}), size = 3)
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -141,10 +142,11 @@ Artist <- R6::R6Class("Artist",
     #' @param y The column in `data` to map to the y-axis.
     #' @param size The column in `data` to map to the size of the points.
     #' @param col The column in `data` to map to the color of the points.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    bubble = function(data = self$data, x, y, size, col, ...) {
+    plot_bubble = function(data = self$data, x, y, size, col, add = private$is_htest(), ...) {
       p <- ggplot(
         data,
         aes(
@@ -156,7 +158,7 @@ Artist <- R6::R6Class("Artist",
         geom_point() +
         scale_size(name = "Size", range = c(1, 10))
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -168,10 +170,11 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param group The column in `data` representing the grouping variable.
     #' @param y The column in `data` to map to the y-axis.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    barchart_divergence = function(data = self$data, group, y, ...) {
+    plot_barchart_divergence = function(data = self$data, group, y, add = private$is_htest(), ...) {
       y_vec <- data[[deparse(substitute(y))]]
       p <- ggplot(
         data,
@@ -202,7 +205,7 @@ Artist <- R6::R6Class("Artist",
           panel.grid.major.y = element_blank()
         )
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -214,10 +217,11 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    lollipop = function(data = self$data, x, y, ...) {
+    plot_lollipop = function(data = self$data, x, y, add = private$is_htest(), ...) {
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_segment(aes(x = {{ x }}, xend = {{ x }}, y = 0, yend = {{ y }}),
           col = "gray", lwd = 1
@@ -227,7 +231,7 @@ Artist <- R6::R6Class("Artist",
         coord_flip() +
         theme_minimal()
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -239,16 +243,17 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    contour = function(data = self$data, x, y, ...) {
+    plot_contour = function(data = self$data, x, y, add = private$is_htest(), ...) {
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_point() +
         geom_density_2d_filled(alpha = 0.4) +
         geom_density_2d(colour = "black")
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -261,10 +266,11 @@ Artist <- R6::R6Class("Artist",
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
     #' @param col The column in `data` to map to the color aesthetic.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    scatter_ellipses = function(data = self$data, x, y, col, ...) {
+    plot_scatter_ellipses = function(data = self$data, x, y, col, add = private$is_htest(), ...) {
       p <- ggplot(data, aes(
         x = {{ x }},
         y = {{ y }}, col = {{ col }}, ...
@@ -276,7 +282,7 @@ Artist <- R6::R6Class("Artist",
           alpha = 0.25
         )
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -289,10 +295,11 @@ Artist <- R6::R6Class("Artist",
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
     #' @param fill The column in `data` to map to the fill color of the sections.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    donut = function(data = self$data, x, y, fill, ...) {
+    plot_donut = function(data = self$data, x, y, fill, add = private$is_htest(), ...) {
       hsize <- 3
       p <- ggplot(data, aes(
         x = {{ x }}, y = {{ y }},
@@ -313,7 +320,7 @@ Artist <- R6::R6Class("Artist",
           axis.text = element_blank()
         )
 
-      private$record(p)
+      eval(private$append_gg)
     },
 
     #' @description
@@ -324,10 +331,11 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param y The column in `data` to map to the y-axis.
     #' @param fill The column in `data` to map to the fill color of the sections.
+    #' @param add whether to add the test result.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
-    pie = function(data = self$data, y, fill, ...) {
+    plot_pie = function(data = self$data, y, fill, add = private$is_htest(), ...) {
       p <- ggplot(
         data,
         aes(
@@ -350,7 +358,7 @@ Artist <- R6::R6Class("Artist",
           panel.background = element_rect(fill = "white")
         )
 
-      private$record(p)
+      eval(private$append_gg)
     }
   ),
   private = list(

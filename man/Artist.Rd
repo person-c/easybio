@@ -49,14 +49,14 @@ cying$plot_scatter(x = Wind, y = Temp)
 \item \href{#method-Artist-test_t}{\code{Artist$test_t()}}
 \item \href{#method-Artist-plot_scatter}{\code{Artist$plot_scatter()}}
 \item \href{#method-Artist-plot_box}{\code{Artist$plot_box()}}
-\item \href{#method-Artist-dumbbell}{\code{Artist$dumbbell()}}
-\item \href{#method-Artist-bubble}{\code{Artist$bubble()}}
-\item \href{#method-Artist-barchart_divergence}{\code{Artist$barchart_divergence()}}
-\item \href{#method-Artist-lollipop}{\code{Artist$lollipop()}}
-\item \href{#method-Artist-contour}{\code{Artist$contour()}}
-\item \href{#method-Artist-scatter_ellipses}{\code{Artist$scatter_ellipses()}}
-\item \href{#method-Artist-donut}{\code{Artist$donut()}}
-\item \href{#method-Artist-pie}{\code{Artist$pie()}}
+\item \href{#method-Artist-plot_dumbbell}{\code{Artist$plot_dumbbell()}}
+\item \href{#method-Artist-plot_bubble}{\code{Artist$plot_bubble()}}
+\item \href{#method-Artist-plot_barchart_divergence}{\code{Artist$plot_barchart_divergence()}}
+\item \href{#method-Artist-plot_lollipop}{\code{Artist$plot_lollipop()}}
+\item \href{#method-Artist-plot_contour}{\code{Artist$plot_contour()}}
+\item \href{#method-Artist-plot_scatter_ellipses}{\code{Artist$plot_scatter_ellipses()}}
+\item \href{#method-Artist-plot_donut}{\code{Artist$plot_donut()}}
+\item \href{#method-Artist-plot_pie}{\code{Artist$plot_pie()}}
 \item \href{#method-Artist-clone}{\code{Artist$clone()}}
 }
 }
@@ -213,15 +213,22 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-dumbbell"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-dumbbell}{}}}
-\subsection{Method \code{dumbbell()}}{
+\if{html}{\out{<a id="method-Artist-plot_dumbbell"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_dumbbell}{}}}
+\subsection{Method \code{plot_dumbbell()}}{
 Create a dumbbell plot
 
 This method generates a dumbbell plot using the provided data, mapping the specified columns
 to the x-axis, y-axis, and color aesthetic.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$dumbbell(data = self$data, x, y, col, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_dumbbell(
+  data = self$data,
+  x,
+  y,
+  col,
+  add = private$is_htest(),
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -235,6 +242,8 @@ to the x-axis, y-axis, and color aesthetic.
 
 \item{\code{col}}{The column in \code{data} to map to the color aesthetic.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -244,15 +253,23 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-bubble"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-bubble}{}}}
-\subsection{Method \code{bubble()}}{
+\if{html}{\out{<a id="method-Artist-plot_bubble"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_bubble}{}}}
+\subsection{Method \code{plot_bubble()}}{
 Create a bubble plot
 
 This method generates a bubble plot where points are mapped to the x and y axes, with their
 size and color representing additional variables.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$bubble(data = self$data, x, y, size, col, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_bubble(
+  data = self$data,
+  x,
+  y,
+  size,
+  col,
+  add = private$is_htest(),
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -268,6 +285,8 @@ size and color representing additional variables.
 
 \item{\code{col}}{The column in \code{data} to map to the color of the points.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -277,15 +296,21 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-barchart_divergence"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-barchart_divergence}{}}}
-\subsection{Method \code{barchart_divergence()}}{
+\if{html}{\out{<a id="method-Artist-plot_barchart_divergence"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_barchart_divergence}{}}}
+\subsection{Method \code{plot_barchart_divergence()}}{
 Create a divergence bar chart
 
 This method generates a divergence bar chart where bars are colored based on their
 positive or negative value.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$barchart_divergence(data = self$data, group, y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_barchart_divergence(
+  data = self$data,
+  group,
+  y,
+  add = private$is_htest(),
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -297,6 +322,8 @@ positive or negative value.
 
 \item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -306,15 +333,15 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-lollipop"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-lollipop}{}}}
-\subsection{Method \code{lollipop()}}{
+\if{html}{\out{<a id="method-Artist-plot_lollipop"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_lollipop}{}}}
+\subsection{Method \code{plot_lollipop()}}{
 Create a lollipop plot
 
 This method generates a lollipop plot, where points are connected to a baseline by vertical
 segments.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$lollipop(data = self$data, x, y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_lollipop(data = self$data, x, y, add = private$is_htest(), ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -326,6 +353,8 @@ segments.
 
 \item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -335,15 +364,15 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-contour"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-contour}{}}}
-\subsection{Method \code{contour()}}{
+\if{html}{\out{<a id="method-Artist-plot_contour"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_contour}{}}}
+\subsection{Method \code{plot_contour()}}{
 Create a contour plot
 
 This method generates a contour plot that includes filled and outlined density contours,
 with data points overlaid.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$contour(data = self$data, x, y, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_contour(data = self$data, x, y, add = private$is_htest(), ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -355,6 +384,8 @@ with data points overlaid.
 
 \item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -364,15 +395,22 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-scatter_ellipses"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-scatter_ellipses}{}}}
-\subsection{Method \code{scatter_ellipses()}}{
+\if{html}{\out{<a id="method-Artist-plot_scatter_ellipses"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_scatter_ellipses}{}}}
+\subsection{Method \code{plot_scatter_ellipses()}}{
 Create a scatter plot with ellipses
 
 This method generates a scatter plot where data points are colored by group, with ellipses
 representing the confidence intervals for each group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$scatter_ellipses(data = self$data, x, y, col, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_scatter_ellipses(
+  data = self$data,
+  x,
+  y,
+  col,
+  add = private$is_htest(),
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -386,6 +424,8 @@ representing the confidence intervals for each group.
 
 \item{\code{col}}{The column in \code{data} to map to the color aesthetic.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -395,15 +435,15 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-donut"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-donut}{}}}
-\subsection{Method \code{donut()}}{
+\if{html}{\out{<a id="method-Artist-plot_donut"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_donut}{}}}
+\subsection{Method \code{plot_donut()}}{
 Create a donut plot
 
 This method generates a donut plot, which is a variation of a pie chart with a hole in the center.
 The sections of the donut represent the proportion of categories in the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$donut(data = self$data, x, y, fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_donut(data = self$data, x, y, fill, add = private$is_htest(), ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -417,6 +457,8 @@ The sections of the donut represent the proportion of categories in the data.
 
 \item{\code{fill}}{The column in \code{data} to map to the fill color of the sections.}
 
+\item{\code{add}}{whether to add the test result.}
+
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
@@ -426,14 +468,14 @@ The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-pie"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-pie}{}}}
-\subsection{Method \code{pie()}}{
+\if{html}{\out{<a id="method-Artist-plot_pie"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-plot_pie}{}}}
+\subsection{Method \code{plot_pie()}}{
 Create a pie chart
 
 This method generates a pie chart where sections represent the proportion of categories in the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$pie(data = self$data, y, fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$plot_pie(data = self$data, y, fill, add = private$is_htest(), ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -444,6 +486,8 @@ This method generates a pie chart where sections represent the proportion of cat
 \item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
 \item{\code{fill}}{The column in \code{data} to map to the fill color of the sections.}
+
+\item{\code{add}}{whether to add the test result.}
 
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
