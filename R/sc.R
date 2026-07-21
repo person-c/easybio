@@ -50,7 +50,9 @@ finsert <- function(
 
   maxL <- max(unlist(sapply(x, \(.x) eval(.x[[2]]), simplify = FALSE)))
   v <- rep(na, if (!missing(len) && len > (maxL + 1)) len else maxL + 1)
-  invisible(lapply(x, \(.x) v[eval(.x[[2]]) + 1] <<- .x[[3]]))
+  for (.x in x) {
+    v[eval(.x[[2]]) + 1] <- .x[[3]]
+  }
 
   if (setname) names(v) <- as.character(0:(length(v) - 1))
 
