@@ -115,7 +115,7 @@ limmaFit <- function(x, group.column) {
   if (!requireNamespace("limma", quietly = TRUE)) {
     stop("To fit linear model, 'limmaFit' requires 'limma' package which cannot be found. Please install 'limma' using 'BiocManager::install('limma')'.")
   }
-  makeContrasts <- limma::makeContrasts()
+  makeContrasts <- limma::makeContrasts
 
   design <- model.matrix(~ 0 + x$samples[[group.column]])
   colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
