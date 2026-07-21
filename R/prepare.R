@@ -11,9 +11,11 @@
 #' @param method A character string specifying the method to use for combining probes into a single gene symbol. Options are `"max"` (take the maximum value) or `"mean"` (compute the average). Default is `"max"`.
 #'
 #' @return A list containing:
-#' \item{data}{A data frame of the expression matrix.}
+#' \item{data}{A data frame of the expression matrix, or `NULL` if not available.}
 #' \item{sample}{A data frame of the sample metadata.}
-#' \item{feature}{A data frame of the feature metadata, which includes gene symbols if combining probes.}
+#' \item{feature}{A data frame of the feature metadata, or `NULL` if not available.}
+#' \item{status}{A character string indicating the data source: `"expression_matrix"`, `"supplementary_files"`, or `"no_data"`.}
+#' \item{supplementary}{Only present when `status` is `"supplementary_files"`. A named list of `data.table` objects parsed from supplementary files.}
 #'
 #' @importFrom utils download.file
 #' @export
@@ -55,16 +57,22 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
       message("Check URL manually if in doubt")
       message(url)
 
-      return(eset[[1]]@phenoData@data)
+      return(list(
+        data = NULL, sample = pd, feature = NULL,
+        status = "no_data"
+      ))
     }
 
     message("detect potential expression data: \n", paste0(fnames[fIdx], "\n"))
     message("read potential expression data in supplementary files...")
     res <- lapply(fIdx, \(idx) fread(paste0(url, fnames[[idx]])))
     names(res) <- make.names(fnames[[fIdx]])
-    res[["sampleInfo"]] <- eset[[1]]@phenoData@data
 
-    return(res)
+    return(list(
+      data = NULL, sample = pd, feature = NULL,
+      status = "supplementary_files",
+      supplementary = res
+    ))
   }
 
   gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = ".")
@@ -78,7 +86,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
 
   if (!combine) {
     gpl <- setDF(gpl, gpl[[1]])
-    return(list(data = exp, sample = pd, feature = gpl))
+    return(list(data = exp, sample = pd, feature = gpl, status = "expression_matrix"))
   }
 
   gpl2 <- copy(gpl)
@@ -106,7 +114,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   gpl2 <- gpl2[.(rownames(exp2)), on = .(symbol), mult = "first"]
   gpl2 <- setDF(gpl2, gpl2$symbol)
   gpl2$symbol <- NULL
-  return(list(data = exp2, sample = pd, feature = gpl2))
+  return(list(data = exp2, sample = pd, feature = gpl2, status = "expression_matrix"))
 }
 
 #' Prepare TCGA Data for Analysis

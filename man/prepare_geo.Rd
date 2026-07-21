@@ -17,9 +17,11 @@ prepare_geo(geo, dir = ".", combine = TRUE, method = "max")
 }
 \value{
 A list containing:
-\item{data}{A data frame of the expression matrix.}
+\item{data}{A data frame of the expression matrix, or \code{NULL} if not available.}
 \item{sample}{A data frame of the sample metadata.}
-\item{feature}{A data frame of the feature metadata, which includes gene symbols if combining probes.}
+\item{feature}{A data frame of the feature metadata, or \code{NULL} if not available.}
+\item{status}{A character string indicating the data source: \code{"expression_matrix"}, \code{"supplementary_files"}, or \code{"no_data"}.}
+\item{supplementary}{Only present when \code{status} is \code{"supplementary_files"}. A named list of \code{data.table} objects parsed from supplementary files.}
 }
 \description{
 This function downloads gene expression data from the Gene Expression Omnibus (GEO) database.
