@@ -171,6 +171,7 @@ Artist <- R6::R6Class("Artist",
     #'
     #' @return A ggplot object representing the divergence bar chart.
     barchart_divergence = function(data = self$data, group, y, fill, ...) {
+      y_vec <- data[[deparse(substitute(y))]]
       ggplot(
         data,
         aes(
@@ -181,7 +182,7 @@ Artist <- R6::R6Class("Artist",
         geom_bar(
           stat = "identity",
           show.legend = FALSE,
-          fill = ifelse(y >= 0, "lightblue", "lightpink"),
+          fill = ifelse(y_vec >= 0, "lightblue", "lightpink"),
           col = "white"
         ) +
         geom_hline(yintercept = 0, col = 1, lwd = 0.2) +
