@@ -8,13 +8,14 @@ The \code{R6} class \link{Artist}.
 }
 \description{
 The \code{Artist} class offers a suite of methods designed to create a variety of plots using \code{ggplot2} for
-data exploration. Any methods prefixed with \code{plot_} or \code{test_} will log the command history along with
-their results, allowing you to review all outcomes later via the \code{get_all_results()} method.
-Notably, methods starting with \code{plot_} will check if the result of the preceding command is of the
+data exploration. All methods log their calls and results, allowing you to review all outcomes later
+via the \code{get_all_results()} method.
+
+Methods prefixed with \code{plot_} will check if the result of the preceding command is of the
 \code{htest} class. If so, it will incorporate the previous command and its p-value as the title and subtitle,
-respectively. This class encompasses methods for crafting dumbbell plots, bubble plots, divergence bar charts,
-lollipop plots, contour plots, scatter plots with ellipses, donut plots, and pie charts.
-Each method is tailored to map data to specific visual aesthetics and to apply additional customizations as needed.
+respectively.
+
+All methods return \code{invisible(self)}, enabling fluent method chaining.
 }
 \examples{
 library(data.table)
@@ -26,7 +27,6 @@ cying$test_wilcox(
   formula = Ozone ~ Month,
 )
 cying$plot_scatter(x = Wind, y = Temp)
-cying$plot_scatter(f = \(x) x[, z := Wind * Temp], x = Wind, y = z)
 
 }
 \section{Public fields}{
@@ -49,7 +49,7 @@ cying$plot_scatter(f = \(x) x[, z := Wind * Temp], x = Wind, y = z)
 \item \href{#method-Artist-test_t}{\code{Artist$test_t()}}
 \item \href{#method-Artist-plot_scatter}{\code{Artist$plot_scatter()}}
 \item \href{#method-Artist-plot_box}{\code{Artist$plot_box()}}
-\item \href{#method-Artist-dumbbbell}{\code{Artist$dumbbbell()}}
+\item \href{#method-Artist-dumbbell}{\code{Artist$dumbbell()}}
 \item \href{#method-Artist-bubble}{\code{Artist$bubble()}}
 \item \href{#method-Artist-barchart_divergence}{\code{Artist$barchart_divergence()}}
 \item \href{#method-Artist-lollipop}{\code{Artist$lollipop()}}
@@ -114,14 +114,14 @@ Conduct wilcox.test
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot2 scatter plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Artist-test_t"></a>}}
 \if{latex}{\out{\hypertarget{method-Artist-test_t}{}}}
 \subsection{Method \code{test_t()}}{
-Conduct wilcox.test
+Conduct t.test
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$test_t(formula, data = self$data, ...)}\if{html}{\out{</div>}}
 }
@@ -138,7 +138,7 @@ Conduct wilcox.test
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot2 scatter plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -175,7 +175,7 @@ Creates a scatter plot.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot2 scatter plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -209,19 +209,19 @@ Creates a box plot.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot2 box plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Artist-dumbbbell"></a>}}
-\if{latex}{\out{\hypertarget{method-Artist-dumbbbell}{}}}
-\subsection{Method \code{dumbbbell()}}{
+\if{html}{\out{<a id="method-Artist-dumbbell"></a>}}
+\if{latex}{\out{\hypertarget{method-Artist-dumbbell}{}}}
+\subsection{Method \code{dumbbell()}}{
 Create a dumbbell plot
 
 This method generates a dumbbell plot using the provided data, mapping the specified columns
 to the x-axis, y-axis, and color aesthetic.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$dumbbbell(data = self$data, x, y, col, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$dumbbell(data = self$data, x, y, col, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -240,7 +240,7 @@ to the x-axis, y-axis, and color aesthetic.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the dumbbell plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -273,7 +273,7 @@ size and color representing additional variables.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the bubble plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -285,7 +285,7 @@ Create a divergence bar chart
 This method generates a divergence bar chart where bars are colored based on their
 positive or negative value.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Artist$barchart_divergence(data = self$data, group, y, fill, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Artist$barchart_divergence(data = self$data, group, y, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -297,14 +297,12 @@ positive or negative value.
 
 \item{\code{y}}{The column in \code{data} to map to the y-axis.}
 
-\item{\code{fill}}{The column in \code{data} to map to the fill color of the bars.}
-
 \item{\code{...}}{Additional aesthetic mappings or other arguments passed to \code{ggplot}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the divergence bar chart.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -314,7 +312,7 @@ A ggplot object representing the divergence bar chart.
 Create a lollipop plot
 
 This method generates a lollipop plot, where points are connected to a baseline by vertical
-segments, with customizable colors and labels.
+segments.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artist$lollipop(data = self$data, x, y, ...)}\if{html}{\out{</div>}}
 }
@@ -333,7 +331,7 @@ segments, with customizable colors and labels.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the lollipop plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -362,7 +360,7 @@ with data points overlaid.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the contour plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -393,7 +391,7 @@ representing the confidence intervals for each group.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the scatter plot with ellipses.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -424,7 +422,7 @@ The sections of the donut represent the proportion of categories in the data.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the donut plot.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -452,7 +450,7 @@ This method generates a pie chart where sections represent the proportion of cat
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A ggplot object representing the pie chart.
+The Artist object invisibly.
 }
 }
 \if{html}{\out{<hr>}}
