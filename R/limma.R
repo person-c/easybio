@@ -82,8 +82,8 @@ dprocess_dgeList <- function(x, group.column, min.count = 10) {
   boxplot(lcpm, las = 2)
   title("Normalized data")
 
-  if (requireNamespace("limma", quietly = TRUE)) {
-    stop("To plot MDS plot, 'plotMDS' requires 'limma' package which cannot be found. Please install 'limma' using 'BiocManager::install('limma')'")
+  if (!requireNamespace("limma", quietly = TRUE)) {
+    stop("To plot MDS plot, 'plotMDS' requires 'limma' package which cannot be found. Please install 'limma' using 'BiocManager::install('limma')'.")
   }
   limma::plotMDS(lcpm,
     label = x$samples[[group.column]],
