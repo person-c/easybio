@@ -1,5 +1,6 @@
 .Rproj.user
-inst/doc
+inst/doc/*
+!/inst/doc/.gitkeep
 /doc/
 /Meta/
 /.vscode/
