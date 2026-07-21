@@ -21,8 +21,8 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -41,10 +41,20 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::covr, any::lintr
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          build_args: 'c("--no-manual","--no-build-vignettes")'
+
+      - name: Lint
+        if: always() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
+        run: lintr::lint_package()
+        shell: Rscript {0}
+
+      - name: Test coverage
+        if: success() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
+        run: covr::codecov(token = "${{ secrets.CODECOV_TOKEN }}")
+        shell: Rscript {0}
