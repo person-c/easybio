@@ -5,9 +5,8 @@
 #' data exploration. All methods log their calls and results, allowing you to review all outcomes later
 #' via the `get_all_results()` method.
 #'
-#' Methods prefixed with `plot_` will check if the result of the preceding command is of the
-#' `htest` class. If so, it will incorporate the previous command and its p-value as the title and subtitle,
-#' respectively.
+#' Each `plot_*` method displays the generating command as the plot title. When a `plot_*` method
+#' immediately follows a `test_*` method, the test result (p-value) is automatically added as the subtitle.
 #'
 #' All methods return `invisible(self)`, enabling fluent method chaining.
 #'
@@ -21,9 +20,7 @@
 #' setDT(air)
 #' cying <- Artist$new(data = air)
 #' cying$plot_scatter(x = Wind, y = Temp)
-#' cying$test_wilcox(
-#'   formula = Ozone ~ Month,
-#' )
+#' cying$test_wilcox(formula = Ozone ~ Month)
 #' cying$plot_scatter(x = Wind, y = Temp)
 #'
 Artist <- R6::R6Class("Artist",
@@ -58,9 +55,9 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings passed to [wilcox.test()].
     #' @return The Artist object invisibly.
     test_wilcox = function(formula, data = self$data, ...) {
+      mc <- match.call()
       htestRes <- wilcox.test(formula = formula, data = data, ...)
-
-      eval(private$append_htest)
+      private$finalize_test(htestRes, mc)
     },
     #' @description
     #' Conduct t.test
@@ -70,9 +67,9 @@ Artist <- R6::R6Class("Artist",
     #' @param ... Additional aesthetic mappings passed to [t.test()].
     #' @return The Artist object invisibly.
     test_t = function(formula, data = self$data, ...) {
+      mc <- match.call()
       htestRes <- t.test(formula = formula, data = data, ...)
-
-      eval(private$append_htest)
+      private$finalize_test(htestRes, mc)
     },
     #' @description
     #' Creates a scatter plot.
@@ -80,37 +77,39 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted. Default is `self$data`.
     #' @param x The column name for the x-axis.
     #' @param y The column name for the y-axis.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param fun function to process the `self$data`.
     #' @param ... Additional aesthetic mappings passed to `aes()`.
     #' @return The Artist object invisibly.
     plot_scatter = function(data = self$data, fun = \(x) x, x, y, ..., add = private$is_htest()) {
+      mc <- match.call()
       data <- force(fun)(data)
 
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_point()
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
     #' @description
     #' Creates a box plot.
     #'
     #' @param data A data frame or tibble containing the data to be plotted. Default is `self$data`.
     #' @param x The column name for the x-axis.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param fun function to process the `self$data`.
     #' @param ... Additional aesthetic mappings passed to `aes()`.
     #' @return The Artist object invisibly.
     plot_box = function(data = self$data, fun = \(x) x, x, ..., add = private$is_htest()) {
+      mc <- match.call()
       data <- force(fun)(data)
 
       p <- ggplot(data, aes(x = {{ x }}, ...)) +
         geom_boxplot()
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
     #' @description
-    #' Create a dumbbell plot
+    #' Creates a dumbbell plot.
     #'
     #' This method generates a dumbbell plot using the provided data, mapping the specified columns
     #' to the x-axis, y-axis, and color aesthetic.
@@ -119,20 +118,21 @@ Artist <- R6::R6Class("Artist",
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
     #' @param col The column in `data` to map to the color aesthetic.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_dumbbell = function(data = self$data, x, y, col, add = private$is_htest(), ...) {
+      mc <- match.call()
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}), ...) +
         geom_line() +
         geom_point(aes(col = {{ col }}), size = 3)
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a bubble plot
+    #' Creates a bubble plot.
     #'
     #' This method generates a bubble plot where points are mapped to the x and y axes, with their
     #' size and color representing additional variables.
@@ -142,11 +142,12 @@ Artist <- R6::R6Class("Artist",
     #' @param y The column in `data` to map to the y-axis.
     #' @param size The column in `data` to map to the size of the points.
     #' @param col The column in `data` to map to the color of the points.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_bubble = function(data = self$data, x, y, size, col, add = private$is_htest(), ...) {
+      mc <- match.call()
       p <- ggplot(
         data,
         aes(
@@ -158,11 +159,11 @@ Artist <- R6::R6Class("Artist",
         geom_point() +
         scale_size(name = "Size", range = c(1, 10))
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a divergence bar chart
+    #' Creates a divergence bar chart.
     #'
     #' This method generates a divergence bar chart where bars are colored based on their
     #' positive or negative value.
@@ -170,11 +171,12 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param group The column in `data` representing the grouping variable.
     #' @param y The column in `data` to map to the y-axis.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_barchart_divergence = function(data = self$data, group, y, add = private$is_htest(), ...) {
+      mc <- match.call()
       y_vec <- data[[deparse(substitute(y))]]
       p <- ggplot(
         data,
@@ -205,11 +207,11 @@ Artist <- R6::R6Class("Artist",
           panel.grid.major.y = element_blank()
         )
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a lollipop plot
+    #' Creates a lollipop plot.
     #'
     #' This method generates a lollipop plot, where points are connected to a baseline by vertical
     #' segments.
@@ -217,11 +219,12 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_lollipop = function(data = self$data, x, y, add = private$is_htest(), ...) {
+      mc <- match.call()
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_segment(aes(x = {{ x }}, xend = {{ x }}, y = 0, yend = {{ y }}),
           col = "gray", lwd = 1
@@ -231,11 +234,11 @@ Artist <- R6::R6Class("Artist",
         coord_flip() +
         theme_minimal()
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a contour plot
+    #' Creates a contour plot.
     #'
     #' This method generates a contour plot that includes filled and outlined density contours,
     #' with data points overlaid.
@@ -243,21 +246,22 @@ Artist <- R6::R6Class("Artist",
     #' @param data A data frame containing the data to be plotted.
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_contour = function(data = self$data, x, y, add = private$is_htest(), ...) {
+      mc <- match.call()
       p <- ggplot(data, aes(x = {{ x }}, y = {{ y }}, ...)) +
         geom_point() +
         geom_density_2d_filled(alpha = 0.4) +
         geom_density_2d(colour = "black")
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a scatter plot with ellipses
+    #' Creates a scatter plot with ellipses.
     #'
     #' This method generates a scatter plot where data points are colored by group, with ellipses
     #' representing the confidence intervals for each group.
@@ -266,11 +270,12 @@ Artist <- R6::R6Class("Artist",
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
     #' @param col The column in `data` to map to the color aesthetic.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_scatter_ellipses = function(data = self$data, x, y, col, add = private$is_htest(), ...) {
+      mc <- match.call()
       p <- ggplot(data, aes(
         x = {{ x }},
         y = {{ y }}, col = {{ col }}, ...
@@ -282,11 +287,11 @@ Artist <- R6::R6Class("Artist",
           alpha = 0.25
         )
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a donut plot
+    #' Creates a donut plot.
     #'
     #' This method generates a donut plot, which is a variation of a pie chart with a hole in the center.
     #' The sections of the donut represent the proportion of categories in the data.
@@ -295,11 +300,12 @@ Artist <- R6::R6Class("Artist",
     #' @param x The column in `data` to map to the x-axis.
     #' @param y The column in `data` to map to the y-axis.
     #' @param fill The column in `data` to map to the fill color of the sections.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_donut = function(data = self$data, x, y, fill, add = private$is_htest(), ...) {
+      mc <- match.call()
       hsize <- 3
       p <- ggplot(data, aes(
         x = {{ x }}, y = {{ y }},
@@ -320,22 +326,23 @@ Artist <- R6::R6Class("Artist",
           axis.text = element_blank()
         )
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     },
 
     #' @description
-    #' Create a pie chart
+    #' Creates a pie chart.
     #'
     #' This method generates a pie chart where sections represent the proportion of categories in the data.
     #'
     #' @param data A data frame containing the data to be plotted.
     #' @param y The column in `data` to map to the y-axis.
     #' @param fill The column in `data` to map to the fill color of the sections.
-    #' @param add whether to add the test result.
+    #' @param add whether to add the test result as subtitle.
     #' @param ... Additional aesthetic mappings or other arguments passed to `ggplot`.
     #'
     #' @return The Artist object invisibly.
     plot_pie = function(data = self$data, y, fill, add = private$is_htest(), ...) {
+      mc <- match.call()
       p <- ggplot(
         data,
         aes(
@@ -358,26 +365,31 @@ Artist <- R6::R6Class("Artist",
           panel.background = element_rect(fill = "white")
         )
 
-      eval(private$append_gg)
+      private$finalize_plot(p, mc, add)
     }
   ),
   private = list(
-    append_gg = expression(
-      if (add) p <- p + labs(title = deparse(private$last(self$command))),
-      print(p),
-      self$command <- private$add_in_list(self$command, match.call()),
-      self$result <- private$add_in_list(self$result, p),
-      invisible(self)
-    ),
-    append_htest = expression(
-      self$command <- private$add_in_list(self$command, match.call()),
-      self$result <- private$add_in_list(self$result, htestRes),
-      invisible(self)
-    ),
-    record = function(p) {
+    finalize_plot = function(p, mc, add_htest = FALSE) {
+      cmd_text <- paste(strwrap(deparse(mc, width.cutoff = 500L), width = 60L),
+        collapse = "\n"
+      )
+      p <- p + labs(title = cmd_text)
+
+      if (add_htest && length(self$result) > 0L) {
+        prev <- self$result[[length(self$result)]]
+        if (inherits(prev, "htest")) {
+          p <- p + labs(subtitle = sprintf("p = %.4g", prev$p.value))
+        }
+      }
+
       print(p)
-      self$command <- private$add_in_list(self$command, match.call())
+      self$command <- private$add_in_list(self$command, mc)
       self$result <- private$add_in_list(self$result, p)
+      invisible(self)
+    },
+    finalize_test = function(htestRes, mc) {
+      self$command <- private$add_in_list(self$command, mc)
+      self$result <- private$add_in_list(self$result, htestRes)
       invisible(self)
     },
     last = function(x) {
