@@ -21,8 +21,8 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -47,7 +47,7 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual","--no-build-vignettes")'
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
 
       - name: Lint
         if: always() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
@@ -56,7 +56,5 @@ jobs:
 
       - name: Test coverage
         if: success() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
-        run: |
-          token <- Sys.getenv("CODECOV_TOKEN", unset = NA)
-          covr::codecov(token = if (is.na(token)) "" else token)
+        run: covr::codecov(token = if (Sys.getenv("CODECOV_TOKEN") == "") "" else Sys.getenv("CODECOV_TOKEN"))
         shell: Rscript {0}
