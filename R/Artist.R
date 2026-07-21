@@ -364,6 +364,7 @@ Artist <- R6::R6Class("Artist",
   private = list(
     append_gg = expression(
       if (add) p <- p + labs(title = deparse(private$last(self$command))),
+      print(p),
       self$command <- private$add_in_list(self$command, match.call()),
       self$result <- private$add_in_list(self$result, p),
       invisible(self)
@@ -374,6 +375,7 @@ Artist <- R6::R6Class("Artist",
       invisible(self)
     ),
     record = function(p) {
+      print(p)
       self$command <- private$add_in_list(self$command, match.call())
       self$result <- private$add_in_list(self$result, p)
       invisible(self)
