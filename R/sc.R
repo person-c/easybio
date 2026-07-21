@@ -364,8 +364,26 @@ matchCellMarker2 <- function(
   )
 
   setattr(res, "filter_args", filter_args)
+  class(res) <- c("cellmarker_match", class(res))
 
   res
+}
+
+#' @export
+`[.cellmarker_match` <- function(x, ...) {
+  ref <- attr(x, "ref")
+  is_custom_ref <- attr(x, "is_custom_ref")
+  filter_args <- attr(x, "filter_args")
+
+  x <- NextMethod()
+
+  if (inherits(x, "data.table")) {
+    setattr(x, "ref", ref)
+    setattr(x, "is_custom_ref", is_custom_ref)
+    setattr(x, "filter_args", filter_args)
+    class(x) <- unique(c("cellmarker_match", class(x)))
+  }
+  x
 }
 
 #' Verify and Explore Cell Type Annotations
@@ -434,6 +452,13 @@ matchCellMarker2 <- function(
 #' }
 check_marker <- function(
     marker, cl = c(), topcellN = 2, cis = FALSE) {
+  if (!inherits(marker, "cellmarker_match")) {
+    stop(
+      "'marker' must be the result of 'matchCellMarker2()'. ",
+      "Please use 'matchCellMarker2()' to annotate your data first.",
+      call. = FALSE
+    )
+  }
   . <- cell_name <- cluster <- NULL
 
   filter_args <- attr(marker, "filter_args")

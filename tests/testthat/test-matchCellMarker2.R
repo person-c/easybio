@@ -79,3 +79,29 @@ test_that("matchCellMarker2 handles n larger than available markers per cluster"
   expect_s3_class(res, "data.table")
   expect_true(nrow(res) > 0)
 })
+
+test_that("matchCellMarker2 returns a cellmarker_match S3 object", {
+  res <- matchCellMarker2(pbmc.markers, n = 30, spc = "Human")
+  expect_s3_class(res, "cellmarker_match")
+  expect_s3_class(res, "data.table")
+})
+
+test_that("cellmarker_match attributes survive row subsetting", {
+  res <- matchCellMarker2(pbmc.markers, n = 30, spc = "Human")
+  sub <- res[1:3]
+  expect_s3_class(sub, "cellmarker_match")
+  expect_true(is.data.frame(attr(sub, "ref")))
+  expect_type(attr(sub, "filter_args"), "list")
+})
+
+test_that("cellmarker_match attributes survive column selection", {
+  res <- matchCellMarker2(pbmc.markers, n = 30, spc = "Human")
+  sub <- res[, .(cluster, cell_name, N)]
+  expect_s3_class(sub, "cellmarker_match")
+  expect_true(is.data.frame(attr(sub, "ref")))
+})
+
+test_that("check_marker accepts cellmarker_match input", {
+  res <- matchCellMarker2(pbmc.markers, n = 30, spc = "Human")
+  expect_no_error(check_marker(res, cl = 0, topcellN = 1))
+})

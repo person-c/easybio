@@ -48,3 +48,14 @@ test_that("check_marker errors when spc is missing from matchCellMarker2 result"
     "species"
   )
 })
+
+test_that("check_marker rejects non-cellmarker_match input", {
+  plain_dt <- data.table::data.table(
+    cluster = factor(0), cell_name = "A", uniqueN = 1,
+    N = 1, ordered_symbol = list("X"), orderN = list(1)
+  )
+  expect_error(
+    check_marker(plain_dt, cl = 0),
+    "matchCellMarker2"
+  )
+})
