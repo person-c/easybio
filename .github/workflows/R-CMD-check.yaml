@@ -56,5 +56,7 @@ jobs:
 
       - name: Test coverage
         if: success() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
-        run: covr::codecov(token = "${{ secrets.CODECOV_TOKEN }}")
+        run: |
+          token <- Sys.getenv("CODECOV_TOKEN", unset = NA)
+          covr::codecov(token = if (is.na(token)) "" else token)
         shell: Rscript {0}
