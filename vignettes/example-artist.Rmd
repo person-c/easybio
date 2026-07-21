@@ -1,0 +1,198 @@
+---
+title: "Exploratory Data Visualization with the Artist Class"
+author: "[cw](https://cying.org)"
+date: "`{r} Sys.Date()`"
+output: html
+vignette: >
+  %\VignetteEngine{litedown::vignette}
+  %\VignetteIndexEntry{Exploratory Data Visualization with Artist}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+The `Artist` class provides a fluent interface for rapid exploratory data visualization
+using `ggplot2`. It is designed to let you iterate quickly: plot, test, re-plot, and
+review your entire exploration history.
+
+Key features:
+
+- **Method chaining**: all methods return `invisible(self)`, enabling a fluid workflow
+- **Automatic annotations**: `plot_*` methods detect prior statistical tests and add
+  results as plot titles
+- **Command history**: every method call is recorded in `$command` and `$result`
+- **In-place data transformation**: the `fun` parameter lets you modify `self$data`
+  on the fly
+
+## Setup
+
+```{r}
+litedown::reactor(warning = FALSE)
+
+library(easybio)
+library(data.table)
+
+# Example data: airquality, focusing on May and June
+air <- subset(airquality, Month %in% c(5, 6))
+setDT(air)
+```
+
+## Basic Usage
+
+Create an `Artist` instance and start plotting.
+
+```{r}
+a <- Artist$new(data = air)
+
+a$plot_scatter(x = Wind, y = Temp)
+```
+
+The plot is displayed immediately and stored in `a$result`. You can retrieve the
+full history at any time:
+
+```{r}
+a$get_all_result()[, .(command)]
+```
+
+## Statistical Tests and Auto-Annotation
+
+This is the core design of Artist. When a `plot_*` method follows a `test_*` method,
+the statistical result is automatically added to the plot title.
+
+```{r}
+a$plot_box(x = factor(Month), y = Ozone)
+a$test_wilcox(formula = Ozone ~ Month)
+a$plot_box(x = factor(Month), y = Ozone)
+```
+
+Notice how the second `plot_box` includes the previous test in its title — you
+immediately see the comparison context.
+
+The same works with `t.test`:
+
+```{r}
+a$plot_scatter(x = Wind, y = Temp)
+a$test_t(formula = Temp ~ Month)
+a$plot_scatter(x = Wind, y = Temp)
+```
+
+## Method Chaining
+
+All methods return the Artist object itself, so you can chain calls:
+
+```{r}
+a$plot_scatter(x = Wind, y = Temp)$
+  test_wilcox(formula = Ozone ~ Month)$
+  plot_scatter(x = Wind, y = Temp)
+```
+
+## Data Transformation with `fun`
+
+The `fun` parameter applies a transformation to `self$data` before plotting.
+This is useful for derived variables:
+
+```{r}
+a$plot_scatter(
+  fun = \(x) x[, z := Wind * Temp],
+  x = Wind,
+  y = z
+)
+```
+
+The transformation is applied in-place, so `a$data` now contains the `z` column.
+
+## Available Plot Types
+
+All plot methods follow the same interface and support chaining.
+
+### Dumbbell Plot
+
+```{r}
+# Summarise data for dumbbell
+air[, mean_temp := mean(Temp), by = Month]
+a$plot_dumbbell(x = Month, y = mean_temp, col = factor(Month))
+```
+
+### Bubble Plot
+
+```{r}
+air[, .N, by = .(Month, Day)]
+a2 <- Artist$new(data = air[, .N, by = .(Month, Day)])
+a2$plot_bubble(x = Month, y = Day, size = N, col = N)
+```
+
+### Divergence Bar Chart
+
+```{r}
+# Create some example data with positive and negative values
+example <- data.table(
+  group = letters[1:6],
+  value = c(1.5, -0.8, 2.1, -1.2, 0.5, -0.3)
+)
+a3 <- Artist$new(data = example)
+a3$plot_barchart_divergence(group = group, y = value)
+```
+
+### Lollipop Plot
+
+```{r}
+a3$plot_lollipop(x = group, y = value)
+```
+
+### Contour Plot
+
+```{r}
+a$plot_contour(x = Wind, y = Temp)
+```
+
+### Scatter Plot with Ellipses
+
+```{r}
+a$plot_scatter_ellipses(x = Wind, y = Temp, col = factor(Month))
+```
+
+### Donut Plot
+
+```{r}
+month_counts <- air[, .N, by = Month]
+a4 <- Artist$new(data = month_counts)
+a4$plot_donut(x = Month, y = N, fill = factor(Month))
+```
+
+### Pie Chart
+
+```{r}
+a4$plot_pie(y = N, fill = factor(Month))
+```
+
+## Reviewing Your Exploration History
+
+Every plot and test is recorded. Use `get_all_result()` to see the full log:
+
+```{r}
+history <- a$get_all_result()
+history
+```
+
+```{r}
+# The last plot
+a$result[[length(a$result)]]
+
+# The last statistical test result
+for (res in a$result) {
+  if (inherits(res, "htest")) print(res)
+}
+```
+
+## Summary
+
+The `Artist` class turns exploratory data analysis into a structured, reproducible
+workflow. You can:
+
+1. **Plot** → `plot_scatter`, `plot_box`, `plot_dumbbell`, etc.
+2. **Test** → `test_wilcox`, `test_t`
+3. **Re-plot** → same plot method now shows test context
+4. **Review** → `get_all_result()` gives you the complete history
+
+This makes it ideal for quick data inspection before committing to a formal
+analysis pipeline.
