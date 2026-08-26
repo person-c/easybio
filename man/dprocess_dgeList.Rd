@@ -2,26 +2,19 @@
 % Please edit documentation in R/limma.R
 \name{dprocess_dgeList}
 \alias{dprocess_dgeList}
-\title{Filter Low-Expressed Genes and Normalize DGEList Data}
+\title{Filter and Normalize DGEList Data (Deprecated)}
 \usage{
-dprocess_dgeList(x, group.column, min.count = 10)
+dprocess_dgeList(...)
 }
 \arguments{
-\item{x}{A \code{DGEList} object containing raw count data.}
-
-\item{group.column}{The name of the column in \code{x$samples} that contains the
-grouping information for the samples.}
-
-\item{min.count}{The minimum number of counts required for a gene to be
-considered expressed. Genes with counts below this threshold in any group
-will be filtered out. Defaults to 10.}
+\item{...}{Arguments passed on to \code{\link[=process_dge_list]{process_dge_list()}}.}
 }
 \value{
-The function returns a \code{DGEList} object with low-expressed genes
-filtered out and normalization factors calculated.
+See \code{\link[=process_dge_list]{process_dge_list()}}.
 }
 \description{
-This function filters out low-expressed genes from a \code{DGEList} object and
-normalizes the count data. It also provides diagnostic plots for raw and
-filtered data.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{dprocess_dgeList()} was renamed to \code{\link[=process_dge_list]{process_dge_list()}} to follow the
+snake_case naming style. It will be removed in the next version.
 }

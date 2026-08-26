@@ -1,29 +1,40 @@
 #' @title Download and Process GEO Data
 #'
 #' @description
-#' This function downloads gene expression data from the Gene Expression Omnibus (GEO) database.
-#' It retrieves either the expression matrix or the supplementary tabular data if the expression data is not available.
-#' The function also allows for the conversion of probe identifiers to gene symbols and can combine multiple probes into a single symbol.
+#' This function downloads gene expression data from the Gene Expression
+#' Omnibus (GEO) database. It retrieves either the expression matrix or the
+#' supplementary tabular data if the expression data is not available.
+#' The function also allows for the conversion of probe identifiers to gene
+#' symbols and can combine multiple probes into a single symbol.
 #'
 #' @param geo A character string specifying the GEO Series ID (e.g., "GSE12345").
-#' @param dir A character string specifying the directory where files should be downloaded. Default is the current working directory (`"."`).
-#' @param combine A logical value indicating whether to combine multiple probes into a single gene symbol. Default is `TRUE`.
-#' @param method A character string specifying the method to use for combining probes into a single gene symbol. Options are `"max"` (take the maximum value) or `"mean"` (compute the average). Default is `"max"`.
+#' @param dir A character string specifying the directory where files should be
+#'   downloaded. Default is the current working directory (`"."`).
+#' @param combine A logical value indicating whether to combine multiple probes
+#'   into a single gene symbol. Default is `TRUE`.
+#' @param method A character string specifying the method to use for combining
+#'   probes into a single gene symbol. Options are `"max"` (take the maximum
+#'   value) or `"mean"` (compute the average). Default is `"max"`.
 #'
 #' @return A list containing:
 #' \item{data}{A data frame of the expression matrix, or `NULL` if not available.}
 #' \item{sample}{A data frame of the sample metadata.}
 #' \item{feature}{A data frame of the feature metadata, or `NULL` if not available.}
-#' \item{status}{A character string indicating the data source: `"expression_matrix"`, `"supplementary_files"`, or `"no_data"`.}
-#' \item{supplementary}{Only present when `status` is `"supplementary_files"`. A named list of `data.table` objects parsed from supplementary files.}
+#' \item{status}{A character string indicating the data source:
+#'   `"expression_matrix"`, `"supplementary_files"`, or `"no_data"`.}
+#' \item{supplementary}{Only present when `status` is `"supplementary_files"`.
+#'   A named list of `data.table` objects parsed from supplementary files.}
 #'
 #' @importFrom utils download.file
 #' @export
 prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
-  . <- ID <- symbol <- gene_assignment <- NULL
+  . <- ID <- symbol <- gene_assignment <- NULL # nolint: object_name_linter.
 
   if (!requireNamespace("GEOquery", quietly = TRUE)) {
-    stop("To get GEO datasets, prepare_geo() requires 'GEOquery' package which cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'.")
+    stop(
+      "To get GEO datasets, prepare_geo() requires 'GEOquery' package which ",
+      "cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'."
+    )
   }
 
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
@@ -50,9 +61,9 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
       },
       silent = TRUE
     )
-    fIdx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = fnames, ignore.case = TRUE)
+    f_idx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = fnames, ignore.case = TRUE)
 
-    if (inherits(fnames, "try-error") || length(fIdx) == 0L) {
+    if (inherits(fnames, "try-error") || length(f_idx) == 0L) {
       message(sprintf("No potential expression data is detected in supplementary files"))
       message("Check URL manually if in doubt")
       message(url)
@@ -63,10 +74,10 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
       ))
     }
 
-    message("detect potential expression data: \n", paste0(fnames[fIdx], "\n"))
+    message("detect potential expression data: \n", paste0(fnames[f_idx], "\n"))
     message("read potential expression data in supplementary files...")
-    res <- lapply(fIdx, \(idx) fread(paste0(url, fnames[[idx]])))
-    names(res) <- make.names(fnames[[fIdx]])
+    res <- lapply(f_idx, \(idx) fread(paste0(url, fnames[[idx]])))
+    names(res) <- make.names(fnames[[f_idx]])
 
     return(list(
       data = NULL, sample = pd, feature = NULL,
@@ -119,41 +130,43 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
 
 #' Prepare TCGA Data for Analysis
 #'
-#' This function prepares TCGA data for downstream analyses such as differential expression analysis with `limma` or survival analysis.
-#' It extracts and processes the necessary information from the TCGA data object, separating tumor and non-tumor samples.
+#' This function prepares TCGA data for downstream analyses such as
+#' differential expression analysis with `limma` or survival analysis.
+#' It extracts and processes the necessary information from the TCGA data
+#' object, separating tumor and non-tumor samples.
 #'
 #' @param data A `SummarizedExperiment` object containing TCGA data, typically obtained from R package `TCGABiolinks`.
 #'
 #' @return A list.
 #' @export
 prepare_tcga <- function(data) {
-  sampleInfo <- as.data.frame(data@colData)
-  sampleInfo[["OS"]] <- fcoalesce(sampleInfo[["days_to_death"]], sampleInfo[["days_to_last_follow_up"]])
+  sample_info <- as.data.frame(data@colData)
+  sample_info[["OS"]] <- fcoalesce(sample_info[["days_to_death"]], sample_info[["days_to_last_follow_up"]])
 
-  featuresInfo <- as.data.frame(data@rowRanges)
-  rownames(featuresInfo) <- data@rowRanges@ranges@NAMES
-  expr <- as.data.frame(data@assays@data$unstranded, row.names = rownames(featuresInfo))
-  colnames(expr) <- rownames(sampleInfo)
+  features_info <- as.data.frame(data@rowRanges)
+  rownames(features_info) <- data@rowRanges@ranges@NAMES
+  expr <- as.data.frame(data@assays@data$unstranded, row.names = rownames(features_info))
+  colnames(expr) <- rownames(sample_info)
 
   # tumor smaple data
-  tumorIdx <- sampleInfo[["sample_type"]] %ilike% "Tumor"
+  tumor_idx <- sample_info[["sample_type"]] %ilike% "Tumor"
 
-  expr2 <- as.data.frame(data@assays@data$fpkm_unstrand, row.names = rownames(featuresInfo))
-  colnames(expr2) <- rownames(sampleInfo)
-  expr2 <- expr2[, tumorIdx]
+  expr2 <- as.data.frame(data@assays@data$fpkm_unstrand, row.names = rownames(features_info))
+  colnames(expr2) <- rownames(sample_info)
+  expr2 <- expr2[, tumor_idx]
 
-  sampleInfo2 <- sampleInfo[tumorIdx, ]
+  sample_info2 <- sample_info[tumor_idx, ]
 
   structure(list(
     all = list(
       exprCount = expr,
-      featuresInfo = featuresInfo,
-      sampleInfo = sampleInfo
+      features_info = features_info,
+      sample_info = sample_info
     ),
     tumor = list(
       exprFpkm = expr2,
-      featuresInfo = featuresInfo,
-      sampleInfo = sampleInfo2
+      features_info = features_info,
+      sample_info = sample_info2
     )
   ))
 }

@@ -9,7 +9,7 @@ suggest_best_match(
   choices,
   n = 1,
   threshold = 2,
-  ignore.case = TRUE,
+  ignore_case = TRUE,
   return_distance = FALSE
 )
 }
@@ -24,7 +24,7 @@ Defaults to 1.}
 \item{threshold}{An integer; the maximum Levenshtein distance to consider a
 choice a "close" match. A lower value is stricter. Defaults to 2.}
 
-\item{ignore.case}{A logical value. If \code{TRUE}, matching is case-insensitive.
+\item{ignore_case}{A logical value. If \code{TRUE}, matching is case-insensitive.
 Defaults to \code{TRUE}.}
 
 \item{return_distance}{A logical value. If \code{TRUE}, the output is a data.frame

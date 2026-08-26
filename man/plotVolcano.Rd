@@ -2,28 +2,19 @@
 % Please edit documentation in R/limma.R
 \name{plotVolcano}
 \alias{plotVolcano}
-\title{Plot Volcano Plot for Differentially Expressed Genes}
+\title{Plot a Volcano Plot (Deprecated)}
 \usage{
-plotVolcano(data, data.text, x, y, color, label)
+plotVolcano(...)
 }
 \arguments{
-\item{data}{A data frame containing the DEGs result.}
-
-\item{data.text}{A data frame containing labeled data for text annotation.}
-
-\item{x}{variable representing the aesthetic for the x-axis.}
-
-\item{y}{variable representing the aesthetic for the y-axis.}
-
-\item{color}{variable representing the column name for the color aesthetic.}
-
-\item{label}{variable representing the column name for the text label aesthetic.}
+\item{...}{Arguments passed on to \code{\link[=plot_volcano]{plot_volcano()}}.}
 }
 \value{
-A \code{ggplot} object representing the volcano plot.
+See \code{\link[=plot_volcano]{plot_volcano()}}.
 }
 \description{
-This function generates a volcano plot for differentially expressed genes
-(DEGs) using \code{ggplot2}. It allows for customization of the plot with
-different aesthetic parameters.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotVolcano()} was renamed to \code{\link[=plot_volcano]{plot_volcano()}} to follow the snake_case
+naming style. It will be removed in the next version.
 }

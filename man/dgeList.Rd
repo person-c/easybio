@@ -2,27 +2,19 @@
 % Please edit documentation in R/limma.R
 \name{dgeList}
 \alias{dgeList}
-\title{Construct a DGEList Object}
+\title{Construct a DGEList Object (Deprecated)}
 \usage{
-dgeList(count, sample.info, feature.info)
+dgeList(...)
 }
 \arguments{
-\item{count}{A numeric matrix where rows represent features (e.g., genes) and
-columns represent samples. Row names should correspond to feature identifiers,
-and column names should correspond to sample identifiers.}
-
-\item{sample.info}{A data frame containing information about the samples. The
-number of rows should match the number of columns in the \code{count} matrix.}
-
-\item{feature.info}{A data frame containing information about the features. The
-number of rows should match the number of rows in the \code{count} matrix.}
+\item{...}{Arguments passed on to \code{\link[=dge_list]{dge_list()}}.}
 }
 \value{
-A \code{DGEList} object as defined by the edgeR package, which includes the
-count data, sample information, and feature information.
+See \code{\link[=dge_list]{dge_list()}}.
 }
 \description{
-This function creates a \code{DGEList} object from a count matrix, sample
-information, and feature information. It is designed to facilitate the
-analysis of differential gene expression using the edgeR package.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{dgeList()} was renamed to \code{\link[=dge_list]{dge_list()}} to follow the snake_case naming
+style. It will be removed in the next version.
 }

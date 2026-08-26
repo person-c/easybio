@@ -4,7 +4,7 @@
 \alias{check_marker}
 \title{Verify and Explore Cell Type Annotations}
 \usage{
-check_marker(marker, cl = c(), topcellN = 2, cis = FALSE)
+check_marker(marker, cl = c(), top_cell_n = 2, cis = FALSE)
 }
 \arguments{
 \item{marker}{A \code{data.table} object, which is the result of a call to \code{match_ref()}.
@@ -12,8 +12,8 @@ This object must contain the attributes set by \code{match_ref} for the function
 
 \item{cl}{A numeric or character vector specifying the cluster IDs to be inspected.}
 
-\item{topcellN}{An integer. For each cluster in \code{cl}, the function will retrieve
-markers for the top \code{topcellN} cell type annotations. Defaults to 2.}
+\item{top_cell_n}{An integer. For each cluster in \code{cl}, the function will retrieve
+markers for the top \code{top_cell_n} cell type annotations. Defaults to 2.}
 
 \item{cis}{A logical value that switches the function's mode. See Details.
 Defaults to \code{FALSE}.}
@@ -54,23 +54,23 @@ data(pbmc.markers)
 matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 
 # Step 2: Verify the annotation for cluster 0.
-# Let's check the top annotation (topcellN = 1).
+# Let's check the top annotation (top_cell_n = 1).
 
 # Question 1: "Is cluster 0 really a CD4-positive T cell?
 # Let's see the canonical markers for it."
 # Note: We don't need to pass 'spc' here; it's retrieved from matched_cells.
-reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
+reference_markers <- check_marker(matched_cells, cl = 0, top_cell_n = 1)
 print(reference_markers)
 # Now you would typically use these markers in Seurat::DotPlot() or Seurat::FeaturePlot()
 
 # Question 2: "Which of my genes made the algorithm think cluster 0
 # is a CD4-positive T cell?"
-local_markers <- check_marker(matched_cells, cl = 0, topcellN = 1, cis = TRUE)
+local_markers <- check_marker(matched_cells, cl = 0, top_cell_n = 1, cis = TRUE)
 print(local_markers)
 }
 }
 \seealso{
 \code{\link{match_ref}} to generate the input for this function.
 \code{\link{get_marker}} which is used internally when \code{cis = FALSE}.
-\code{\link{plotSeuratDot}} to visualize the results.
+\code{\link{plot_seurat_dot}} to visualize the results.
 }

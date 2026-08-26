@@ -2,18 +2,19 @@
 % Please edit documentation in R/ora.R
 \name{plotRank}
 \alias{plotRank}
-\title{Visualization of GSEA Rank Statistics}
+\title{Visualize GSEA Rank Statistics (Deprecated)}
 \usage{
-plotRank(stats)
+plotRank(...)
 }
 \arguments{
-\item{stats}{A numeric vector containing the ranked statistics from a GSEA analysis.}
+\item{...}{Arguments passed on to \code{\link[=plot_rank]{plot_rank()}}.}
 }
 \value{
-ggplot2 object
+See \code{\link[=plot_rank]{plot_rank()}}.
 }
 \description{
-The \code{plotRank} function visualizes the ranked statistics of a GSEA (Gene Set Enrichment Analysis) analysis.
-The function creates a plot where the x-axis represents the rank of each gene, and the y-axis shows
-the corresponding ranked list metric.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotRank()} was renamed to \code{\link[=plot_rank]{plot_rank()}} to follow the snake_case naming
+style. It will be removed in the next version.
 }

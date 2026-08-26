@@ -23,7 +23,7 @@
 #' cying$test_wilcox(formula = Ozone ~ Month)
 #' cying$plot_scatter(x = Wind, y = Temp)
 #'
-Artist <- R6::R6Class("Artist",
+Artist <- R6::R6Class("Artist", # nolint: object_name_linter.
   public = list(
     #' @field data Stores the dataset used for plotting.
     data = NULL,
@@ -56,8 +56,8 @@ Artist <- R6::R6Class("Artist",
     #' @return The Artist object invisibly.
     test_wilcox = function(formula, data = self$data, ...) {
       mc <- match.call()
-      htestRes <- wilcox.test(formula = formula, data = data, ...)
-      private$finalize_test(htestRes, mc)
+      htest_result <- wilcox.test(formula = formula, data = data, ...)
+      private$finalize_test(htest_result, mc)
     },
     #' @description
     #' Conduct t.test
@@ -68,8 +68,8 @@ Artist <- R6::R6Class("Artist",
     #' @return The Artist object invisibly.
     test_t = function(formula, data = self$data, ...) {
       mc <- match.call()
-      htestRes <- t.test(formula = formula, data = data, ...)
-      private$finalize_test(htestRes, mc)
+      htest_result <- t.test(formula = formula, data = data, ...)
+      private$finalize_test(htest_result, mc)
     },
     #' @description
     #' Creates a scatter plot.
@@ -387,9 +387,9 @@ Artist <- R6::R6Class("Artist",
       self$result <- private$add_in_list(self$result, p)
       invisible(self)
     },
-    finalize_test = function(htestRes, mc) {
+    finalize_test = function(htest_result, mc) {
       self$command <- private$add_in_list(self$command, mc)
-      self$result <- private$add_in_list(self$result, htestRes)
+      self$result <- private$add_in_list(self$result, htest_result)
       invisible(self)
     },
     last = function(x) {

@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{setrownames}
 \alias{setrownames}
-\title{Rename Row Names of a Data Frame or Matrix}
+\title{Rename Row Names (Deprecated)}
 \usage{
-setrownames(object, nm)
+setrownames(...)
 }
 \arguments{
-\item{object}{A data frame or matrix whose row names will be renamed.}
-
-\item{nm}{A character vector containing the new names for the rows.}
+\item{...}{Arguments passed on to \code{\link[=set_rownames]{set_rownames()}}.}
 }
 \value{
-A data frame or matrix with the new row names.
+See \code{\link[=set_rownames]{set_rownames()}}.
 }
 \description{
-This function renames the row names of a data frame or matrix to the
-specified names.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{setrownames()} was renamed to \code{\link[=set_rownames]{set_rownames()}} to follow the snake_case
+naming style. It will be removed in the next version.
 }

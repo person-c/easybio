@@ -8,7 +8,7 @@
 #'
 #' @return A data frame or matrix with the new column names.
 #' @export
-setcolnames <- function(object, nm) {
+set_colnames <- function(object, nm) {
   if (length(nm) != ncol(object)) {
     stop("Length of 'nm' must equal the number of columns of 'object'")
   }
@@ -26,7 +26,7 @@ setcolnames <- function(object, nm) {
 #'
 #' @return A data frame or matrix with the new row names.
 #' @export
-setrownames <- function(object, nm) {
+set_rownames <- function(object, nm) {
   if (length(nm) != nrow(object)) {
     stop("Length of 'nm' must equal the number of rows of 'object'")
   }
@@ -48,8 +48,8 @@ setrownames <- function(object, nm) {
 #' @export
 #' @examples
 #' library(easybio)
-#' list2dt(list(a = c(1, 1), b = c(2, 2)))
-list2dt <- function(x, col_names = c("name", "value")) {
+#' list_to_dt(list(a = c(1, 1), b = c(2, 2)))
+list_to_dt <- function(x, col_names = c("name", "value")) {
   res <- data.table(name = rep(names(x), sapply(x, length)), value = unlist(x))
   setnames(res, new = col_names)
   res
@@ -111,7 +111,7 @@ get_attr <- function(x, attr_name) {
 #' @return A data.table representing the graph, with columns for the node names
 #'   (`node_1` and `node_2`) and the weight of the edge (`interWeight`).
 #' @export
-list2graph <- function(nodes) {
+list_to_graph <- function(nodes) {
   comb2 <- combn(names(nodes), m = 2, simplify = FALSE)
   inter <- lapply(comb2, \(x) length(intersect(nodes[[x[[1]]]], nodes[[x[[2]]]])))
 
@@ -137,8 +137,8 @@ list2graph <- function(nodes) {
 #' @export
 #' @examples
 #' library(easybio)
-#' groupStatI(f = \(x) x + 1, x = mtcars, idx = list(c(1, 10), 2))
-groupStatI <- function(f, x, idx) {
+#' group_stat_i(f = \(x) x + 1, x = mtcars, idx = list(c(1, 10), 2))
+group_stat_i <- function(f, x, idx) {
   sapply(idx, \(.x) force(f)(x[.x]), simplify = FALSE)
 }
 
@@ -157,10 +157,10 @@ groupStatI <- function(f, x, idx) {
 #' @export
 #' @examples
 #' library(easybio)
-#' groupStat(f = \(x) x + 1, x = mtcars, patterns = list("mp", "t"))
-groupStat <- function(f, x, xname = colnames(x), patterns) {
+#' group_stat(f = \(x) x + 1, x = mtcars, patterns = list("mp", "t"))
+group_stat <- function(f, x, xname = colnames(x), patterns) {
   idx <- lapply(patterns, \(.x) which(xname %like% .x))
-  groupStatI(f, x, idx)
+  group_stat_i(f, x, idx)
 }
 
 
@@ -174,11 +174,11 @@ groupStat <- function(f, x, xname = colnames(x), patterns) {
 #'
 #' @return The path to the newly created or existing directory.
 #' @export
-setSavedir <- function(...) {
+set_savedir <- function(...) {
   savedir <- file.path(...)
   if (!dir.exists(savedir)) dir.create(savedir, recursive = TRUE)
 
-  return(savedir)
+  savedir
 }
 
 #' Perform Operations in a Specified Directory and Return to the Original Directory
@@ -194,7 +194,7 @@ setSavedir <- function(...) {
 #'
 #' @return The result of evaluating the expression within the specified directory.
 #' @export
-workIn <- function(dir, expr) {
+work_in <- function(dir, expr) {
   oldwd <- getwd()
   on.exit(setwd(oldwd))
   if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
@@ -265,7 +265,7 @@ available_ele <- function(data, col_name, subset) {
 #'   Defaults to 1.
 #' @param threshold An integer; the maximum Levenshtein distance to consider a
 #'   choice a "close" match. A lower value is stricter. Defaults to 2.
-#' @param ignore.case A logical value. If `TRUE`, matching is case-insensitive.
+#' @param ignore_case A logical value. If `TRUE`, matching is case-insensitive.
 #'   Defaults to `TRUE`.
 #' @param return_distance A logical value. If `TRUE`, the output is a data.frame
 #'   containing the suggestions and their calculated distance/score. Defaults to
@@ -317,7 +317,7 @@ suggest_best_match <- function(x,
                                choices,
                                n = 1,
                                threshold = 2,
-                               ignore.case = TRUE,
+                               ignore_case = TRUE,
                                return_distance = FALSE) {
   # --- 1. Input Validation and Normalization ---
   stopifnot(
@@ -330,8 +330,8 @@ suggest_best_match <- function(x,
   }
 
   # Normalize input and choices
-  input_norm <- if (ignore.case) tolower(trimws(x)) else trimws(x)
-  choices_norm <- if (ignore.case) tolower(trimws(choices)) else trimws(choices)
+  input_norm <- if (ignore_case) tolower(trimws(x)) else trimws(x)
+  choices_norm <- if (ignore_case) tolower(trimws(choices)) else trimws(choices)
 
   # --- 2. Exact Match ---
   exact_match_idx <- which(choices_norm == input_norm)
@@ -384,4 +384,134 @@ suggest_best_match <- function(x,
   } else {
     choices[top_n$idx]
   }
+}
+
+# Deprecated aliases ----------------------------------------------------------
+
+#' Rename Column Names (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `setcolnames()` was renamed to [set_colnames()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [set_colnames()].
+#' @return See [set_colnames()].
+#' @export
+setcolnames <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "setcolnames()", "set_colnames()")
+  set_colnames(...)
+}
+
+#' Rename Row Names (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `setrownames()` was renamed to [set_rownames()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [set_rownames()].
+#' @return See [set_rownames()].
+#' @export
+setrownames <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "setrownames()", "set_rownames()")
+  set_rownames(...)
+}
+
+#' Convert a List to a Long Data.table (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `list2dt()` was renamed to [list_to_dt()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [list_to_dt()].
+#' @return See [list_to_dt()].
+#' @export
+list2dt <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "list2dt()", "list_to_dt()")
+  list_to_dt(...)
+}
+
+#' Convert a Named List into a Graph (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `list2graph()` was renamed to [list_to_graph()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [list_to_graph()].
+#' @return See [list_to_graph()].
+#' @export
+list2graph <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "list2graph()", "list_to_graph()")
+  list_to_graph(...)
+}
+
+#' Summarize Data by Group Using an Index (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `groupStatI()` was renamed to [group_stat_i()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [group_stat_i()].
+#' @return See [group_stat_i()].
+#' @export
+groupStatI <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "groupStatI()", "group_stat_i()")
+  group_stat_i(...)
+}
+
+#' Summarize Data by Group Using Regular Expressions (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `groupStat()` was renamed to [group_stat()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [group_stat()].
+#' @return See [group_stat()].
+#' @export
+groupStat <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "groupStat()", "group_stat()")
+  group_stat(...)
+}
+
+#' Set a Directory for Saving Files (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `setSavedir()` was renamed to [set_savedir()] to follow the snake_case
+#' naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [set_savedir()].
+#' @return See [set_savedir()].
+#' @export
+setSavedir <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "setSavedir()", "set_savedir()")
+  set_savedir(...)
+}
+
+#' Perform Operations in a Directory (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `workIn()` was renamed to [work_in()] to follow the snake_case naming
+#' style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [work_in()].
+#' @return See [work_in()].
+#' @export
+workIn <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "workIn()", "work_in()")
+  work_in(...)
 }

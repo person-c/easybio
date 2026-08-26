@@ -2,7 +2,7 @@
 "_PACKAGE"
 
 #' @import data.table
-.datatable.aware <- TRUE
+.datatable.aware <- TRUE # nolint: object_name_linter.
 
 # The following block is used by usethis to automatically manage
 # roxygen namespace tags. Modify with care!

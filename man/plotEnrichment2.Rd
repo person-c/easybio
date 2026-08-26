@@ -2,26 +2,19 @@
 % Please edit documentation in R/ora.R
 \name{plotEnrichment2}
 \alias{plotEnrichment2}
-\title{Plot Enrichment for a Specific Pathway in fgsea}
+\title{Plot Enrichment for a Pathway (Deprecated)}
 \usage{
-plotEnrichment2(pathways, pwayname, stats, gseaParam = 1, ticksSize = 0.2)
+plotEnrichment2(...)
 }
 \arguments{
-\item{pathways}{A list of pathways.}
-
-\item{pwayname}{The name of the pathway for which to plot enrichment.}
-
-\item{stats}{A rank vector obtained from the 'fgsea' package.}
-
-\item{gseaParam}{The GSEA walk length parameter. Default is 1.}
-
-\item{ticksSize}{The size of the tick marks. Default is 0.2.}
+\item{...}{Arguments passed on to \code{\link[=plot_enrichment]{plot_enrichment()}}.}
 }
 \value{
-A ggplot object representing the enrichment plot.
+See \code{\link[=plot_enrichment]{plot_enrichment()}}.
 }
 \description{
-This function creates a plot of enrichment scores for a specified pathway.
-It provides a visual representation of the enrichment
-score (ES) along with the ranks and ticks indicating the GSEA walk length.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotEnrichment2()} was renamed to \code{\link[=plot_enrichment]{plot_enrichment()}} to follow the
+snake_case naming style. It will be removed in the next version.
 }

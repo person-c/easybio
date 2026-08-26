@@ -2,28 +2,19 @@
 % Please edit documentation in R/ora.R
 \name{plotORA}
 \alias{plotORA}
-\title{Visualization of ORA Test Results}
+\title{Visualize ORA Test Results (Deprecated)}
 \usage{
-plotORA(data, x, y, size, fill, flip = FALSE)
+plotORA(...)
 }
 \arguments{
-\item{data}{A data frame containing the ORA results to be visualized.}
-
-\item{x}{The column in \code{data} to map to the x-axis.}
-
-\item{y}{The column in \code{data} to map to the y-axis.}
-
-\item{size}{The column in \code{data} to map to the size of the points.}
-
-\item{fill}{The column in \code{data} to map to the fill color of the bars or points.
-Use a constant value for a single category.}
-
-\item{flip}{A logical value indicating whether to flip the axes of the plot. Default is \code{FALSE}.}
+\item{...}{Arguments passed on to \code{\link[=plot_ora]{plot_ora()}}.}
 }
 \value{
-ggplot2 object.
+See \code{\link[=plot_ora]{plot_ora()}}.
 }
 \description{
-The \code{plotORA} function visualizes the results of an ORA (Over-Representation Analysis) test.
-It generates a plot with customizable aesthetics for x, y, point size, and fill, with an option to flip the axes.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotORA()} was renamed to \code{\link[=plot_ora]{plot_ora()}} to follow the snake_case naming
+style. It will be removed in the next version.
 }

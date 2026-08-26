@@ -1,7 +1,10 @@
 #' Custom ggplot2 Theme for Academic Publications
 #'
-#' `theme_publication` creates a custom ggplot2 theme designed for academic publications, ensuring clarity, readability, and a professional appearance.
-#' It is based on `theme_classic()` and includes additional refinements to axis lines, text, and other plot elements to meet the standards of high-quality academic figures.
+#' `theme_publication` creates a custom ggplot2 theme designed for academic
+#' publications, ensuring clarity, readability, and a professional appearance.
+#' It is based on `theme_classic()` and includes additional refinements to
+#' axis lines, text, and other plot elements to meet the standards of
+#' high-quality academic figures.
 #'
 #' @param base_size numeric, the base font size. Default is 12.
 #' @param base_family character, the base font family. Default is "sans".
@@ -22,8 +25,8 @@ theme_publication <- function(base_size = 12, base_family = "sans") {
     theme(
       panel.background = element_blank(),
       panel.grid = element_blank(),
-      axis.line = element_line(color = "black", size = 0.5),
-      axis.ticks = element_line(color = "black", size = 0.5),
+      axis.line = element_line(color = "black", linewidth = 0.5),
+      axis.ticks = element_line(color = "black", linewidth = 0.5),
       axis.ticks.length = unit(0.2, "cm"),
       axis.text = element_text(color = "black", size = base_size * 0.8),
       axis.title = element_text(color = "black", size = base_size * 0.9, face = "bold"),

@@ -2,22 +2,19 @@
 % Please edit documentation in R/sc.R
 \name{tuneParameters}
 \alias{tuneParameters}
-\title{Optimize Resolution and Gene Number Parameters for Cell Type Annotation}
+\title{Tune Parameters for Cell Type Annotation (Deprecated)}
 \usage{
-tuneParameters(srt, resolution = numeric(), N = integer(), spc)
+tuneParameters(...)
 }
 \arguments{
-\item{srt}{Seurat object, the input data object to be analyzed.}
-
-\item{resolution}{numeric vector, a vector of resolution values to be tested in \code{Seurat::FindClusters()}.}
-
-\item{N}{integer vector, a vector of values indicating the number of top differential genes to be used for matching in \code{match_ref()}.}
-
-\item{spc}{character, the species parameter for the \code{match_ref()} function, specifying the organism.}
+\item{...}{Arguments passed on to \code{\link[=tune_parameters]{tune_parameters()}}.}
 }
 \value{
-A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.
+See \code{\link[=tune_parameters]{tune_parameters()}}.
 }
 \description{
-This function tunes the \code{resolution} parameter in \code{Seurat::FindClusters()} and the number of top differential genes (\code{N}) to obtain different cell type annotation results. The function generates UMAP plots for each parameter combination, allowing for a comparison of how different settings affect the clustering and annotation.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{tuneParameters()} was renamed to \code{\link[=tune_parameters]{tune_parameters()}} to follow the
+snake_case naming style. It will be removed in the next version.
 }

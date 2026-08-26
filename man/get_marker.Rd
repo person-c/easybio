@@ -7,10 +7,10 @@
 get_marker(
   spc,
   cell = character(),
-  tissueClass = available_tissue_class(spc),
-  tissueType = available_tissue_type(spc),
+  tissue_class = available_tissue_class(spc),
+  tissue_type = available_tissue_type(spc),
   number = 5,
-  min.count = 1
+  min_count = 1
 )
 }
 \arguments{
@@ -19,14 +19,14 @@ get_marker(
 
 \item{cell}{A character vector of cell types for which to retrieve markers.}
 
-\item{tissueClass}{A character specifying the tissue classes, default \code{available_tissue_class(spc)}.}
+\item{tissue_class}{A character specifying the tissue classes, default \code{available_tissue_class(spc)}.}
 
-\item{tissueType}{A character specifying the tissue types, default \code{available_tissue_type(spc)}.}
+\item{tissue_type}{A character specifying the tissue types, default \code{available_tissue_type(spc)}.}
 
 \item{number}{An integer specifying the number of top markers to return for
 each cell type.}
 
-\item{min.count}{An integer representing the minimum number of times a marker
+\item{min_count}{An integer representing the minimum number of times a marker
 must have been reported to be included in the results.}
 }
 \value{

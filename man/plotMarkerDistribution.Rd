@@ -2,22 +2,19 @@
 % Please edit documentation in R/sc.R
 \name{plotMarkerDistribution}
 \alias{plotMarkerDistribution}
-\title{Plot Distribution of a Marker Across Tissues and Cell Types}
+\title{Plot Distribution of a Marker (Deprecated)}
 \usage{
-plotMarkerDistribution(mkr = character())
+plotMarkerDistribution(...)
 }
 \arguments{
-\item{mkr}{character, the name of the marker to be plotted.}
+\item{...}{Arguments passed on to \code{\link[=plot_marker_distribution]{plot_marker_distribution()}}.}
 }
 \value{
-A ggplot2 object representing the distribution of the marker.
+See \code{\link[=plot_marker_distribution]{plot_marker_distribution()}}.
 }
 \description{
-This function creates a dot plot displaying the distribution of a specified marker across
-different tissues and cell types, based on data from the CellMarker 3.0 database.
-}
-\examples{
-\dontrun{
-plotMarkerDistribution("CD14")
-}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotMarkerDistribution()} was renamed to \code{\link[=plot_marker_distribution]{plot_marker_distribution()}} to
+follow the snake_case naming style. It will be removed in the next version.
 }

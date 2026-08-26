@@ -5,3 +5,4 @@ inst/doc
 /.vscode/
 /data-raw/GDCdata/
 /data-raw/single_cell_marker/
+/.claude/

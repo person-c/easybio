@@ -10,3 +10,4 @@
 ^CRAN-SUBMISSION$
 .lintr
 ^data-raw$
+^\.claude$

@@ -7,11 +7,11 @@
 match_ref(
   marker,
   n,
-  avg_log2FC_threshold = 0,
+  avg_log2fc_threshold = 0,
   p_val_adj_threshold = 0.05,
   spc,
-  tissueClass = available_tissue_class(spc),
-  tissueType = available_tissue_type(spc),
+  tissue_class = available_tissue_class(spc),
+  tissue_type = available_tissue_type(spc),
   ref = NULL
 )
 }
@@ -23,7 +23,7 @@ match_ref(
 \item{n}{An integer specifying the number of top marker genes to use from each
 cluster for matching. Genes are ranked by \code{avg_log2FC} after filtering.}
 
-\item{avg_log2FC_threshold}{A numeric value setting the minimum average log2 fold
+\item{avg_log2fc_threshold}{A numeric value setting the minimum average log2 fold
 change for a marker to be considered. Defaults to \code{0}.}
 
 \item{p_val_adj_threshold}{A numeric value setting the maximum adjusted p-value
@@ -33,12 +33,12 @@ for a marker to be considered. Defaults to \code{0.05}.}
 This is used to filter the \code{cellMarker3} database. This parameter is ignored
 if a custom \code{ref} is provided.}
 
-\item{tissueClass}{A character vector of tissue classes to include from the
+\item{tissue_class}{A character vector of tissue classes to include from the
 \code{cellMarker3} database. Defaults to all available tissue classes for the
 specified species. This parameter is ignored if a custom \code{ref} is provided.
 See \code{available_tissue_class()}.}
 
-\item{tissueType}{A character vector of tissue types to include from the
+\item{tissue_type}{A character vector of tissue types to include from the
 \code{cellMarker3} database. Defaults to all available tissue types for the
 specified species. This parameter is ignored if a custom \code{ref} is provided.
 See \code{available_tissue_type()}.}
@@ -46,8 +46,8 @@ See \code{available_tissue_type()}.}
 \item{ref}{An optional long \code{data.frame} which must contain 'cell_name'
 and 'marker' columns to be used as the reference for marker matching.
 If \code{NULL} (the default), the function uses the built-in \code{cellMarker3}
-dataset. When a custom \code{ref} is provided, the \code{spc}, \code{tissueClass}, and
-\code{tissueType} parameters are ignored for the matching process itself,
+dataset. When a custom \code{ref} is provided, the \code{spc}, \code{tissue_class}, and
+\code{tissue_type} parameters are ignored for the matching process itself,
 but their original values are saved for provenance.}
 }
 \value{
@@ -87,9 +87,9 @@ matched_cells_strict <- match_ref(
   pbmc.markers,
   n = 30,
   spc = "Human",
-  avg_log2FC_threshold = 0.5,
+  avg_log2fc_threshold = 0.5,
   p_val_adj_threshold = 0.01,
-  tissueType = c("Blood", "Bone marrow")
+  tissue_type = c("Blood", "Bone marrow")
 )
 print(matched_cells_strict)
 
@@ -106,7 +106,7 @@ custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
 
 # Run annotation using the custom reference.
 # When 'ref' is provided, the internal cellMarker3 database and its filters
-# ('spc', 'tissueClass', 'tissueType') are ignored for matching.
+# ('spc', 'tissue_class', 'tissue_type') are ignored for matching.
 matched_custom <- match_ref(
   pbmc.markers,
   n = 50,
@@ -116,5 +116,6 @@ print(matched_custom)
 }
 }
 \seealso{
-\code{\link{check_marker}}, \code{\link{plotPossibleCell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
+\code{\link{check_marker}}, \code{\link{plot_possible_cell}},
+\code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
 }

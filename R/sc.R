@@ -46,10 +46,10 @@ finsert <- function(
     len = integer(),
     setname = TRUE,
     na = "Unknown") {
-  x <- if (is.expression(x)) lapply(x, .exprs2formula) else x
+  x <- if (is.expression(x)) lapply(x, .exprs_to_formula) else x
 
-  maxL <- max(unlist(sapply(x, \(.x) eval(.x[[2]]), simplify = FALSE)))
-  v <- rep(na, if (!missing(len) && len > (maxL + 1)) len else maxL + 1)
+  max_len <- max(unlist(sapply(x, \(.x) eval(.x[[2]]), simplify = FALSE)))
+  v <- rep(na, if (!missing(len) && len > (max_len + 1)) len else max_len + 1)
   for (.x in x) {
     v[eval(.x[[2]]) + 1] <- .x[[3]]
   }
@@ -118,10 +118,10 @@ available_tissue_type <- function(spc) {
 #' @param cell A character vector of cell types for which to retrieve markers.
 #' @param number An integer specifying the number of top markers to return for
 #'   each cell type.
-#' @param min.count An integer representing the minimum number of times a marker
+#' @param min_count An integer representing the minimum number of times a marker
 #'   must have been reported to be included in the results.
-#' @param tissueClass A character specifying the tissue classes, default `available_tissue_class(spc)`.
-#' @param tissueType A character specifying the tissue types, default `available_tissue_type(spc)`.
+#' @param tissue_class A character specifying the tissue classes, default `available_tissue_class(spc)`.
+#' @param tissue_type A character specifying the tissue types, default `available_tissue_type(spc)`.
 #'
 #' @return A named list where each name corresponds to a cell type and each
 #'   element is a vector of marker names.
@@ -138,11 +138,11 @@ available_tissue_type <- function(spc) {
 #' markers_typo <- get_marker(spc = "Human", cell = c("Macrophae", "Monocyte"))
 get_marker <- function(
     spc, cell = character(),
-    tissueClass = available_tissue_class(spc),
-    tissueType = available_tissue_type(spc),
-    number = 5, min.count = 1) {
-  . <- tissue_type <- tissue_class <- NULL
-  species <- cell_name <- N <- marker <- NULL
+    tissue_class = available_tissue_class(spc),
+    tissue_type = available_tissue_type(spc),
+    number = 5, min_count = 1) {
+  . <- NULL
+  species <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
 
   all_cell_names <- available_ele(cellMarker3, "cell_name", subset = species == spc)
   is_exists <- cell %chin% all_cell_names
@@ -166,7 +166,7 @@ get_marker <- function(
         return(paste(all_cell_names[grep_idx], collapse = " or "))
       }
 
-      return("") # No suggestion found
+      "" # No suggestion found
     })
 
     # Format and print message for cells with suggestions
@@ -197,7 +197,9 @@ get_marker <- function(
   # Proceed with only the cell names that exist
   valid_cells <- cell[is_exists]
 
-  cellmarker3_filtered <- cellMarker3[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  tissue_class_filter <- tissue_class
+  tissue_type_filter <- tissue_type
+  cellmarker3_filtered <- cellMarker3[tissue_class %chin% tissue_class_filter & tissue_type %chin% tissue_type_filter]
   marker <- cellmarker3_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
 
   if (is.null(marker) || nrow(marker) == 0) {
@@ -205,7 +207,7 @@ get_marker <- function(
   }
 
   marker <- marker[, .N, by = .(cell_name, marker)]
-  marker <- marker[N >= min.count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
+  marker <- marker[N >= min_count, na.omit(.SD)[order(-N)] |> head(number), by = .(cell_name)]
   marker <- marker[, .(marker = .(marker)), by = .(cell_name)]
   marker <- setNames(marker[["marker"]], marker[["cell_name"]])
 
@@ -228,23 +230,23 @@ get_marker <- function(
 #' @param spc A character string specifying the species, either "Human" or "Mouse".
 #'   This is used to filter the `cellMarker3` database. This parameter is ignored
 #'   if a custom `ref` is provided.
-#' @param avg_log2FC_threshold A numeric value setting the minimum average log2 fold
+#' @param avg_log2fc_threshold A numeric value setting the minimum average log2 fold
 #'   change for a marker to be considered. Defaults to `0`.
 #' @param p_val_adj_threshold A numeric value setting the maximum adjusted p-value
 #'   for a marker to be considered. Defaults to `0.05`.
-#' @param tissueClass A character vector of tissue classes to include from the
+#' @param tissue_class A character vector of tissue classes to include from the
 #'   `cellMarker3` database. Defaults to all available tissue classes for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
 #'   See `available_tissue_class()`.
-#' @param tissueType A character vector of tissue types to include from the
+#' @param tissue_type A character vector of tissue types to include from the
 #'   `cellMarker3` database. Defaults to all available tissue types for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
 #'   See `available_tissue_type()`.
 #' @param ref An optional long `data.frame` which must contain 'cell_name'
 #'   and 'marker' columns to be used as the reference for marker matching.
 #'   If `NULL` (the default), the function uses the built-in `cellMarker3`
-#'   dataset. When a custom `ref` is provided, the `spc`, `tissueClass`, and
-#'   `tissueType` parameters are ignored for the matching process itself,
+#'   dataset. When a custom `ref` is provided, the `spc`, `tissue_class`, and
+#'   `tissue_type` parameters are ignored for the matching process itself,
 #'   but their original values are saved for provenance.
 #'
 #' @return A `data.table` where each row represents a potential cell type match for a
@@ -258,7 +260,8 @@ get_marker <- function(
 #'   \item{filter_args}{A list containing the filtering parameters used during the annotation,
 #'   which is essential for the `check_marker` function.}
 #'
-#' @seealso \code{\link{check_marker}}, \code{\link{plotPossibleCell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
+#' @seealso \code{\link{check_marker}}, \code{\link{plot_possible_cell}},
+#'   \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
 #'
 #' @export
 #'
@@ -280,9 +283,9 @@ get_marker <- function(
 #'   pbmc.markers,
 #'   n = 30,
 #'   spc = "Human",
-#'   avg_log2FC_threshold = 0.5,
+#'   avg_log2fc_threshold = 0.5,
 #'   p_val_adj_threshold = 0.01,
-#'   tissueType = c("Blood", "Bone marrow")
+#'   tissue_type = c("Blood", "Bone marrow")
 #' )
 #' print(matched_cells_strict)
 #'
@@ -299,7 +302,7 @@ get_marker <- function(
 #'
 #' # Run annotation using the custom reference.
 #' # When 'ref' is provided, the internal cellMarker3 database and its filters
-#' # ('spc', 'tissueClass', 'tissueType') are ignored for matching.
+#' # ('spc', 'tissue_class', 'tissue_type') are ignored for matching.
 #' matched_custom <- match_ref(
 #'   pbmc.markers,
 #'   n = 50,
@@ -309,20 +312,20 @@ get_marker <- function(
 #' }
 match_ref <- function(
     marker, n,
-    avg_log2FC_threshold = 0,
+    avg_log2fc_threshold = 0,
     p_val_adj_threshold = 0.05,
     spc,
-    tissueClass = available_tissue_class(spc),
-    tissueType = available_tissue_type(spc),
+    tissue_class = available_tissue_class(spc),
+    tissue_type = available_tissue_type(spc),
     ref = NULL) {
-  . <- markerWith <- tissue_class <- tissue_type <- NULL
-  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL
+  . <- marker_with <- NULL
+  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL # nolint: object_name_linter.
 
   marker <- copy(marker)
   setDT(marker)
 
   marker <- marker[
-    avg_log2FC >= avg_log2FC_threshold & p_val_adj <= p_val_adj_threshold,
+    avg_log2FC >= avg_log2fc_threshold & p_val_adj <= p_val_adj_threshold,
     .SD[order(-avg_log2FC)][1:n],
     keyby = .(cluster)
   ]
@@ -331,21 +334,23 @@ match_ref <- function(
   is_custom_ref <- TRUE
   if (is.null(ref)) {
     ref <- cellMarker3[.(spc), .SD, on = .(species), nomatch = NULL]
-    ref <- ref[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+    tissue_class_filter <- tissue_class
+    tissue_type_filter <- tissue_type
+    ref <- ref[tissue_class %chin% tissue_class_filter & tissue_type %chin% tissue_type_filter]
 
     is_custom_ref <- FALSE
   }
 
   res <- marker[ref, on = "gene==marker", nomatch = NULL]
-  res <- res[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
+  res <- res[, .(marker_with = .(gene), N = .N), by = .(cluster, cell_name)]
   res <- res[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
 
-  res[, let(uniqueN = sapply(markerWith, FUN = \(x) uniqueN(x)))]
-  res[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
-  res[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
-  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
-  res[["markerWith"]] <- NULL
+  res[, let(uniqueN = sapply(marker_with, FUN = \(x) uniqueN(x)))]
+  res[, let(ordered_symbol = lapply(marker_with, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
+  res[, let(orderN = lapply(marker_with, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
+  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "marker_with"))
+  res[["marker_with"]] <- NULL
 
   setattr(res, "ref", ref)
   setattr(res, "is_custom_ref", is_custom_ref)
@@ -353,13 +358,13 @@ match_ref <- function(
   filter_args <- list(
     marker_filter = c(
       n = n,
-      avg_log2FC_threshold = avg_log2FC_threshold,
+      avg_log2fc_threshold = avg_log2fc_threshold,
       p_val_adj_threshold = p_val_adj_threshold
     ),
     cellmarker3_filter = list(
       spc = if (missing(spc)) NULL else spc,
-      tissueClass = if (missing(spc)) NULL else tissueClass,
-      tissueType = if (missing(spc)) NULL else tissueType
+      tissue_class = if (missing(spc)) NULL else tissue_class,
+      tissue_type = if (missing(spc)) NULL else tissue_type
     )
   )
 
@@ -382,7 +387,7 @@ match_ref <- function(
 #' @param ... Arguments passed on to [match_ref()].
 #' @return See [match_ref()].
 #' @export
-matchCellMarker2 <- function(marker, n, ...) {
+matchCellMarker2 <- function(marker, n, ...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "matchCellMarker2()", "match_ref()")
   match_ref(marker = marker, n = n, ...)
 }
@@ -431,8 +436,8 @@ matchCellMarker2 <- function(marker, n, ...) {
 #' @param marker A `data.table` object, which is the result of a call to `match_ref()`.
 #'   This object must contain the attributes set by `match_ref` for the function to work correctly.
 #' @param cl A numeric or character vector specifying the cluster IDs to be inspected.
-#' @param topcellN An integer. For each cluster in `cl`, the function will retrieve
-#'   markers for the top `topcellN` cell type annotations. Defaults to 2.
+#' @param top_cell_n An integer. For each cluster in `cl`, the function will retrieve
+#'   markers for the top `top_cell_n` cell type annotations. Defaults to 2.
 #' @param cis A logical value that switches the function's mode. See Details.
 #'   Defaults to `FALSE`.
 #'
@@ -441,7 +446,7 @@ matchCellMarker2 <- function(marker, n, ...) {
 #'
 #' @seealso \code{\link{match_ref}} to generate the input for this function.
 #'   \code{\link{get_marker}} which is used internally when `cis = FALSE`.
-#'   \code{\link{plotSeuratDot}} to visualize the results.
+#'   \code{\link{plot_seurat_dot}} to visualize the results.
 #'
 #' @export
 #'
@@ -454,22 +459,22 @@ matchCellMarker2 <- function(marker, n, ...) {
 #' matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 #'
 #' # Step 2: Verify the annotation for cluster 0.
-#' # Let's check the top annotation (topcellN = 1).
+#' # Let's check the top annotation (top_cell_n = 1).
 #'
 #' # Question 1: "Is cluster 0 really a CD4-positive T cell?
 #' # Let's see the canonical markers for it."
 #' # Note: We don't need to pass 'spc' here; it's retrieved from matched_cells.
-#' reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
+#' reference_markers <- check_marker(matched_cells, cl = 0, top_cell_n = 1)
 #' print(reference_markers)
 #' # Now you would typically use these markers in Seurat::DotPlot() or Seurat::FeaturePlot()
 #'
 #' # Question 2: "Which of my genes made the algorithm think cluster 0
 #' # is a CD4-positive T cell?"
-#' local_markers <- check_marker(matched_cells, cl = 0, topcellN = 1, cis = TRUE)
+#' local_markers <- check_marker(matched_cells, cl = 0, top_cell_n = 1, cis = TRUE)
 #' print(local_markers)
 #' }
 check_marker <- function(
-    marker, cl = c(), topcellN = 2, cis = FALSE) {
+    marker, cl = c(), top_cell_n = 2, cis = FALSE) {
   if (!inherits(marker, "cellmarker_match")) {
     stop(
       "'marker' must be the result of 'match_ref()'. ",
@@ -483,7 +488,7 @@ check_marker <- function(
   marker <- marker[.(factor(cl)), .SD, on = .(cluster)]
 
   if (cis) {
-    topmarker <- marker[, head(.SD, topcellN), by = .(cluster)]
+    topmarker <- marker[, head(.SD, top_cell_n), by = .(cluster)]
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
     if (is.null(filter_args$cellmarker3_filter$spc)) {
@@ -494,14 +499,14 @@ check_marker <- function(
         call. = FALSE
       )
     }
-    topcell <- marker[, head(.SD, topcellN), keyby = .(cluster)][, unique(cell_name)]
+    topcell <- marker[, head(.SD, top_cell_n), keyby = .(cluster)][, unique(cell_name)]
     topmarker <- get_marker(
       spc = filter_args$cellmarker3_filter$spc,
       cell = topcell,
-      tissueClass = filter_args$cellmarker3_filter$tissueClass,
-      tissueType = filter_args$cellmarker3_filter$tissueType,
+      tissue_class = filter_args$cellmarker3_filter$tissue_class,
+      tissue_type = filter_args$cellmarker3_filter$tissue_type,
       number = 10,
-      min.count = 1
+      min_count = 1
     )
   }
 
@@ -548,7 +553,7 @@ check_marker <- function(
 #' rownames(counts) <- marker_genes
 #' colnames(counts) <- paste0("cell_", 1:50)
 #'
-#' srt <- CreateSeuratObject(counts = counts)
+#' srt <- Createseurat_object(counts = counts)
 #' srt$seurat_clusters <- sample(0:3, 50, replace = TRUE)
 #' Idents(srt) <- "seurat_clusters"
 #'
@@ -556,14 +561,14 @@ check_marker <- function(
 #' matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 #'
 #' # Step 2: Get canonical markers for cluster 0's top annotation
-#' reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
+#' reference_markers <- check_marker(matched_cells, cl = 0, top_cell_n = 1)
 #'
 #' # Step 3: Plot the expression of these markers
 #' if (!is.null(reference_markers) && length(reference_markers) > 0) {
-#'   plotSeuratDot(features = reference_markers, srt = srt)
+#'   plot_seurat_dot(features = reference_markers, srt = srt)
 #' }
 #' }
-plotSeuratDot <- function(features, srt, split = FALSE, ...) {
+plot_seurat_dot <- function(features, srt, split = FALSE, ...) {
   if (split) {
     all_plots <- vector("list", length = length(features))
     for (i in seq_along(features)) {
@@ -619,10 +624,10 @@ plotSeuratDot <- function(features, srt, split = FALSE, ...) {
 #' @export
 #' @examples
 #' \dontrun{
-#' plotMarkerDistribution("CD14")
+#' plot_marker_distribution("CD14")
 #' }
-plotMarkerDistribution <- function(mkr = character()) {
-  . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
+plot_marker_distribution <- function(mkr = character()) {
+  . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
   tmp <- cellMarker3[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
   tmp <- tmp[, .N, by = .(cell_name, tissue_class)]
 
@@ -641,14 +646,15 @@ plotMarkerDistribution <- function(mkr = character()) {
 #' based on the results from the `match_ref()` function, utilizing data from the CellMarker 3.0 database.
 #'
 #' @param marker data.table, the result from the `match_ref()` function.
-#' @param min.uniqueN integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.
+#' @param min_unique_n integer, the minimum number of unique marker genes that
+#'   must be matched for a cell type to be included in the plot. Default is 2.
 #'
 #' @return A ggplot2 object representing the distribution of possible cell types.
 #' @import ggplot2
 #' @export
-plotPossibleCell <- function(marker, min.uniqueN = 2) {
-  cluster <- cell_name <- N <- NULL
-  p <- ggplot(marker[uniqueN > min.uniqueN], aes(x = cell_name, y = cluster)) +
+plot_possible_cell <- function(marker, min_unique_n = 2) {
+  cluster <- cell_name <- N <- NULL # nolint: object_name_linter.
+  p <- ggplot(marker[uniqueN > min_unique_n], aes(x = cell_name, y = cluster)) +
     geom_point(aes(size = N, color = N)) +
     scale_x_discrete(guide = guide_axis(angle = 60)) +
     scale_color_distiller(direction = 1) +
@@ -659,13 +665,13 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
 
 
 
-.tuneParameters <- function(srt, resolution, N, spc) {
+.tune_parameters <- function(srt, resolution, n, spc) {
   cluster <- NULL
   srt <- suppressMessages(Seurat::FindClusters(srt, resolution = resolution))
-  srt.markers <- Seurat::FindAllMarkers(srt, only.pos = TRUE)
+  srt_markers <- Seurat::FindAllMarkers(srt, only.pos = TRUE)
 
-  markerMatched <- match_ref(marker = srt.markers, n = N, spc = spc)
-  cl2cell <- markerMatched[, head(.SD, 1), by = cluster][, 1:4]
+  marker_matched <- match_ref(marker = srt_markers, n = n, spc = spc)
+  cl2cell <- marker_matched[, head(.SD, 1), by = cluster][, 1:4]
   cl2cell <- setNames(cl2cell[["cell_name"]], as.character(cl2cell[["cluster"]]))
   srt@meta.data[["CellMarker3.0"]] <- cl2cell[as.character(Seurat::Idents(srt))]
 
@@ -675,7 +681,7 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
     pt.size = 0.6, repel = TRUE,
     group.by = "CellMarker3.0"
   ) +
-    labs(title = sprintf("resolution: %s N: %s", resolution, N)) +
+    labs(title = sprintf("resolution: %s n: %s", resolution, n)) +
     guides(color = guide_legend(override.aes = list(size = 0.5))) +
     theme_publication(base_size = 8)
 
@@ -683,33 +689,39 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
 }
 #' Optimize Resolution and Gene Number Parameters for Cell Type Annotation
 #'
-#' This function tunes the `resolution` parameter in `Seurat::FindClusters()` and the number of top differential genes (`N`) to obtain different cell type annotation results. The function generates UMAP plots for each parameter combination, allowing for a comparison of how different settings affect the clustering and annotation.
+#' This function tunes the `resolution` parameter in `Seurat::FindClusters()`
+#' and the number of top differential genes (`n`) to obtain different cell type
+#' annotation results. The function generates UMAP plots for each parameter
+#' combination, allowing for a comparison of how different settings affect the
+#' clustering and annotation.
 #'
 #' @param srt Seurat object, the input data object to be analyzed.
 #' @param resolution numeric vector, a vector of resolution values to be tested in `Seurat::FindClusters()`.
-#' @param N integer vector, a vector of values indicating the number of top differential genes to be used for matching in `match_ref()`.
+#' @param n integer vector, a vector of values indicating the number of top
+#'   differential genes to be used for matching in `match_ref()`.
 #' @param spc character, the species parameter for the `match_ref()` function, specifying the organism.
 #'
-#' @return A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.
+#' @return A list of ggplot2 objects, each representing a UMAP plot generated
+#'   with a different combination of resolution and n parameters.
 #' @import ggplot2
 #' @export
-tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
-  parameters <- CJ(resolution = resolution, N = N)
+tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
+  parameters <- CJ(resolution = resolution, n = n)
 
-  parameterPlot <- Map(
-    f = function(x, y) .tuneParameters(srt, x, y, spc),
+  parameter_plot <- Map(
+    f = function(x, y) .tune_parameters(srt, x, y, spc),
     x = parameters[["resolution"]],
-    y = parameters[["N"]]
+    y = parameters[["n"]]
   )
 
-  parameterPlot
+  parameter_plot
 }
 
 # Used for future
 # Assign weight for different markers
-.get_marker_weight <- function(spc, cell = character(), min.count = 0, power = 2) {
+.get_marker_weight <- function(spc, cell = character(), min_count = 0, power = 2) {
   . <- NULL
-  species <- cell_name <- N <- marker <- NULL
+  species <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
 
   marker <- cellMarker3[.(spc, cell), .SD, on = .(species, cell_name)]
   marker <- marker[, .(N = .N), by = .(cell_name, marker)]
@@ -718,12 +730,78 @@ tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
 }
 
 # Find markers for similar clusters
-.findMarkers <- function(SeuratObject, cls = list()) {
+.find_markers <- function(seurat_object, cls = list()) {
   lapply(cls, function(x) {
-    Seurat::FindMarkers(SeuratObject, ident.1 = x, group.by = "seurat_clusters")
+    Seurat::FindMarkers(seurat_object, ident.1 = x, group.by = "seurat_clusters")
   })
 }
 
-.exprs2formula <- function(expr) {
+.exprs_to_formula <- function(expr) {
   formula(paste(deparse(expr[[2]]), "~", deparse(expr[[3]])))
+}
+
+# Deprecated aliases ----------------------------------------------------------
+
+#' Plot Distribution of a Marker (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `plotMarkerDistribution()` was renamed to [plot_marker_distribution()] to
+#' follow the snake_case naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [plot_marker_distribution()].
+#' @return See [plot_marker_distribution()].
+#' @export
+plotMarkerDistribution <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "plotMarkerDistribution()", "plot_marker_distribution()")
+  plot_marker_distribution(...)
+}
+
+#' Plot Possible Cell Distribution (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `plotPossibleCell()` was renamed to [plot_possible_cell()] to follow the
+#' snake_case naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [plot_possible_cell()].
+#' @return See [plot_possible_cell()].
+#' @export
+plotPossibleCell <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "plotPossibleCell()", "plot_possible_cell()")
+  plot_possible_cell(...)
+}
+
+#' Create a Dot Plot of Marker Gene Expression (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `plotSeuratDot()` was renamed to [plot_seurat_dot()] to follow the
+#' snake_case naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [plot_seurat_dot()].
+#' @return See [plot_seurat_dot()].
+#' @export
+plotSeuratDot <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "plotSeuratDot()", "plot_seurat_dot()")
+  plot_seurat_dot(...)
+}
+
+#' Tune Parameters for Cell Type Annotation (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `tuneParameters()` was renamed to [tune_parameters()] to follow the
+#' snake_case naming style. It will be removed in the next version.
+#'
+#' @param ... Arguments passed on to [tune_parameters()].
+#' @return See [tune_parameters()].
+#' @export
+tuneParameters <- function(...) { # nolint: object_name_linter.
+  lifecycle::deprecate_warn("1.2.4", "tuneParameters()", "tune_parameters()")
+  tune_parameters(...)
 }

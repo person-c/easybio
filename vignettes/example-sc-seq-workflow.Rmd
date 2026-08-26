@@ -16,7 +16,7 @@ This vignette demonstrates the powerful and intuitive workflow for single-cell R
 The core workflow follows three logical steps:
 
 1.  **Automated Annotation**: Use `match_ref()` to quickly get a list of potential cell types for each cluster based on its marker genes.
-2.  **Verification & Exploration**: Interactively investigate the automated results using `check_marker()` and `plotSeuratDot()` to build confidence in the annotations. This step helps answer two critical questions:
+2.  **Verification & Exploration**: Interactively investigate the automated results using `check_marker()` and `plot_seurat_dot()` to build confidence in the annotations. This step helps answer two critical questions:
     *   "**Why** was this annotation made?" (Which of my genes matched the database?)
     *   "Is this annotation **correct**?" (Are the canonical markers for this cell type expressed in my cluster?)
 3.  **Final Curation**: Based on the evidence gathered, use `finsert()` to assign the final, high-confidence cell type labels.
@@ -61,11 +61,11 @@ print("Initial automated annotation:")
 cl2cell_auto
 ```
 
-We can also get a global view of all possible annotations using `plotPossibleCell`.
+We can also get a global view of all possible annotations using `plot_possible_cell`.
 
 ```{r}
 #| fig.width=10
-plotPossibleCell(marker_matched[, head(.SD), by = .(cluster)], min.uniqueN = 2)
+plot_possible_cell(marker_matched[, head(.SD), by = .(cluster)], min_unique_n = 2)
 ```
 
 ## Step 2: Verification and Exploration
@@ -78,7 +78,7 @@ To see the evidence behind an annotation, we use `check_marker()` with `cis = TR
 
 ```{r}
 # Let's investigate clusters 1, 5, and 7
-local_evidence <- check_marker(marker_matched, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
+local_evidence <- check_marker(marker_matched, cl = c(1, 5, 7), top_cell_n = 2, cis = TRUE)
 print(local_evidence)
 ```
 
@@ -87,13 +87,13 @@ print(local_evidence)
 To validate an annotation, we use `check_marker()` with `cis = FALSE` (the default). This fetches the **canonical markers** for the suggested cell type from the database. We can then check if these well-known markers are expressed in our cluster.
 
 ```{r}
-canonical_markers <- check_marker(marker_matched, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
+canonical_markers <- check_marker(marker_matched, cl = c(1, 5, 7), top_cell_n = 2, cis = FALSE)
 print(canonical_markers)
 ```
 
-### Visual Confirmation with `plotSeuratDot`
+### Visual Confirmation with `plot_seurat_dot`
 
-The best way to check marker expression is visually. `plotSeuratDot` is designed to work seamlessly with `check_marker`.
+The best way to check marker expression is visually. `plot_seurat_dot` is designed to work seamlessly with `check_marker`.
 
 The entire pipeline from annotation to visualization can be done in a single, elegant pipe:
 
@@ -116,8 +116,8 @@ Idents(srt) <- "seurat_clusters"
 
 # Now, let's plot the evidence for clusters 1, 5, and 7
 match_ref(marker = pbmc.markers, n = 50, spc = "Human") |>
-  check_marker(cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
-  plotSeuratDot(srt = srt)
+  check_marker(cl = c(1, 5, 7), top_cell_n = 2, cis = TRUE) |>
+  plot_seurat_dot(srt = srt)
 ```
 
 This dot plot clearly shows the expression of the genes that led to the annotations for clusters 1, 5, and 7, allowing us to confidently assess the results.
@@ -162,14 +162,14 @@ print(custom_ref_list)
 ```
 
 **Step 2: Convert the list to the required data.frame format.**
-`easybio` provides the `list2dt` helper function for this.
+`easybio` provides the `list_to_dt` helper function for this.
 ```{r}
-custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
+custom_ref_df <- list_to_dt(custom_ref_list, col_names = c("cell_name", "marker"))
 head(custom_ref_df)
 ```
 
 **Step 3: Run `match_ref` with the `ref` parameter.**
-When `ref` is provided, the function ignores the `spc`, `tissueClass`, and `tissueType` parameters for matching.
+When `ref` is provided, the function ignores the `spc`, `tissue_class`, and `tissue_type` parameters for matching.
 ```{r}
 marker_custom <- match_ref(
   marker = pbmc.markers,
@@ -187,13 +187,13 @@ marker_custom[, head(.SD, 2), by = cluster]
 ### `get_marker()`
 Directly retrieve markers for any cell type of interest.
 ```{r}
-get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
+get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min_count = 1)
 ```
 
-### `plotMarkerDistribution()`
+### `plot_marker_distribution()`
 Check the distribution of a specific marker across all cell types and tissues in the database.
 ```{r, fig.width=7.5, fig.height=7}
-plotMarkerDistribution(mkr = "CD68")
+plot_marker_distribution(mkr = "CD68")
 ```
 
 

@@ -2,19 +2,19 @@
 % Please edit documentation in R/sc.R
 \name{plotPossibleCell}
 \alias{plotPossibleCell}
-\title{Plot Possible Cell Distribution Based on match_ref() Results}
+\title{Plot Possible Cell Distribution (Deprecated)}
 \usage{
-plotPossibleCell(marker, min.uniqueN = 2)
+plotPossibleCell(...)
 }
 \arguments{
-\item{marker}{data.table, the result from the \code{match_ref()} function.}
-
-\item{min.uniqueN}{integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.}
+\item{...}{Arguments passed on to \code{\link[=plot_possible_cell]{plot_possible_cell()}}.}
 }
 \value{
-A ggplot2 object representing the distribution of possible cell types.
+See \code{\link[=plot_possible_cell]{plot_possible_cell()}}.
 }
 \description{
-This function creates a dot plot to visualize the distribution of possible cell types
-based on the results from the \code{match_ref()} function, utilizing data from the CellMarker 3.0 database.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotPossibleCell()} was renamed to \code{\link[=plot_possible_cell]{plot_possible_cell()}} to follow the
+snake_case naming style. It will be removed in the next version.
 }
