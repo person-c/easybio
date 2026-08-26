@@ -31,7 +31,7 @@ test_that("match_ref stores ref, is_custom_ref, and filter_args as attributes", 
 test_that("match_ref works with custom reference", {
   custom_ref <- data.frame(
     cell_name = c("T-cell", "T-cell", "B-cell", "Myeloid"),
-    marker    = c("CD3D", "CD3E", "MS4A1", "LYZ"),
+    marker = c("CD3D", "CD3E", "MS4A1", "LYZ"),
     stringsAsFactors = FALSE
   )
 
@@ -42,33 +42,45 @@ test_that("match_ref works with custom reference", {
 })
 
 test_that("match_ref filters by avg_log2FC threshold", {
-  res_strict <- match_ref(pbmc.markers, n = 50, spc = "Human",
-                                  avg_log2fc_threshold = 0.5)
-  res_loose   <- match_ref(pbmc.markers, n = 50, spc = "Human",
-                                  avg_log2fc_threshold = 0)
+  res_strict <- match_ref(pbmc.markers,
+    n = 50, spc = "Human",
+    avg_log2fc_threshold = 0.5
+  )
+  res_loose <- match_ref(pbmc.markers,
+    n = 50, spc = "Human",
+    avg_log2fc_threshold = 0
+  )
 
   expect_true(nrow(res_strict) > 0)
 })
 
 test_that("match_ref filters by p_val_adj threshold", {
-  res_strict <- match_ref(pbmc.markers, n = 50, spc = "Human",
-                                  p_val_adj_threshold = 0.01)
-  res_loose  <- match_ref(pbmc.markers, n = 50, spc = "Human",
-                                  p_val_adj_threshold = 1)
+  res_strict <- match_ref(pbmc.markers,
+    n = 50, spc = "Human",
+    p_val_adj_threshold = 0.01
+  )
+  res_loose <- match_ref(pbmc.markers,
+    n = 50, spc = "Human",
+    p_val_adj_threshold = 1
+  )
 
   expect_true(nrow(res_strict) > 0)
 })
 
 test_that("match_ref returns empty dt when no markers pass filter", {
-  res <- match_ref(pbmc.markers, n = 10, spc = "Human",
-                           avg_log2fc_threshold = 100, p_val_adj_threshold = 1e-300)
+  res <- match_ref(pbmc.markers,
+    n = 10, spc = "Human",
+    avg_log2fc_threshold = 100, p_val_adj_threshold = 1e-300
+  )
   expect_equal(nrow(res), 0)
 })
 
 test_that("match_ref respects tissue_class filter", {
   res_all <- match_ref(pbmc.markers, n = 30, spc = "Human")
-  res_blood <- match_ref(pbmc.markers, n = 30, spc = "Human",
-                                 tissue_class = "Blood")
+  res_blood <- match_ref(pbmc.markers,
+    n = 30, spc = "Human",
+    tissue_class = "Blood"
+  )
 
   expect_true(nrow(res_blood) <= nrow(res_all))
 })
