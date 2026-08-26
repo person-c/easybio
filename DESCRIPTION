@@ -15,6 +15,7 @@ Imports:
     checkmate,
     ggplot2,
     httr2,
+    lifecycle,
     R6,
     xml2
 Depends: 

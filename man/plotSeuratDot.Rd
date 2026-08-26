@@ -49,7 +49,7 @@ srt$seurat_clusters <- sample(0:3, 50, replace = TRUE)
 Idents(srt) <- "seurat_clusters"
 
 # Step 1: Generate cell type annotations
-matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 
 # Step 2: Get canonical markers for cluster 0's top annotation
 reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
