@@ -2,22 +2,19 @@
 % Please edit documentation in R/limma.R
 \name{limmaFit}
 \alias{limmaFit}
-\title{Fit a Linear Model for RNA-seq data using limma}
+\title{Fit a Linear Model for RNA-seq Data (Deprecated)}
 \usage{
-limmaFit(x, group.column)
+limmaFit(...)
 }
 \arguments{
-\item{x}{A processed \code{DGEList} object containing normalized count data.}
-
-\item{group.column}{The name of the column in \code{x$samples} that contains
-the grouping information for the samples.}
+\item{...}{Arguments passed on to \code{\link[=limma_fit]{limma_fit()}}.}
 }
 \value{
-An \code{eBayes} object containing the fitted linear model and
-results of the differential expression analysis.
+See \code{\link[=limma_fit]{limma_fit()}}.
 }
 \description{
-This function fits a linear model to processed \code{DGEList} data using the
-\code{limma} package. It defines contrasts between groups and performs
-differential expression analysis.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{limmaFit()} was renamed to \code{\link[=limma_fit]{limma_fit()}} to follow the snake_case naming
+style. It will be removed in the next version.
 }

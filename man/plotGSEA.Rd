@@ -2,25 +2,19 @@
 % Please edit documentation in R/ora.R
 \name{plotGSEA}
 \alias{plotGSEA}
-\title{Visualization of GSEA Result from \code{\link[fgsea:fgsea]{fgsea::fgsea()}}}
+\title{Visualize GSEA Results (Deprecated)}
 \usage{
-plotGSEA(fgseaRes, pathways, pwayname, stats, save = FALSE)
+plotGSEA(...)
 }
 \arguments{
-\item{fgseaRes}{A data table containing the GSEA results from the \code{fgsea} package.}
-
-\item{pathways}{A list of all pathways used in the GSEA analysis.}
-
-\item{pwayname}{The name of the pathway to visualize.}
-
-\item{stats}{A numeric vector representing the ranked statistics.}
-
-\item{save}{A logical value indicating whether to save the plot as a PDF file. Default is \code{FALSE}.}
+\item{...}{Arguments passed on to \code{\link[=plot_gsea]{plot_gsea()}}.}
 }
 \value{
-ggplot2 object.
+See \code{\link[=plot_gsea]{plot_gsea()}}.
 }
 \description{
-The \code{plotGSEA} function visualizes the results of a GSEA (Gene Set Enrichment Analysis) using data from
-the \code{fgsea} package. It generates a composite plot that includes an enrichment plot and a ranked metric plot.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{plotGSEA()} was renamed to \code{\link[=plot_gsea]{plot_gsea()}} to follow the snake_case naming
+style. It will be removed in the next version.
 }

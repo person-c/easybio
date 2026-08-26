@@ -18,9 +18,9 @@ lt <- prepare_tcga(data)
 lt$all$sampleInfo[["group"]] <- fifelse(lt$all$sampleInfo$sample_type %ilike% "Tumor", "Tumor", "Normal")
 
 # limma-voom workflow
-x <- dgeList(lt$all$exprCount, lt$all$sampleInfo, lt$all$featuresInfo)
-x <- dprocess_dgeList(x, "group", 10)
-efit <- limmaFit(x, "group")
+x <- dge_list(lt$all$exprCount, lt$all$sampleInfo, lt$all$featuresInfo)
+x <- process_dge_list(x, "group", 10)
+efit <- limma_fit(x, "group")
 
 get_attr(efit, "contrast")
 
@@ -36,7 +36,7 @@ CHOL_DEGs[, let(
   )
 )]
 
-plotVolcano(
+plot_volcano(
   data = CHOL_DEGs,
   x = logFC,
   y = -log10(adj.P.Val),
@@ -64,7 +64,7 @@ oraRes[, let(
 
 oraRes <- oraRes[, .SD[order(padj)], by = .(category)]
 oraRes[, let(pathwayGO = factor(pathway, levels = rev(pathway)))]
-plotORA(
+plot_ora(
   data = oraRes[, head(.SD, 5), by = category],
   x = -log10(padj),
   y = pathwayGO,
