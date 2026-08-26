@@ -1,4 +1,4 @@
-## code to prepare `cellMarker2` dataset from CellMarker 3.0
+## code to prepare `cellMarker3` dataset from CellMarker 3.0
 ## Source: data-raw/single_cell_marker/single_cell_marker.txt
 ## (raw 142 MB file, git-ignored; see .gitignore)
 
@@ -24,9 +24,9 @@ x[species == "Mouse", let(marker = gsub("(^[[:alpha:]])", "\\U\\1",
 # Rows are NOT deduplicated: repeated marker-cell pairs carry the
 # literature-support counts that get_marker(min.count) relies on.
 keep_cols <- c("species", "tissue_class", "tissue_type", "cell_name", "marker")
-cellMarker2 <- x[, .SD, .SDcols = keep_cols]
+cellMarker3 <- x[, .SD, .SDcols = keep_cols]
 
 # Build index on species for fast lookups
-data.table::setindex(cellMarker2, species)
+data.table::setindex(cellMarker3, species)
 
-usethis::use_data(cellMarker2, internal = TRUE, overwrite = TRUE)
+usethis::use_data(cellMarker3, internal = TRUE, overwrite = TRUE)

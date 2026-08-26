@@ -9,6 +9,7 @@
 - upgrade the built-in annotation database from CellMarker 2.0 to CellMarker 3.0 (418,933 entries; only the columns used by the package are kept, see `data-raw/cellmarker.R`).
 - `tuneParameters()` now stores the annotation in the meta.data column "CellMarker3.0" instead of "CellMarker2.0".
 - `matchCellMarker2()` renamed to `match_ref()` because it also supports custom reference datasets. The old name is deprecated and will be removed in the next version.
+- the built-in annotation dataset is renamed from `cellMarker2` to `cellMarker3` (internal; reflects the CellMarker 3.0 source).
 
 # Version 1.2.3 Changes
 

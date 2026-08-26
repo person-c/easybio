@@ -80,7 +80,7 @@ available_tissue_class <- function(spc) {
   assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
 
   species <- NULL
-  available_ele(cellMarker2, "tissue_class", subset = species == spc)
+  available_ele(cellMarker3, "tissue_class", subset = species == spc)
 }
 
 #' Retrieve Available Tissue Types for a Given Species
@@ -104,13 +104,13 @@ available_tissue_type <- function(spc) {
   assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
 
   species <- NULL
-  available_ele(cellMarker2, "tissue_type", subset = species == spc)
+  available_ele(cellMarker3, "tissue_type", subset = species == spc)
 }
 
-#' Retrieve Markers for Specific Cells from cellMarker2
+#' Retrieve Markers for Specific Cells from cellMarker3
 #'
 #' This function extracts a list of markers for one or more cell types from the
-#' `cellMarker2` dataset. It allows filtering by species, cell type, the number
+#' `cellMarker3` dataset. It allows filtering by species, cell type, the number
 #' of markers to retrieve, and a minimum count threshold for marker occurrences.
 #'
 #' @param spc A character string specifying the species, which can be either
@@ -144,7 +144,7 @@ get_marker <- function(
   . <- tissue_type <- tissue_class <- NULL
   species <- cell_name <- N <- marker <- NULL
 
-  all_cell_names <- available_ele(cellMarker2, "cell_name", subset = species == spc)
+  all_cell_names <- available_ele(cellMarker3, "cell_name", subset = species == spc)
   is_exists <- cell %chin% all_cell_names
 
   not_found_cells <- cell[!is_exists]
@@ -197,8 +197,8 @@ get_marker <- function(
   # Proceed with only the cell names that exist
   valid_cells <- cell[is_exists]
 
-  cellmarker2_filtered <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
-  marker <- cellmarker2_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
+  cellmarker3_filtered <- cellMarker3[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  marker <- cellmarker3_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
 
   if (is.null(marker) || nrow(marker) == 0) {
     return(NULL)
@@ -226,23 +226,23 @@ get_marker <- function(
 #' @param n An integer specifying the number of top marker genes to use from each
 #'   cluster for matching. Genes are ranked by `avg_log2FC` after filtering.
 #' @param spc A character string specifying the species, either "Human" or "Mouse".
-#'   This is used to filter the `cellMarker2` database. This parameter is ignored
+#'   This is used to filter the `cellMarker3` database. This parameter is ignored
 #'   if a custom `ref` is provided.
 #' @param avg_log2FC_threshold A numeric value setting the minimum average log2 fold
 #'   change for a marker to be considered. Defaults to `0`.
 #' @param p_val_adj_threshold A numeric value setting the maximum adjusted p-value
 #'   for a marker to be considered. Defaults to `0.05`.
 #' @param tissueClass A character vector of tissue classes to include from the
-#'   `cellMarker2` database. Defaults to all available tissue classes for the
+#'   `cellMarker3` database. Defaults to all available tissue classes for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
 #'   See `available_tissue_class()`.
 #' @param tissueType A character vector of tissue types to include from the
-#'   `cellMarker2` database. Defaults to all available tissue types for the
+#'   `cellMarker3` database. Defaults to all available tissue types for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
 #'   See `available_tissue_type()`.
 #' @param ref An optional long `data.frame` which must contain 'cell_name'
 #'   and 'marker' columns to be used as the reference for marker matching.
-#'   If `NULL` (the default), the function uses the built-in `cellMarker2`
+#'   If `NULL` (the default), the function uses the built-in `cellMarker3`
 #'   dataset. When a custom `ref` is provided, the `spc`, `tissueClass`, and
 #'   `tissueType` parameters are ignored for the matching process itself,
 #'   but their original values are saved for provenance.
@@ -253,7 +253,7 @@ get_marker <- function(
 #'   `ordered_symbol` (matching genes, ordered by frequency), and `orderN` (their frequencies).
 #'
 #'   The returned object also contains important attributes for downstream analysis:
-#'   \item{ref}{The reference data (either from `cellMarker2` or the custom `ref`) used for the annotation.}
+#'   \item{ref}{The reference data (either from `cellMarker3` or the custom `ref`) used for the annotation.}
 #'   \item{is_custom_ref}{A logical flag indicating if a custom `ref` was used.}
 #'   \item{filter_args}{A list containing the filtering parameters used during the annotation,
 #'   which is essential for the `check_marker` function.}
@@ -298,7 +298,7 @@ get_marker <- function(
 #' custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
 #'
 #' # Run annotation using the custom reference.
-#' # When 'ref' is provided, the internal cellMarker2 database and its filters
+#' # When 'ref' is provided, the internal cellMarker3 database and its filters
 #' # ('spc', 'tissueClass', 'tissueType') are ignored for matching.
 #' matched_custom <- match_ref(
 #'   pbmc.markers,
@@ -330,7 +330,7 @@ match_ref <- function(
 
   is_custom_ref <- TRUE
   if (is.null(ref)) {
-    ref <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
+    ref <- cellMarker3[.(spc), .SD, on = .(species), nomatch = NULL]
     ref <- ref[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
 
     is_custom_ref <- FALSE
@@ -356,7 +356,7 @@ match_ref <- function(
       avg_log2FC_threshold = avg_log2FC_threshold,
       p_val_adj_threshold = p_val_adj_threshold
     ),
-    cellmarker2_filter = list(
+    cellmarker3_filter = list(
       spc = if (missing(spc)) NULL else spc,
       tissueClass = if (missing(spc)) NULL else tissueClass,
       tissueType = if (missing(spc)) NULL else tissueType
@@ -485,7 +485,7 @@ check_marker <- function(
     topmarker <- marker[, head(.SD, topcellN), by = .(cluster)]
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
-    if (is.null(filter_args$cellmarker2_filter$spc)) {
+    if (is.null(filter_args$cellmarker3_filter$spc)) {
       stop("
       Can't find the species information from the 'marker' input. This usually happens when \n
       1. You didn't set the 'spc' arguments when using `match_ref`; or \n
@@ -495,10 +495,10 @@ check_marker <- function(
     }
     topcell <- marker[, head(.SD, topcellN), keyby = .(cluster)][, unique(cell_name)]
     topmarker <- get_marker(
-      spc = filter_args$cellmarker2_filter$spc,
+      spc = filter_args$cellmarker3_filter$spc,
       cell = topcell,
-      tissueClass = filter_args$cellmarker2_filter$tissueClass,
-      tissueType = filter_args$cellmarker2_filter$tissueType,
+      tissueClass = filter_args$cellmarker3_filter$tissueClass,
+      tissueType = filter_args$cellmarker3_filter$tissueType,
       number = 10,
       min.count = 1
     )
@@ -622,7 +622,7 @@ plotSeuratDot <- function(features, srt, split = FALSE, ...) {
 #' }
 plotMarkerDistribution <- function(mkr = character()) {
   . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
-  tmp <- cellMarker2[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
+  tmp <- cellMarker3[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
   tmp <- tmp[, .N, by = .(cell_name, tissue_class)]
 
   p <- ggplot(tmp, aes(x = cell_name, y = tissue_class)) +
@@ -710,7 +710,7 @@ tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
   . <- NULL
   species <- cell_name <- N <- marker <- NULL
 
-  marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)]
+  marker <- cellMarker3[.(spc, cell), .SD, on = .(species, cell_name)]
   marker <- marker[, .(N = .N), by = .(cell_name, marker)]
   marker[, let(weight = N^power / sum(N^power)), by = cell_name]
   marker
