@@ -54,7 +54,7 @@ dge_list <- function(count, sample_info, feature_info) {
 process_dge_list <- function(x, group_column, min_count = 10) {
   lcpm <- edgeR::cpm(x, log = TRUE, prior.count = 2)
   # filter low expressed genes
-  keep_exprs <- edgeR::filterByExpr(x, group = x$samples[[group_column]], min_count = min_count)
+  keep_exprs <- edgeR::filterByExpr(x, group = x$samples[[group_column]], min.count = min_count)
   x <- x[keep_exprs, , keep.lib.sizes = FALSE]
 
   nsamples <- ncol(x)

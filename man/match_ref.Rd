@@ -116,5 +116,6 @@ print(matched_custom)
 }
 }
 \seealso{
-\code{\link{check_marker}}, \code{\link{plot_possible_cell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
+\code{\link{check_marker}}, \code{\link{plot_possible_cell}},
+\code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
 }

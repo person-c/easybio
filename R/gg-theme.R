@@ -25,8 +25,8 @@ theme_publication <- function(base_size = 12, base_family = "sans") {
     theme(
       panel.background = element_blank(),
       panel.grid = element_blank(),
-      axis.line = element_line(color = "black", size = 0.5),
-      axis.ticks = element_line(color = "black", size = 0.5),
+      axis.line = element_line(color = "black", linewidth = 0.5),
+      axis.ticks = element_line(color = "black", linewidth = 0.5),
       axis.ticks.length = unit(0.2, "cm"),
       axis.text = element_text(color = "black", size = base_size * 0.8),
       axis.title = element_text(color = "black", size = base_size * 0.9, face = "bold"),

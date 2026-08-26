@@ -22,7 +22,7 @@ plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_siz
   }
   pd <- fgsea::plotEnrichmentData(
     pathway = pathways[[pwayname]], stats = stats,
-    gsea_param = gsea_param
+    gseaParam = gsea_param
   )
   with(pd, ggplot(data = curve) +
     geom_line(aes(x = rank, y = ES),

@@ -9,7 +9,8 @@ plot_possible_cell(marker, min_unique_n = 2)
 \arguments{
 \item{marker}{data.table, the result from the \code{match_ref()} function.}
 
-\item{min_unique_n}{integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.}
+\item{min_unique_n}{integer, the minimum number of unique marker genes that
+must be matched for a cell type to be included in the plot. Default is 2.}
 }
 \value{
 A ggplot2 object representing the distribution of possible cell types.

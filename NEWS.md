@@ -7,6 +7,7 @@
 # Version 1.2.3.9000 Changes
 
 - all exported functions follow the snake_case naming style; camelCase names are kept as deprecated aliases and will be removed in the next version (lintr config now enforces snake_case).
+- function parameters renamed to snake_case as well (e.g., `avg_log2fc_threshold`, `top_cell_n`, `tissue_class`, `tissue_type`, `min_count`, `min_unique_n`, `ignore_case`, `group_column`, `sample_info`, `feature_info`, `data_text`, `gsea_param`, `ticks_size`, `fgsea_res`).
 - upgrade the built-in annotation database from CellMarker 2.0 to CellMarker 3.0 (418,933 entries; only the columns used by the package are kept, see `data-raw/cellmarker.R`).
 - `tuneParameters()` now stores the annotation in the meta.data column "CellMarker3.0" instead of "CellMarker2.0".
 - `matchCellMarker2()` renamed to `match_ref()` because it also supports custom reference datasets. The old name is deprecated and will be removed in the next version.

@@ -9,22 +9,30 @@ prepare_geo(geo, dir = ".", combine = TRUE, method = "max")
 \arguments{
 \item{geo}{A character string specifying the GEO Series ID (e.g., "GSE12345").}
 
-\item{dir}{A character string specifying the directory where files should be downloaded. Default is the current working directory (\code{"."}).}
+\item{dir}{A character string specifying the directory where files should be
+downloaded. Default is the current working directory (\code{"."}).}
 
-\item{combine}{A logical value indicating whether to combine multiple probes into a single gene symbol. Default is \code{TRUE}.}
+\item{combine}{A logical value indicating whether to combine multiple probes
+into a single gene symbol. Default is \code{TRUE}.}
 
-\item{method}{A character string specifying the method to use for combining probes into a single gene symbol. Options are \code{"max"} (take the maximum value) or \code{"mean"} (compute the average). Default is \code{"max"}.}
+\item{method}{A character string specifying the method to use for combining
+probes into a single gene symbol. Options are \code{"max"} (take the maximum
+value) or \code{"mean"} (compute the average). Default is \code{"max"}.}
 }
 \value{
 A list containing:
 \item{data}{A data frame of the expression matrix, or \code{NULL} if not available.}
 \item{sample}{A data frame of the sample metadata.}
 \item{feature}{A data frame of the feature metadata, or \code{NULL} if not available.}
-\item{status}{A character string indicating the data source: \code{"expression_matrix"}, \code{"supplementary_files"}, or \code{"no_data"}.}
-\item{supplementary}{Only present when \code{status} is \code{"supplementary_files"}. A named list of \code{data.table} objects parsed from supplementary files.}
+\item{status}{A character string indicating the data source:
+\code{"expression_matrix"}, \code{"supplementary_files"}, or \code{"no_data"}.}
+\item{supplementary}{Only present when \code{status} is \code{"supplementary_files"}.
+A named list of \code{data.table} objects parsed from supplementary files.}
 }
 \description{
-This function downloads gene expression data from the Gene Expression Omnibus (GEO) database.
-It retrieves either the expression matrix or the supplementary tabular data if the expression data is not available.
-The function also allows for the conversion of probe identifiers to gene symbols and can combine multiple probes into a single symbol.
+This function downloads gene expression data from the Gene Expression
+Omnibus (GEO) database. It retrieves either the expression matrix or the
+supplementary tabular data if the expression data is not available.
+The function also allows for the conversion of probe identifiers to gene
+symbols and can combine multiple probes into a single symbol.
 }

@@ -13,6 +13,8 @@ prepare_tcga(data)
 A list.
 }
 \description{
-This function prepares TCGA data for downstream analyses such as differential expression analysis with \code{limma} or survival analysis.
-It extracts and processes the necessary information from the TCGA data object, separating tumor and non-tumor samples.
+This function prepares TCGA data for downstream analyses such as
+differential expression analysis with \code{limma} or survival analysis.
+It extracts and processes the necessary information from the TCGA data
+object, separating tumor and non-tumor samples.
 }
