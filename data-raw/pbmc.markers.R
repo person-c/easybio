@@ -45,7 +45,7 @@ cls <- list(
 )
 
 check_marker(pbmc.markers, 50, spc = "Human", cl = c(1, 5, 7))
-dotplotList <- plotSeuratDot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
+dotplotList <- plot_seurat_dot(srt = pbmc, cls = cls, marker = pbmc.markers, spc = "Human", n = 50)
 ls(dotplotList)
 
 cl2cell <- finsert(

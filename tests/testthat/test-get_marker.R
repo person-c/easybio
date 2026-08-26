@@ -1,6 +1,6 @@
 test_that("get_marker returns markers for valid human cell types", {
   res <- get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"),
-                     number = 5, min.count = 1)
+                     number = 5, min_count = 1)
   expect_type(res, "list")
   expect_equal(names(res), c("Macrophage", "Monocyte"))
   expect_true(all(vapply(res, is.character, logical(1))))
@@ -45,17 +45,17 @@ test_that("get_marker returns NULL gracefully for invalid species", {
   expect_null(res)
 })
 
-test_that("get_marker filters by tissueClass", {
+test_that("get_marker filters by tissue_class", {
   res <- get_marker(spc = "Human", cell = "B cell",
-                     tissueClass = "Blood", number = 5)
+                     tissue_class = "Blood", number = 5)
   expect_type(res, "list")
 })
 
-test_that("get_marker excludes markers below min.count", {
+test_that("get_marker excludes markers below min_count", {
   res_loose <- get_marker(spc = "Human", cell = "B cell",
-                           number = 50, min.count = 1)
+                           number = 50, min_count = 1)
   res_strict <- get_marker(spc = "Human", cell = "B cell",
-                            number = 50, min.count = 1000)
+                            number = 50, min_count = 1000)
 
   expect_true(length(res_strict[["B cell"]]) <= length(res_loose[["B cell"]]))
 })

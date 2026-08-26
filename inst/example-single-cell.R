@@ -80,7 +80,7 @@ cl2cell
 
 
 # ---
-# Step 3: Verification and Exploration with `check_marker` and `plotSeuratDot`
+# Step 3: Verification and Exploration with `check_marker` and `plot_seurat_dot`
 # ---
 # The automated annotation is just a starting point. This step is crucial for
 # verifying the results and gaining confidence in the annotations.
@@ -88,19 +88,19 @@ cl2cell
 # Question 1: "Why did the algorithm make these annotations?"
 # Use `cis = TRUE` to see which of OUR marker genes matched the database,
 # providing the evidence for the annotation.
-tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
+tmp <- check_marker(marker, cl = c(1, 5, 7), top_cell_n = 2, cis = TRUE)
 
 # Question 2: "Are these annotations correct?"
 # Use `cis = FALSE` to retrieve the CANONICAL markers for the suggested cell types
 # from the CellMarker 3.0 database. We can then check if these canonical markers
 # are actually expressed in our clusters.
-tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
+tmp <- check_marker(marker, cl = c(1, 5, 7), top_cell_n = 2, cis = FALSE)
 
 # Now, let's visually confirm the expression of the supporting markers using a Dot Plot.
-# We can pipe the results from `check_marker` directly into `plotSeuratDot`.
+# We can pipe the results from `check_marker` directly into `plot_seurat_dot`.
 # This plot shows the expression of the genes that led to the annotation (from cis = TRUE).
-tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
-  plotSeuratDot(srt = pbmc)
+tmp <- check_marker(marker, cl = c(1, 5, 7), top_cell_n = 2, cis = TRUE) |>
+  plot_seurat_dot(srt = pbmc)
 
 # We can systematically check all interesting cluster groups.
 # Here, we create a list of cluster groups based on the UMAP plot.
@@ -113,8 +113,8 @@ cls <- list(
 
 # Loop through the list and generate a dot plot for each group to inspect the evidence.
 tmp <- lapply(cls, \(cl) {
-  check_marker(marker, cl = cl, topcellN = 2, cis = TRUE) |>
-    plotSeuratDot(srt = pbmc) +
+  check_marker(marker, cl = cl, top_cell_n = 2, cis = TRUE) |>
+    plot_seurat_dot(srt = pbmc) +
     ggplot2::ggtitle(
       paste0("Cluster ", paste(cl, collapse = ","), "'s possible cell types")
     )
@@ -124,8 +124,8 @@ print(tmp[[1]]) # Show the first plot as an example
 
 # The entire workflow from annotation to visualization can be done in a single pipe:
 tmp <- match_ref(marker = pbmc.markers, n = 50, spc = "Human") |>
-  check_marker(cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
-  plotSeuratDot(srt = pbmc)
+  check_marker(cl = c(1, 5, 7), top_cell_n = 2, cis = TRUE) |>
+  plot_seurat_dot(srt = pbmc)
 
 print(tmp)
 # ---
@@ -164,8 +164,8 @@ print(tmp)
 # The package also includes functions for direct queries.
 
 # `get_marker`: Retrieve canonical markers for specific cell types directly.
-get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
+get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min_count = 1)
 
-# `plotMarkerDistribution`: Visualize how a single marker is distributed across
+# `plot_marker_distribution`: Visualize how a single marker is distributed across
 # all cell types and tissues in the CellMarker 3.0 database.
-plotMarkerDistribution(mkr = "CD68")
+plot_marker_distribution(mkr = "CD68")

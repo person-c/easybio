@@ -2,64 +2,19 @@
 % Please edit documentation in R/sc.R
 \name{plotSeuratDot}
 \alias{plotSeuratDot}
-\title{Create a Dot Plot to Visualize Marker Gene Expression}
+\title{Create a Dot Plot of Marker Gene Expression (Deprecated)}
 \usage{
-plotSeuratDot(features, srt, split = FALSE, ...)
+plotSeuratDot(...)
 }
 \arguments{
-\item{features}{A named list of character vectors. Each name in the list represents
-a cell type or category, and the corresponding character vector contains the
-marker genes to be plotted for that category. This is typically the output of
-\code{check_marker()}.}
-
-\item{srt}{A Seurat object containing the single-cell expression data.}
-
-\item{split}{Logical, if \code{TRUE}, generates separate dot plots for each cell type in \code{features}}
-
-\item{...}{Additional arguments passed to \code{Seurat::DotPlot()}, such as \code{cols}, \code{dot.scale}, etc.}
+\item{...}{Arguments passed on to \code{\link[=plot_seurat_dot]{plot_seurat_dot()}}.}
 }
 \value{
-A ggplot2 object representing the dot plot, which can be further customized.
+See \code{\link[=plot_seurat_dot]{plot_seurat_dot()}}.
 }
 \description{
-This function generates a \code{Seurat::DotPlot} to visualize the expression of
-specified marker genes across different cell clusters or groups. It is designed
-to work with a list of features, such as the output from the \code{check_marker} function.
-}
-\examples{
-\dontrun{
-library(easybio)
-library(Seurat)
-data(pbmc.markers)
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-# In a real scenario, 'srt' would be your fully processed Seurat object.
-# For this example, we create a minimal Seurat object.
-# The expression matrix should contain the marker genes for the plot to be meaningful.
-marker_genes <- unique(pbmc.markers$gene)
-counts <- matrix(
-  abs(rnorm(length(marker_genes) * 50, mean = 1, sd = 2)),
-  nrow = length(marker_genes),
-  ncol = 50
-)
-rownames(counts) <- marker_genes
-colnames(counts) <- paste0("cell_", 1:50)
-
-srt <- CreateSeuratObject(counts = counts)
-srt$seurat_clusters <- sample(0:3, 50, replace = TRUE)
-Idents(srt) <- "seurat_clusters"
-
-# Step 1: Generate cell type annotations
-matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
-
-# Step 2: Get canonical markers for cluster 0's top annotation
-reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
-
-# Step 3: Plot the expression of these markers
-if (!is.null(reference_markers) && length(reference_markers) > 0) {
-  plotSeuratDot(features = reference_markers, srt = srt)
-}
-}
-}
-\seealso{
-\code{\link{check_marker}} to generate the \code{features} list.
+\code{plotSeuratDot()} was renamed to \code{\link[=plot_seurat_dot]{plot_seurat_dot()}} to follow the
+snake_case naming style. It will be removed in the next version.
 }

@@ -43,9 +43,9 @@ test_that("match_ref works with custom reference", {
 
 test_that("match_ref filters by avg_log2FC threshold", {
   res_strict <- match_ref(pbmc.markers, n = 50, spc = "Human",
-                                  avg_log2FC_threshold = 0.5)
+                                  avg_log2fc_threshold = 0.5)
   res_loose   <- match_ref(pbmc.markers, n = 50, spc = "Human",
-                                  avg_log2FC_threshold = 0)
+                                  avg_log2fc_threshold = 0)
 
   expect_true(nrow(res_strict) > 0)
 })
@@ -61,14 +61,14 @@ test_that("match_ref filters by p_val_adj threshold", {
 
 test_that("match_ref returns empty dt when no markers pass filter", {
   res <- match_ref(pbmc.markers, n = 10, spc = "Human",
-                           avg_log2FC_threshold = 100, p_val_adj_threshold = 1e-300)
+                           avg_log2fc_threshold = 100, p_val_adj_threshold = 1e-300)
   expect_equal(nrow(res), 0)
 })
 
-test_that("match_ref respects tissueClass filter", {
+test_that("match_ref respects tissue_class filter", {
   res_all <- match_ref(pbmc.markers, n = 30, spc = "Human")
   res_blood <- match_ref(pbmc.markers, n = 30, spc = "Human",
-                                 tissueClass = "Blood")
+                                 tissue_class = "Blood")
 
   expect_true(nrow(res_blood) <= nrow(res_all))
 })
@@ -103,7 +103,7 @@ test_that("cellmarker_match attributes survive column selection", {
 
 test_that("check_marker accepts cellmarker_match input", {
   res <- match_ref(pbmc.markers, n = 30, spc = "Human")
-  expect_no_error(check_marker(res, cl = 0, topcellN = 1))
+  expect_no_error(check_marker(res, cl = 0, top_cell_n = 1))
 })
 
 test_that("matchCellMarker2 is deprecated but still works", {
