@@ -4,3 +4,4 @@ inst/doc
 /Meta/
 /.vscode/
 /data-raw/GDCdata/
+/data-raw/single_cell_marker/
