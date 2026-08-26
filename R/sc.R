@@ -62,7 +62,7 @@ finsert <- function(
 #' Retrieve Available Tissue Classes for a Given Species
 #'
 #' This function extracts and returns a unique list of available tissue classes
-#' from the CellMarker2.0 database for a specified species.
+#' from the CellMarker 3.0 database for a specified species.
 #'
 #' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
 #'
@@ -86,7 +86,7 @@ available_tissue_class <- function(spc) {
 #' Retrieve Available Tissue Types for a Given Species
 #'
 #' This function extracts and returns a unique list of available tissue types
-#' from the CellMarker2.0 database for a specified species.
+#' from the CellMarker 3.0 database for a specified species.
 #'
 #' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
 #'
@@ -212,7 +212,7 @@ get_marker <- function(
   marker
 }
 
-#' Annotate Clusters by Matching Markers with the CellMarker2.0 Database
+#' Annotate Clusters by Matching Markers with the CellMarker 3.0 Database
 #'
 #' This function takes cluster-specific markers, typically from `Seurat::FindAllMarkers`,
 #' and annotates each cluster with potential cell types by matching these markers
@@ -591,7 +591,7 @@ plotSeuratDot <- function(features, srt, split = FALSE, ...) {
 #' Plot Distribution of a Marker Across Tissues and Cell Types
 #'
 #' This function creates a dot plot displaying the distribution of a specified marker across
-#' different tissues and cell types, based on data from the CellMarker2.0 database.
+#' different tissues and cell types, based on data from the CellMarker 3.0 database.
 #'
 #' @param mkr character, the name of the marker to be plotted.
 #'
@@ -620,7 +620,7 @@ plotMarkerDistribution <- function(mkr = character()) {
 #' Plot Possible Cell Distribution Based on matchCellMarker2() Results
 #'
 #' This function creates a dot plot to visualize the distribution of possible cell types
-#' based on the results from the `matchCellMarker2()` function, utilizing data from the CellMarker2.0 database.
+#' based on the results from the `matchCellMarker2()` function, utilizing data from the CellMarker 3.0 database.
 #'
 #' @param marker data.table, the result from the `matchCellMarker2()` function.
 #' @param min.uniqueN integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.
@@ -649,13 +649,13 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
   markerMatched <- matchCellMarker2(marker = srt.markers, n = N, spc = spc)
   cl2cell <- markerMatched[, head(.SD, 1), by = cluster][, 1:4]
   cl2cell <- setNames(cl2cell[["cell_name"]], as.character(cl2cell[["cluster"]]))
-  srt@meta.data[["CellMarker2.0"]] <- cl2cell[as.character(Seurat::Idents(srt))]
+  srt@meta.data[["CellMarker3.0"]] <- cl2cell[as.character(Seurat::Idents(srt))]
 
   p <- Seurat::DimPlot(srt,
     reduction = "umap",
     label = TRUE, label.size = 1,
     pt.size = 0.6, repel = TRUE,
-    group.by = "CellMarker2.0"
+    group.by = "CellMarker3.0"
   ) +
     labs(title = sprintf("resolution: %s N: %s", resolution, N)) +
     guides(color = guide_legend(override.aes = list(size = 0.5))) +

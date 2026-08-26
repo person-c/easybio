@@ -15,7 +15,7 @@ If no tissue classes are found, an empty vector is returned.
 }
 \description{
 This function extracts and returns a unique list of available tissue classes
-from the CellMarker2.0 database for a specified species.
+from the CellMarker 3.0 database for a specified species.
 }
 \examples{
 # Get all tissue classes for Human

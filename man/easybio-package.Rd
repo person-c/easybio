@@ -6,7 +6,7 @@
 \alias{easybio-package}
 \title{easybio: Comprehensive Single-Cell Annotation and Transcriptomic Analysis Toolkit}
 \description{
-Provides a comprehensive toolkit for single-cell annotation with the 'CellMarker2.0' database (see Xia Li, Peng Wang, Yunpeng Zhang (2023) \doi{ 10.1093/nar/gkac947}). Streamlines biological label assignment in single-cell RNA-seq data and facilitates transcriptomic analysis, including preparation of TCGA\url{https://portal.gdc.cancer.gov/} and GEO\url{https://www.ncbi.nlm.nih.gov/geo/} datasets, differential expression analysis and visualization of enrichment analysis results. Additional utility functions support various bioinformatics workflows. See Wei Cui (2024) \doi{ 10.1101/2024.09.14.609619} for more details.
+Provides a comprehensive toolkit for single-cell annotation with the 'CellMarker 3.0' database \url{https://bio-bigdata.hrbmu.edu.cn/CellMarker/}. Streamlines biological label assignment in single-cell RNA-seq data and facilitates transcriptomic analysis, including preparation of TCGA\url{https://portal.gdc.cancer.gov/} and GEO\url{https://www.ncbi.nlm.nih.gov/geo/} datasets, differential expression analysis and visualization of enrichment analysis results. Additional utility functions support various bioinformatics workflows. See Wei Cui (2024) \doi{ 10.1101/2024.09.14.609619} for more details.
 }
 \seealso{
 Useful links:

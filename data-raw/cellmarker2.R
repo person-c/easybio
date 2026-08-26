@@ -1,4 +1,5 @@
 ## code to prepare `MSigDB` dataset goes here
+# NOTE: superseded by cellmarker.R (CellMarker 3.0). Kept for provenance of the 2.0 build.
 url <- "http://bio-bigdata.hrbmu.edu.cn/CellMarker/CellMarker_download_files/file/Cell_marker_Seq.xlsx"
 download.file(url, "data-raw/Cell_marker_Seq.xlsx", mode = "wb")
 

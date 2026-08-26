@@ -4,6 +4,11 @@
 2. **Plot Customization**: All `plot*` functions will be enhanced to allow greater user customization.
 3. **New S3 Class**: Development of a new S3 class, similar to `dgeList`, which will offer improved customization and performance.
 
+# Version 1.2.3.9000 Changes
+
+- upgrade the built-in annotation database from CellMarker 2.0 to CellMarker 3.0 (418,933 entries; only the columns used by the package are kept, see `data-raw/cellmarker.R`).
+- `tuneParameters()` now stores the annotation in the meta.data column "CellMarker3.0" instead of "CellMarker2.0".
+
 # Version 1.2.3 Changes
 
 - dont run `Seurat::DotPlot` in vignette to avoid upstream upgrade's affects

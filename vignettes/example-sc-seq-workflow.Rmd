@@ -41,7 +41,7 @@ head(pbmc.markers)
 
 ## Step 1: Automated Annotation with `matchCellMarker2`
 
-We begin by feeding the cluster markers (from `Seurat::FindAllMarkers`) into `matchCellMarker2()`. This function compares our markers against the CellMarker2.0 database and returns a ranked list of potential cell types for each cluster.
+We begin by feeding the cluster markers (from `Seurat::FindAllMarkers`) into `matchCellMarker2()`. This function compares our markers against the CellMarker 3.0 database and returns a ranked list of potential cell types for each cluster.
 
 ```{r}
 marker_matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")

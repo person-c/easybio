@@ -64,7 +64,7 @@ pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 # Step 2: Automated Annotation with `matchCellMarker2`
 # ---
 # This is the first core step of the `easybio` workflow. We use the marker genes
-# found in the previous step to query the CellMarker2.0 database and get a list
+# found in the previous step to query the CellMarker 3.0 database and get a list
 # of potential cell types for each cluster.
 
 marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
@@ -92,7 +92,7 @@ tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
 
 # Question 2: "Are these annotations correct?"
 # Use `cis = FALSE` to retrieve the CANONICAL markers for the suggested cell types
-# from the CellMarker2.0 database. We can then check if these canonical markers
+# from the CellMarker 3.0 database. We can then check if these canonical markers
 # are actually expressed in our clusters.
 tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
 
@@ -167,5 +167,5 @@ print(tmp)
 get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
 
 # `plotMarkerDistribution`: Visualize how a single marker is distributed across
-# all cell types and tissues in the CellMarker2.0 database.
+# all cell types and tissues in the CellMarker 3.0 database.
 plotMarkerDistribution(mkr = "CD68")

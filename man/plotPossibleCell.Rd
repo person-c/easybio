@@ -16,5 +16,5 @@ A ggplot2 object representing the distribution of possible cell types.
 }
 \description{
 This function creates a dot plot to visualize the distribution of possible cell types
-based on the results from the \code{matchCellMarker2()} function, utilizing data from the CellMarker2.0 database.
+based on the results from the \code{matchCellMarker2()} function, utilizing data from the CellMarker 3.0 database.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sc.R
 \name{matchCellMarker2}
 \alias{matchCellMarker2}
-\title{Annotate Clusters by Matching Markers with the CellMarker2.0 Database}
+\title{Annotate Clusters by Matching Markers with the CellMarker 3.0 Database}
 \usage{
 matchCellMarker2(
   marker,
