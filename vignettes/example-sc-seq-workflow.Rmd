@@ -15,7 +15,7 @@ This vignette demonstrates the powerful and intuitive workflow for single-cell R
 
 The core workflow follows three logical steps:
 
-1.  **Automated Annotation**: Use `matchCellMarker2()` to quickly get a list of potential cell types for each cluster based on its marker genes.
+1.  **Automated Annotation**: Use `match_ref()` to quickly get a list of potential cell types for each cluster based on its marker genes.
 2.  **Verification & Exploration**: Interactively investigate the automated results using `check_marker()` and `plotSeuratDot()` to build confidence in the annotations. This step helps answer two critical questions:
     *   "**Why** was this annotation made?" (Which of my genes matched the database?)
     *   "Is this annotation **correct**?" (Are the canonical markers for this cell type expressed in my cluster?)
@@ -39,12 +39,12 @@ library(data.table)
 head(pbmc.markers)
 ```
 
-## Step 1: Automated Annotation with `matchCellMarker2`
+## Step 1: Automated Annotation with `match_ref`
 
-We begin by feeding the cluster markers (from `Seurat::FindAllMarkers`) into `matchCellMarker2()`. This function compares our markers against the CellMarker2.0 database and returns a ranked list of potential cell types for each cluster.
+We begin by feeding the cluster markers (from `Seurat::FindAllMarkers`) into `match_ref()`. This function compares our markers against the CellMarker 3.0 database and returns a ranked list of potential cell types for each cluster.
 
 ```{r}
-marker_matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
+marker_matched <- match_ref(marker = pbmc.markers, n = 50, spc = "Human")
 
 # Let's look at the top 2 potential cell types for each cluster
 marker_matched[, head(.SD, 2), by = cluster]
@@ -115,7 +115,7 @@ Idents(srt) <- "seurat_clusters"
 
 
 # Now, let's plot the evidence for clusters 1, 5, and 7
-matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human") |>
+match_ref(marker = pbmc.markers, n = 50, spc = "Human") |>
   check_marker(cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
   plotSeuratDot(srt = srt)
 ```
@@ -147,7 +147,7 @@ This `cl2cell_final` vector can now be added to your Seurat object's metadata fo
 
 ## Using a Custom Marker Database
 
-For specialized analyses, such as focusing on a specific tissue, working with a non-model organism, or using a proprietary list of markers, you can provide your own custom reference to `matchCellMarker2`.
+For specialized analyses, such as focusing on a specific tissue, working with a non-model organism, or using a proprietary list of markers, you can provide your own custom reference to `match_ref`.
 
 The reference must be a `data.frame` (or `data.table`) with at least two columns: `cell_name` and `marker`. The easiest way to create this is from a named list.
 
@@ -168,10 +168,10 @@ custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
 head(custom_ref_df)
 ```
 
-**Step 3: Run `matchCellMarker2` with the `ref` parameter.**
+**Step 3: Run `match_ref` with the `ref` parameter.**
 When `ref` is provided, the function ignores the `spc`, `tissueClass`, and `tissueType` parameters for matching.
 ```{r}
-marker_custom <- matchCellMarker2(
+marker_custom <- match_ref(
   marker = pbmc.markers,
   n = 50,
   ref = custom_ref_df

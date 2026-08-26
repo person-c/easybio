@@ -30,7 +30,7 @@ ggplot2::ggsave("UMAP_Raw.png", width = 4.62, height = 3.26)
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 data.table::fwrite(pbmc.markers, "pbmc.markers.csv")
 
-markerTop50Matched <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
+markerTop50Matched <- match_ref(marker = pbmc.markers, n = 50, spc = "Human")
 head(markerTop50Matched)
 
 cl2cell <- markerTop50Matched[, head(.SD, 1), by = .(cluster)]

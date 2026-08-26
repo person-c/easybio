@@ -62,7 +62,7 @@ finsert <- function(
 #' Retrieve Available Tissue Classes for a Given Species
 #'
 #' This function extracts and returns a unique list of available tissue classes
-#' from the CellMarker2.0 database for a specified species.
+#' from the CellMarker 3.0 database for a specified species.
 #'
 #' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
 #'
@@ -80,13 +80,13 @@ available_tissue_class <- function(spc) {
   assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
 
   species <- NULL
-  available_ele(cellMarker2, "tissue_class", subset = species == spc)
+  available_ele(cellMarker3, "tissue_class", subset = species == spc)
 }
 
 #' Retrieve Available Tissue Types for a Given Species
 #'
 #' This function extracts and returns a unique list of available tissue types
-#' from the CellMarker2.0 database for a specified species.
+#' from the CellMarker 3.0 database for a specified species.
 #'
 #' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
 #'
@@ -104,13 +104,13 @@ available_tissue_type <- function(spc) {
   assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
 
   species <- NULL
-  available_ele(cellMarker2, "tissue_type", subset = species == spc)
+  available_ele(cellMarker3, "tissue_type", subset = species == spc)
 }
 
-#' Retrieve Markers for Specific Cells from cellMarker2
+#' Retrieve Markers for Specific Cells from cellMarker3
 #'
 #' This function extracts a list of markers for one or more cell types from the
-#' `cellMarker2` dataset. It allows filtering by species, cell type, the number
+#' `cellMarker3` dataset. It allows filtering by species, cell type, the number
 #' of markers to retrieve, and a minimum count threshold for marker occurrences.
 #'
 #' @param spc A character string specifying the species, which can be either
@@ -144,7 +144,7 @@ get_marker <- function(
   . <- tissue_type <- tissue_class <- NULL
   species <- cell_name <- N <- marker <- NULL
 
-  all_cell_names <- available_ele(cellMarker2, "cell_name", subset = species == spc)
+  all_cell_names <- available_ele(cellMarker3, "cell_name", subset = species == spc)
   is_exists <- cell %chin% all_cell_names
 
   not_found_cells <- cell[!is_exists]
@@ -197,8 +197,8 @@ get_marker <- function(
   # Proceed with only the cell names that exist
   valid_cells <- cell[is_exists]
 
-  cellmarker2_filtered <- cellMarker2[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
-  marker <- cellmarker2_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
+  cellmarker3_filtered <- cellMarker3[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
+  marker <- cellmarker3_filtered[.(spc, valid_cells), .SD, on = .(species, cell_name), nomatch = NULL]
 
   if (is.null(marker) || nrow(marker) == 0) {
     return(NULL)
@@ -212,7 +212,7 @@ get_marker <- function(
   marker
 }
 
-#' Annotate Clusters by Matching Markers with the CellMarker2.0 Database
+#' Annotate Clusters by Matching Markers with the CellMarker 3.0 Database
 #'
 #' This function takes cluster-specific markers, typically from `Seurat::FindAllMarkers`,
 #' and annotates each cluster with potential cell types by matching these markers
@@ -226,23 +226,23 @@ get_marker <- function(
 #' @param n An integer specifying the number of top marker genes to use from each
 #'   cluster for matching. Genes are ranked by `avg_log2FC` after filtering.
 #' @param spc A character string specifying the species, either "Human" or "Mouse".
-#'   This is used to filter the `cellMarker2` database. This parameter is ignored
+#'   This is used to filter the `cellMarker3` database. This parameter is ignored
 #'   if a custom `ref` is provided.
 #' @param avg_log2FC_threshold A numeric value setting the minimum average log2 fold
 #'   change for a marker to be considered. Defaults to `0`.
 #' @param p_val_adj_threshold A numeric value setting the maximum adjusted p-value
 #'   for a marker to be considered. Defaults to `0.05`.
 #' @param tissueClass A character vector of tissue classes to include from the
-#'   `cellMarker2` database. Defaults to all available tissue classes for the
+#'   `cellMarker3` database. Defaults to all available tissue classes for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
 #'   See `available_tissue_class()`.
 #' @param tissueType A character vector of tissue types to include from the
-#'   `cellMarker2` database. Defaults to all available tissue types for the
+#'   `cellMarker3` database. Defaults to all available tissue types for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
 #'   See `available_tissue_type()`.
 #' @param ref An optional long `data.frame` which must contain 'cell_name'
 #'   and 'marker' columns to be used as the reference for marker matching.
-#'   If `NULL` (the default), the function uses the built-in `cellMarker2`
+#'   If `NULL` (the default), the function uses the built-in `cellMarker3`
 #'   dataset. When a custom `ref` is provided, the `spc`, `tissueClass`, and
 #'   `tissueType` parameters are ignored for the matching process itself,
 #'   but their original values are saved for provenance.
@@ -253,7 +253,7 @@ get_marker <- function(
 #'   `ordered_symbol` (matching genes, ordered by frequency), and `orderN` (their frequencies).
 #'
 #'   The returned object also contains important attributes for downstream analysis:
-#'   \item{ref}{The reference data (either from `cellMarker2` or the custom `ref`) used for the annotation.}
+#'   \item{ref}{The reference data (either from `cellMarker3` or the custom `ref`) used for the annotation.}
 #'   \item{is_custom_ref}{A logical flag indicating if a custom `ref` was used.}
 #'   \item{filter_args}{A list containing the filtering parameters used during the annotation,
 #'   which is essential for the `check_marker` function.}
@@ -268,7 +268,7 @@ get_marker <- function(
 #' data(pbmc.markers)
 #'
 #' # Basic usage: Annotate clusters using the top 50 markers per cluster
-#' matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+#' matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 #' print(matched_cells)
 #'
 #' # To see the top annotation for each cluster
@@ -276,7 +276,7 @@ get_marker <- function(
 #' print(top_matches)
 #'
 #' # Advanced usage: Stricter filtering and focus on specific tissues
-#' matched_cells_strict <- matchCellMarker2(
+#' matched_cells_strict <- match_ref(
 #'   pbmc.markers,
 #'   n = 30,
 #'   spc = "Human",
@@ -298,16 +298,16 @@ get_marker <- function(
 #' custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
 #'
 #' # Run annotation using the custom reference.
-#' # When 'ref' is provided, the internal cellMarker2 database and its filters
+#' # When 'ref' is provided, the internal cellMarker3 database and its filters
 #' # ('spc', 'tissueClass', 'tissueType') are ignored for matching.
-#' matched_custom <- matchCellMarker2(
+#' matched_custom <- match_ref(
 #'   pbmc.markers,
 #'   n = 50,
 #'   ref = custom_ref_df
 #' )
 #' print(matched_custom)
 #' }
-matchCellMarker2 <- function(
+match_ref <- function(
     marker, n,
     avg_log2FC_threshold = 0,
     p_val_adj_threshold = 0.05,
@@ -330,7 +330,7 @@ matchCellMarker2 <- function(
 
   is_custom_ref <- TRUE
   if (is.null(ref)) {
-    ref <- cellMarker2[.(spc), .SD, on = .(species), nomatch = NULL]
+    ref <- cellMarker3[.(spc), .SD, on = .(species), nomatch = NULL]
     ref <- ref[tissue_class %chin% tissueClass & tissue_type %chin% tissueType]
 
     is_custom_ref <- FALSE
@@ -356,7 +356,7 @@ matchCellMarker2 <- function(
       avg_log2FC_threshold = avg_log2FC_threshold,
       p_val_adj_threshold = p_val_adj_threshold
     ),
-    cellmarker2_filter = list(
+    cellmarker3_filter = list(
       spc = if (missing(spc)) NULL else spc,
       tissueClass = if (missing(spc)) NULL else tissueClass,
       tissueType = if (missing(spc)) NULL else tissueType
@@ -367,6 +367,24 @@ matchCellMarker2 <- function(
   class(res) <- c("cellmarker_match", class(res))
 
   res
+}
+
+#' Annotate Clusters by Matching Markers (Deprecated)
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `matchCellMarker2()` was renamed to [match_ref()] because it supports
+#' custom reference datasets as well as the built-in CellMarker 3.0 database.
+#' It will be removed in the next version.
+#'
+#' @inheritParams match_ref
+#' @param ... Arguments passed on to [match_ref()].
+#' @return See [match_ref()].
+#' @export
+matchCellMarker2 <- function(marker, n, ...) {
+  lifecycle::deprecate_warn("1.2.4", "matchCellMarker2()", "match_ref()")
+  match_ref(marker = marker, n = n, ...)
 }
 
 #' @export
@@ -389,7 +407,7 @@ matchCellMarker2 <- function(
 #' Verify and Explore Cell Type Annotations
 #'
 #' A post-analysis function that helps to verify and explore the automated cell
-#' type annotations generated by `matchCellMarker2`. It retrieves marker genes
+#' type annotations generated by `match_ref`. It retrieves marker genes
 #' for the top-matching cell types of specified clusters, allowing for deeper
 #' inspection of the annotation results.
 #'
@@ -402,7 +420,7 @@ matchCellMarker2 <- function(
 #'     This mode answers the question by fetching the *canonical* markers for the
 #'     annotated cell type from the reference database (via `get_marker`). It automatically
 #'     uses the same filtering criteria (species, tissue, etc.) that were used in the
-#'     original `matchCellMarker2` call, ensuring consistency.
+#'     original `match_ref` call, ensuring consistency.
 #'   \item **`cis = TRUE`: "Why was this annotation made?"**
 #'     This mode answers the question by extracting the *local* markers from the
 #'     user's own data (i.e., the differentially expressed genes from the `marker`
@@ -410,8 +428,8 @@ matchCellMarker2 <- function(
 #'     behind the match.
 #' }
 #'
-#' @param marker A `data.table` object, which is the result of a call to `matchCellMarker2()`.
-#'   This object must contain the attributes set by `matchCellMarker2` for the function to work correctly.
+#' @param marker A `data.table` object, which is the result of a call to `match_ref()`.
+#'   This object must contain the attributes set by `match_ref` for the function to work correctly.
 #' @param cl A numeric or character vector specifying the cluster IDs to be inspected.
 #' @param topcellN An integer. For each cluster in `cl`, the function will retrieve
 #'   markers for the top `topcellN` cell type annotations. Defaults to 2.
@@ -421,7 +439,7 @@ matchCellMarker2 <- function(
 #' @return A named list. Each name in the list is a cell type, and each element
 #'   is a character vector of its corresponding marker genes.
 #'
-#' @seealso \code{\link{matchCellMarker2}} to generate the input for this function.
+#' @seealso \code{\link{match_ref}} to generate the input for this function.
 #'   \code{\link{get_marker}} which is used internally when `cis = FALSE`.
 #'   \code{\link{plotSeuratDot}} to visualize the results.
 #'
@@ -433,7 +451,7 @@ matchCellMarker2 <- function(
 #' data(pbmc.markers)
 #'
 #' # Step 1: Generate cell type annotations
-#' matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+#' matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 #'
 #' # Step 2: Verify the annotation for cluster 0.
 #' # Let's check the top annotation (topcellN = 1).
@@ -454,8 +472,8 @@ check_marker <- function(
     marker, cl = c(), topcellN = 2, cis = FALSE) {
   if (!inherits(marker, "cellmarker_match")) {
     stop(
-      "'marker' must be the result of 'matchCellMarker2()'. ",
-      "Please use 'matchCellMarker2()' to annotate your data first.",
+      "'marker' must be the result of 'match_ref()'. ",
+      "Please use 'match_ref()' to annotate your data first.",
       call. = FALSE
     )
   }
@@ -468,20 +486,20 @@ check_marker <- function(
     topmarker <- marker[, head(.SD, topcellN), by = .(cluster)]
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
-    if (is.null(filter_args$cellmarker2_filter$spc)) {
+    if (is.null(filter_args$cellmarker3_filter$spc)) {
       stop("
       Can't find the species information from the 'marker' input. This usually happens when \n
-      1. You didn't set the 'spc' arguments when using `matchCellMarker2`; or \n
+      1. You didn't set the 'spc' arguments when using `match_ref`; or \n
       2. The attributes of the 'marker' input are lost if you have done any operations on it.",
         call. = FALSE
       )
     }
     topcell <- marker[, head(.SD, topcellN), keyby = .(cluster)][, unique(cell_name)]
     topmarker <- get_marker(
-      spc = filter_args$cellmarker2_filter$spc,
+      spc = filter_args$cellmarker3_filter$spc,
       cell = topcell,
-      tissueClass = filter_args$cellmarker2_filter$tissueClass,
-      tissueType = filter_args$cellmarker2_filter$tissueType,
+      tissueClass = filter_args$cellmarker3_filter$tissueClass,
+      tissueType = filter_args$cellmarker3_filter$tissueType,
       number = 10,
       min.count = 1
     )
@@ -535,7 +553,7 @@ check_marker <- function(
 #' Idents(srt) <- "seurat_clusters"
 #'
 #' # Step 1: Generate cell type annotations
-#' matched_cells <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+#' matched_cells <- match_ref(pbmc.markers, n = 50, spc = "Human")
 #'
 #' # Step 2: Get canonical markers for cluster 0's top annotation
 #' reference_markers <- check_marker(matched_cells, cl = 0, topcellN = 1)
@@ -591,7 +609,7 @@ plotSeuratDot <- function(features, srt, split = FALSE, ...) {
 #' Plot Distribution of a Marker Across Tissues and Cell Types
 #'
 #' This function creates a dot plot displaying the distribution of a specified marker across
-#' different tissues and cell types, based on data from the CellMarker2.0 database.
+#' different tissues and cell types, based on data from the CellMarker 3.0 database.
 #'
 #' @param mkr character, the name of the marker to be plotted.
 #'
@@ -605,7 +623,7 @@ plotSeuratDot <- function(features, srt, split = FALSE, ...) {
 #' }
 plotMarkerDistribution <- function(mkr = character()) {
   . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
-  tmp <- cellMarker2[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
+  tmp <- cellMarker3[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
   tmp <- tmp[, .N, by = .(cell_name, tissue_class)]
 
   p <- ggplot(tmp, aes(x = cell_name, y = tissue_class)) +
@@ -617,12 +635,12 @@ plotMarkerDistribution <- function(mkr = character()) {
   p
 }
 
-#' Plot Possible Cell Distribution Based on matchCellMarker2() Results
+#' Plot Possible Cell Distribution Based on match_ref() Results
 #'
 #' This function creates a dot plot to visualize the distribution of possible cell types
-#' based on the results from the `matchCellMarker2()` function, utilizing data from the CellMarker2.0 database.
+#' based on the results from the `match_ref()` function, utilizing data from the CellMarker 3.0 database.
 #'
-#' @param marker data.table, the result from the `matchCellMarker2()` function.
+#' @param marker data.table, the result from the `match_ref()` function.
 #' @param min.uniqueN integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.
 #'
 #' @return A ggplot2 object representing the distribution of possible cell types.
@@ -646,16 +664,16 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
   srt <- suppressMessages(Seurat::FindClusters(srt, resolution = resolution))
   srt.markers <- Seurat::FindAllMarkers(srt, only.pos = TRUE)
 
-  markerMatched <- matchCellMarker2(marker = srt.markers, n = N, spc = spc)
+  markerMatched <- match_ref(marker = srt.markers, n = N, spc = spc)
   cl2cell <- markerMatched[, head(.SD, 1), by = cluster][, 1:4]
   cl2cell <- setNames(cl2cell[["cell_name"]], as.character(cl2cell[["cluster"]]))
-  srt@meta.data[["CellMarker2.0"]] <- cl2cell[as.character(Seurat::Idents(srt))]
+  srt@meta.data[["CellMarker3.0"]] <- cl2cell[as.character(Seurat::Idents(srt))]
 
   p <- Seurat::DimPlot(srt,
     reduction = "umap",
     label = TRUE, label.size = 1,
     pt.size = 0.6, repel = TRUE,
-    group.by = "CellMarker2.0"
+    group.by = "CellMarker3.0"
   ) +
     labs(title = sprintf("resolution: %s N: %s", resolution, N)) +
     guides(color = guide_legend(override.aes = list(size = 0.5))) +
@@ -669,8 +687,8 @@ plotPossibleCell <- function(marker, min.uniqueN = 2) {
 #'
 #' @param srt Seurat object, the input data object to be analyzed.
 #' @param resolution numeric vector, a vector of resolution values to be tested in `Seurat::FindClusters()`.
-#' @param N integer vector, a vector of values indicating the number of top differential genes to be used for matching in `matchCellMarker2()`.
-#' @param spc character, the species parameter for the `matchCellMarker2()` function, specifying the organism.
+#' @param N integer vector, a vector of values indicating the number of top differential genes to be used for matching in `match_ref()`.
+#' @param spc character, the species parameter for the `match_ref()` function, specifying the organism.
 #'
 #' @return A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.
 #' @import ggplot2
@@ -693,7 +711,7 @@ tuneParameters <- function(srt, resolution = numeric(), N = integer(), spc) {
   . <- NULL
   species <- cell_name <- N <- marker <- NULL
 
-  marker <- cellMarker2[.(spc, cell), .SD, on = .(species, cell_name)]
+  marker <- cellMarker3[.(spc, cell), .SD, on = .(species, cell_name)]
   marker <- marker[, .(N = .N), by = .(cell_name, marker)]
   marker[, let(weight = N^power / sum(N^power)), by = cell_name]
   marker

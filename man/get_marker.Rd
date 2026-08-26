@@ -2,7 +2,7 @@
 % Please edit documentation in R/sc.R
 \name{get_marker}
 \alias{get_marker}
-\title{Retrieve Markers for Specific Cells from cellMarker2}
+\title{Retrieve Markers for Specific Cells from cellMarker3}
 \usage{
 get_marker(
   spc,
@@ -35,7 +35,7 @@ element is a vector of marker names.
 }
 \description{
 This function extracts a list of markers for one or more cell types from the
-\code{cellMarker2} dataset. It allows filtering by species, cell type, the number
+\code{cellMarker3} dataset. It allows filtering by species, cell type, the number
 of markers to retrieve, and a minimum count threshold for marker occurrences.
 }
 \examples{

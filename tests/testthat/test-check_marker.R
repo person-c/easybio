@@ -1,6 +1,6 @@
 data("pbmc.markers", package = "easybio")
 
-matched <- matchCellMarker2(pbmc.markers, n = 50, spc = "Human")
+matched <- match_ref(pbmc.markers, n = 50, spc = "Human")
 
 test_that("check_marker trans mode returns canonical markers", {
   res <- check_marker(matched, cl = 0, topcellN = 1, cis = FALSE)
@@ -39,8 +39,8 @@ test_that("check_marker cis mode shows matched genes that led to annotation", {
   }
 })
 
-test_that("check_marker errors when spc is missing from matchCellMarker2 result", {
-  matched_no_spc <- matchCellMarker2(pbmc.markers, n = 10, ref = data.frame(
+test_that("check_marker errors when spc is missing from match_ref result", {
+  matched_no_spc <- match_ref(pbmc.markers, n = 10, ref = data.frame(
     cell_name = "A", marker = "RPS12", stringsAsFactors = FALSE
   ))
   expect_error(
@@ -56,6 +56,6 @@ test_that("check_marker rejects non-cellmarker_match input", {
   )
   expect_error(
     check_marker(plain_dt, cl = 0),
-    "matchCellMarker2"
+    "match_ref"
   )
 })

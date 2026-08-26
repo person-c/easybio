@@ -56,18 +56,18 @@ pbmc <- RunUMAP(pbmc, dims = 1:10)
 tmp <- DimPlot(pbmc, reduction = "umap", label = TRUE)
 print(tmp)
 
-# Find marker genes for each cluster. This is the crucial input for matchCellMarker2.
+# Find marker genes for each cluster. This is the crucial input for match_ref.
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 
 
 # ---
-# Step 2: Automated Annotation with `matchCellMarker2`
+# Step 2: Automated Annotation with `match_ref`
 # ---
 # This is the first core step of the `easybio` workflow. We use the marker genes
-# found in the previous step to query the CellMarker2.0 database and get a list
+# found in the previous step to query the CellMarker 3.0 database and get a list
 # of potential cell types for each cluster.
 
-marker <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human")
+marker <- match_ref(marker = pbmc.markers, n = 50, spc = "Human")
 # Let's look at the top results. The table is ranked by the number of matching markers.
 marker |> head()
 
@@ -92,7 +92,7 @@ tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = TRUE)
 
 # Question 2: "Are these annotations correct?"
 # Use `cis = FALSE` to retrieve the CANONICAL markers for the suggested cell types
-# from the CellMarker2.0 database. We can then check if these canonical markers
+# from the CellMarker 3.0 database. We can then check if these canonical markers
 # are actually expressed in our clusters.
 tmp <- check_marker(marker, cl = c(1, 5, 7), topcellN = 2, cis = FALSE)
 
@@ -123,7 +123,7 @@ tmp <- lapply(cls, \(cl) {
 print(tmp[[1]]) # Show the first plot as an example
 
 # The entire workflow from annotation to visualization can be done in a single pipe:
-tmp <- matchCellMarker2(marker = pbmc.markers, n = 50, spc = "Human") |>
+tmp <- match_ref(marker = pbmc.markers, n = 50, spc = "Human") |>
   check_marker(cl = c(1, 5, 7), topcellN = 2, cis = TRUE) |>
   plotSeuratDot(srt = pbmc)
 
@@ -167,5 +167,5 @@ print(tmp)
 get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min.count = 1)
 
 # `plotMarkerDistribution`: Visualize how a single marker is distributed across
-# all cell types and tissues in the CellMarker2.0 database.
+# all cell types and tissues in the CellMarker 3.0 database.
 plotMarkerDistribution(mkr = "CD68")

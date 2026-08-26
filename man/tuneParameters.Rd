@@ -11,9 +11,9 @@ tuneParameters(srt, resolution = numeric(), N = integer(), spc)
 
 \item{resolution}{numeric vector, a vector of resolution values to be tested in \code{Seurat::FindClusters()}.}
 
-\item{N}{integer vector, a vector of values indicating the number of top differential genes to be used for matching in \code{matchCellMarker2()}.}
+\item{N}{integer vector, a vector of values indicating the number of top differential genes to be used for matching in \code{match_ref()}.}
 
-\item{spc}{character, the species parameter for the \code{matchCellMarker2()} function, specifying the organism.}
+\item{spc}{character, the species parameter for the \code{match_ref()} function, specifying the organism.}
 }
 \value{
 A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.

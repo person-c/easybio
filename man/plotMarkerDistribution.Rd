@@ -14,7 +14,7 @@ A ggplot2 object representing the distribution of the marker.
 }
 \description{
 This function creates a dot plot displaying the distribution of a specified marker across
-different tissues and cell types, based on data from the CellMarker2.0 database.
+different tissues and cell types, based on data from the CellMarker 3.0 database.
 }
 \examples{
 \dontrun{
