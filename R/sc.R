@@ -142,7 +142,7 @@ get_marker <- function(
     tissue_type = available_tissue_type(spc),
     number = 5, min_count = 1) {
   . <- NULL
-  species <- cell_name <- N <- marker <- NULL
+  species <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
 
   all_cell_names <- available_ele(cellMarker3, "cell_name", subset = species == spc)
   is_exists <- cell %chin% all_cell_names
@@ -166,7 +166,7 @@ get_marker <- function(
         return(paste(all_cell_names[grep_idx], collapse = " or "))
       }
 
-      return("") # No suggestion found
+      "" # No suggestion found
     })
 
     # Format and print message for cells with suggestions
@@ -260,7 +260,8 @@ get_marker <- function(
 #'   \item{filter_args}{A list containing the filtering parameters used during the annotation,
 #'   which is essential for the `check_marker` function.}
 #'
-#' @seealso \code{\link{check_marker}}, \code{\link{plot_possible_cell}}, \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
+#' @seealso \code{\link{check_marker}}, \code{\link{plot_possible_cell}},
+#'   \code{\link{available_tissue_class}}, \code{\link{available_tissue_type}}
 #'
 #' @export
 #'
@@ -317,8 +318,8 @@ match_ref <- function(
     tissue_class = available_tissue_class(spc),
     tissue_type = available_tissue_type(spc),
     ref = NULL) {
-  . <- markerWith <- NULL
-  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL
+  . <- marker_with <- NULL
+  species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL # nolint: object_name_linter.
 
   marker <- copy(marker)
   setDT(marker)
@@ -341,15 +342,15 @@ match_ref <- function(
   }
 
   res <- marker[ref, on = "gene==marker", nomatch = NULL]
-  res <- res[, .(markerWith = .(gene), N = .N), by = .(cluster, cell_name)]
+  res <- res[, .(marker_with = .(gene), N = .N), by = .(cluster, cell_name)]
   res <- res[N > 0, .SD[order(-N)], keyby = .(cluster)]
 
 
-  res[, let(uniqueN = sapply(markerWith, FUN = \(x) uniqueN(x)))]
-  res[, let(ordered_symbol = lapply(markerWith, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
-  res[, let(orderN = lapply(markerWith, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
-  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "markerWith"))
-  res[["markerWith"]] <- NULL
+  res[, let(uniqueN = sapply(marker_with, FUN = \(x) uniqueN(x)))]
+  res[, let(ordered_symbol = lapply(marker_with, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
+  res[, let(orderN = lapply(marker_with, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
+  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "marker_with"))
+  res[["marker_with"]] <- NULL
 
   setattr(res, "ref", ref)
   setattr(res, "is_custom_ref", is_custom_ref)
@@ -386,7 +387,7 @@ match_ref <- function(
 #' @param ... Arguments passed on to [match_ref()].
 #' @return See [match_ref()].
 #' @export
-matchCellMarker2 <- function(marker, n, ...) {
+matchCellMarker2 <- function(marker, n, ...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "matchCellMarker2()", "match_ref()")
   match_ref(marker = marker, n = n, ...)
 }
@@ -626,7 +627,7 @@ plot_seurat_dot <- function(features, srt, split = FALSE, ...) {
 #' plot_marker_distribution("CD14")
 #' }
 plot_marker_distribution <- function(mkr = character()) {
-  . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL
+  . <- cell_name <- tissue_class <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
   tmp <- cellMarker3[.(mkr), .SD, on = .(marker), by = .(cell_name, tissue_class)]
   tmp <- tmp[, .N, by = .(cell_name, tissue_class)]
 
@@ -645,13 +646,14 @@ plot_marker_distribution <- function(mkr = character()) {
 #' based on the results from the `match_ref()` function, utilizing data from the CellMarker 3.0 database.
 #'
 #' @param marker data.table, the result from the `match_ref()` function.
-#' @param min_unique_n integer, the minimum number of unique marker genes that must be matched for a cell type to be included in the plot. Default is 2.
+#' @param min_unique_n integer, the minimum number of unique marker genes that
+#'   must be matched for a cell type to be included in the plot. Default is 2.
 #'
 #' @return A ggplot2 object representing the distribution of possible cell types.
 #' @import ggplot2
 #' @export
 plot_possible_cell <- function(marker, min_unique_n = 2) {
-  cluster <- cell_name <- N <- NULL
+  cluster <- cell_name <- N <- NULL # nolint: object_name_linter.
   p <- ggplot(marker[uniqueN > min_unique_n], aes(x = cell_name, y = cluster)) +
     geom_point(aes(size = N, color = N)) +
     scale_x_discrete(guide = guide_axis(angle = 60)) +
@@ -687,33 +689,39 @@ plot_possible_cell <- function(marker, min_unique_n = 2) {
 }
 #' Optimize Resolution and Gene Number Parameters for Cell Type Annotation
 #'
-#' This function tunes the `resolution` parameter in `Seurat::FindClusters()` and the number of top differential genes (`N`) to obtain different cell type annotation results. The function generates UMAP plots for each parameter combination, allowing for a comparison of how different settings affect the clustering and annotation.
+#' This function tunes the `resolution` parameter in `Seurat::FindClusters()`
+#' and the number of top differential genes (`n`) to obtain different cell type
+#' annotation results. The function generates UMAP plots for each parameter
+#' combination, allowing for a comparison of how different settings affect the
+#' clustering and annotation.
 #'
 #' @param srt Seurat object, the input data object to be analyzed.
 #' @param resolution numeric vector, a vector of resolution values to be tested in `Seurat::FindClusters()`.
-#' @param n integer vector, a vector of values indicating the number of top differential genes to be used for matching in `match_ref()`.
+#' @param n integer vector, a vector of values indicating the number of top
+#'   differential genes to be used for matching in `match_ref()`.
 #' @param spc character, the species parameter for the `match_ref()` function, specifying the organism.
 #'
-#' @return A list of ggplot2 objects, each representing a UMAP plot generated with a different combination of resolution and N parameters.
+#' @return A list of ggplot2 objects, each representing a UMAP plot generated
+#'   with a different combination of resolution and n parameters.
 #' @import ggplot2
 #' @export
 tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
   parameters <- CJ(resolution = resolution, n = n)
 
-  parameterPlot <- Map(
+  parameter_plot <- Map(
     f = function(x, y) .tune_parameters(srt, x, y, spc),
     x = parameters[["resolution"]],
     y = parameters[["n"]]
   )
 
-  parameterPlot
+  parameter_plot
 }
 
 # Used for future
 # Assign weight for different markers
 .get_marker_weight <- function(spc, cell = character(), min_count = 0, power = 2) {
   . <- NULL
-  species <- cell_name <- N <- marker <- NULL
+  species <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
 
   marker <- cellMarker3[.(spc, cell), .SD, on = .(species, cell_name)]
   marker <- marker[, .(N = .N), by = .(cell_name, marker)]
@@ -745,7 +753,7 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
 #' @param ... Arguments passed on to [plot_marker_distribution()].
 #' @return See [plot_marker_distribution()].
 #' @export
-plotMarkerDistribution <- function(...) {
+plotMarkerDistribution <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotMarkerDistribution()", "plot_marker_distribution()")
   plot_marker_distribution(...)
 }
@@ -761,7 +769,7 @@ plotMarkerDistribution <- function(...) {
 #' @param ... Arguments passed on to [plot_possible_cell()].
 #' @return See [plot_possible_cell()].
 #' @export
-plotPossibleCell <- function(...) {
+plotPossibleCell <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotPossibleCell()", "plot_possible_cell()")
   plot_possible_cell(...)
 }
@@ -777,7 +785,7 @@ plotPossibleCell <- function(...) {
 #' @param ... Arguments passed on to [plot_seurat_dot()].
 #' @return See [plot_seurat_dot()].
 #' @export
-plotSeuratDot <- function(...) {
+plotSeuratDot <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotSeuratDot()", "plot_seurat_dot()")
   plot_seurat_dot(...)
 }
@@ -793,7 +801,7 @@ plotSeuratDot <- function(...) {
 #' @param ... Arguments passed on to [tune_parameters()].
 #' @return See [tune_parameters()].
 #' @export
-tuneParameters <- function(...) {
+tuneParameters <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "tuneParameters()", "tune_parameters()")
   tune_parameters(...)
 }

@@ -1,7 +1,10 @@
 #' Custom ggplot2 Theme for Academic Publications
 #'
-#' `theme_publication` creates a custom ggplot2 theme designed for academic publications, ensuring clarity, readability, and a professional appearance.
-#' It is based on `theme_classic()` and includes additional refinements to axis lines, text, and other plot elements to meet the standards of high-quality academic figures.
+#' `theme_publication` creates a custom ggplot2 theme designed for academic
+#' publications, ensuring clarity, readability, and a professional appearance.
+#' It is based on `theme_classic()` and includes additional refinements to
+#' axis lines, text, and other plot elements to meet the standards of
+#' high-quality academic figures.
 #'
 #' @param base_size numeric, the base font size. Default is 12.
 #' @param base_family character, the base font family. Default is "sans".

@@ -15,7 +15,10 @@
 #' @export
 plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_size = 0.2) {
   if (!requireNamespace("fgsea", quietly = TRUE)) {
-    stop("To get plot data, plot_enrichment() requires 'fgsea' package which cannot be found. Please install 'fgsea' using 'BiocManager::install('fgsea')'.")
+    stop(
+      "To get plot data, plot_enrichment() requires 'fgsea' package which ",
+      "cannot be found. Please install 'fgsea' using 'BiocManager::install('fgsea')'."
+    )
   }
   pd <- fgsea::plotEnrichmentData(
     pathway = pathways[[pwayname]], stats = stats,
@@ -63,7 +66,7 @@ plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_siz
 plot_rank <- function(stats) {
   ranks <- y <- NULL
 
-  rank_data <- data.table(ranks = 1:length(stats), y = fsort(stats, TRUE))
+  rank_data <- data.table(ranks = seq_along(stats), y = fsort(stats, TRUE))
   ggplot(data = rank_data) +
     scale_x_discrete(expand = expansion(0, 0)) +
     geom_segment(aes(x = ranks, y = 0, xend = ranks, yend = y), color = "gray60") +
@@ -89,7 +92,7 @@ plot_rank <- function(stats) {
 #' @export
 plot_gsea <- function(fgsea_res, pathways, pwayname, stats, save = FALSE) {
   . <- NULL
-  NES <- padj <- pathway <- NULL
+  NES <- padj <- pathway <- NULL # nolint: object_name_linter.
 
   anno_text <- fgsea_res[.(pwayname), c(NES, padj), on = .(pathway)]
   p1 <- plot_enrichment(pathways, pwayname, stats)
@@ -166,7 +169,7 @@ plot_ora <- function(data, x, y, size, fill, flip = FALSE) {
 #' @param ... Arguments passed on to [plot_enrichment()].
 #' @return See [plot_enrichment()].
 #' @export
-plotEnrichment2 <- function(...) {
+plotEnrichment2 <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotEnrichment2()", "plot_enrichment()")
   plot_enrichment(...)
 }
@@ -182,7 +185,7 @@ plotEnrichment2 <- function(...) {
 #' @param ... Arguments passed on to [plot_rank()].
 #' @return See [plot_rank()].
 #' @export
-plotRank <- function(...) {
+plotRank <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotRank()", "plot_rank()")
   plot_rank(...)
 }
@@ -198,7 +201,7 @@ plotRank <- function(...) {
 #' @param ... Arguments passed on to [plot_gsea()].
 #' @return See [plot_gsea()].
 #' @export
-plotGSEA <- function(...) {
+plotGSEA <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotGSEA()", "plot_gsea()")
   plot_gsea(...)
 }
@@ -214,7 +217,7 @@ plotGSEA <- function(...) {
 #' @param ... Arguments passed on to [plot_ora()].
 #' @return See [plot_ora()].
 #' @export
-plotORA <- function(...) {
+plotORA <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotORA()", "plot_ora()")
   plot_ora(...)
 }

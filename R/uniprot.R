@@ -1,5 +1,5 @@
-.isJobReady <- function(jobId) {
-  url <- paste0("https://rest.uniprot.org/idmapping/status/", jobId)
+.is_job_ready <- function(job_id) {
+  url <- paste0("https://rest.uniprot.org/idmapping/status/", job_id)
   status <- tryCatch(
     {
       httr2::request(url) |>
@@ -17,15 +17,15 @@
 
   if (!is.null(status[["messages"]])) {
     message(status[["messages"]])
-    return(FALSE)
+    FALSE
   }
 }
 
-.getResultsURL <- function(redirectURL) {
+.get_results_url <- function(redirect_url) {
   url <- fifelse(
-    redirectURL %flike% "/idmapping/results/",
-    gsub("/idmapping/results/", "/idmapping/stream/", redirectURL),
-    gsub("/results/", "/results/stream/", redirectURL)
+    redirect_url %flike% "/idmapping/results/",
+    gsub("/idmapping/results/", "/idmapping/stream/", redirect_url),
+    gsub("/results/", "/results/stream/", redirect_url)
   )
 
   url
@@ -55,16 +55,16 @@ uniprot_id_map <- function(...) {
     httr2::req_perform() |>
     httr2::resp_body_json()
 
-  if (.isJobReady(submission[["jobId"]])) {
-    url <- paste0("https://rest.uniprot.org/idmapping/details/", submission[["jobId"]])
+  if (.is_job_ready(submission[["job_id"]])) {
+    url <- paste0("https://rest.uniprot.org/idmapping/details/", submission[["job_id"]])
     details <- httr2::req_perform(httr2::request(url)) |>
       httr2::resp_body_json()
-    url <- .getResultsURL(details[["redirectURL"]])
+    url <- .get_results_url(details[["redirect_url"]])
     url <- paste0(url, "?format=tsv")
     text <- httr2::req_perform(httr2::request(url)) |> httr2::resp_body_string()
-    resultsTable <- fread(text)
+    results_table <- fread(text)
 
-    return(resultsTable)
+    return(results_table)
   }
 
   warning("Maximum number of tries has been reached!")

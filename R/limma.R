@@ -20,7 +20,10 @@ dge_list <- function(count, sample_info, feature_info) {
   stopifnot(colnames(count) == rownames(sample_info))
 
   if (!requireNamespace("edgeR", quietly = TRUE)) {
-    stop("To construct DGEList object, dge_list() requires 'edgeR' package which cannot be found. Please install 'edgeR' using 'BiocManager::install('edgeR')'.")
+    stop(
+      "To construct DGEList object, dge_list() requires 'edgeR' package which ",
+      "cannot be found. Please install 'edgeR' using 'BiocManager::install('edgeR')'."
+    )
   }
   x <- edgeR::DGEList(count, samples = sample_info, genes = feature_info)
 
@@ -83,7 +86,10 @@ process_dge_list <- function(x, group_column, min_count = 10) {
   title("Normalized data")
 
   if (!requireNamespace("limma", quietly = TRUE)) {
-    stop("To plot MDS plot, 'plotMDS' requires 'limma' package which cannot be found. Please install 'limma' using 'BiocManager::install('limma')'.")
+    stop(
+      "To plot MDS plot, 'plotMDS' requires 'limma' package which cannot be ",
+      "found. Please install 'limma' using 'BiocManager::install('limma')'."
+    )
   }
   limma::plotMDS(lcpm,
     label = x$samples[[group_column]],
@@ -113,9 +119,11 @@ limma_fit <- function(x, group_column) {
   on.exit(par(oldpar))
 
   if (!requireNamespace("limma", quietly = TRUE)) {
-    stop("To fit linear model, 'limma_fit' requires 'limma' package which cannot be found. Please install 'limma' using 'BiocManager::install('limma')'.")
+    stop(
+      "To fit linear model, 'limma_fit' requires 'limma' package which cannot ",
+      "be found. Please install 'limma' using 'BiocManager::install('limma')'."
+    )
   }
-  makeContrasts <- limma::makeContrasts
 
   design <- model.matrix(~ 0 + x$samples[[group_column]])
   colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
@@ -123,7 +131,7 @@ limma_fit <- function(x, group_column) {
   all_vs <- utils::combn(unique(x$samples[[group_column]]), 2, simplify = TRUE)
   all_vs2 <- str2expression(paste0(all_vs[1, ], "-", all_vs[2, ]))
   all_vs2 <- setNames(as.list(all_vs2), paste0(all_vs[1, ], "vs", all_vs[2, ]))
-  contr_matrix <- do.call("makeContrasts", c(all_vs2, levels = list(colnames(design))))
+  contr_matrix <- do.call(limma::makeContrasts, c(all_vs2, levels = list(colnames(design))))
 
   par(mfrow = c(1, 2))
   v <- limma::voom(x, design, plot = TRUE)
@@ -194,7 +202,7 @@ plot_volcano <- function(data, data_text, x, y, color, label) {
 #' @param ... Arguments passed on to [dge_list()].
 #' @return See [dge_list()].
 #' @export
-dgeList <- function(...) {
+dgeList <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "dgeList()", "dge_list()")
   dge_list(...)
 }
@@ -210,7 +218,7 @@ dgeList <- function(...) {
 #' @param ... Arguments passed on to [process_dge_list()].
 #' @return See [process_dge_list()].
 #' @export
-dprocess_dgeList <- function(...) {
+dprocess_dgeList <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "dprocess_dgeList()", "process_dge_list()")
   process_dge_list(...)
 }
@@ -226,7 +234,7 @@ dprocess_dgeList <- function(...) {
 #' @param ... Arguments passed on to [limma_fit()].
 #' @return See [limma_fit()].
 #' @export
-limmaFit <- function(...) {
+limmaFit <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "limmaFit()", "limma_fit()")
   limma_fit(...)
 }
@@ -242,7 +250,7 @@ limmaFit <- function(...) {
 #' @param ... Arguments passed on to [plot_volcano()].
 #' @return See [plot_volcano()].
 #' @export
-plotVolcano <- function(...) {
+plotVolcano <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "plotVolcano()", "plot_volcano()")
   plot_volcano(...)
 }

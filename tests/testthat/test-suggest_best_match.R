@@ -21,10 +21,10 @@ test_that("fuzzy matching catches typos within threshold", {
   expect_equal(suggest_best_match("Macrophagee", choices), "Macrophage")
 })
 
-test_that("fuzzy matching with ignore.case = FALSE", {
+test_that("fuzzy matching with ignore_case = FALSE", {
   choices <- c("Monocyte", "Macrophage")
   expect_equal(
-    suggest_best_match("monocyte", choices, ignore.case = FALSE),
+    suggest_best_match("monocyte", choices, ignore_case = FALSE),
     "Monocyte"
   )
 })

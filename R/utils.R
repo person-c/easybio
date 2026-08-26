@@ -178,7 +178,7 @@ set_savedir <- function(...) {
   savedir <- file.path(...)
   if (!dir.exists(savedir)) dir.create(savedir, recursive = TRUE)
 
-  return(savedir)
+  savedir
 }
 
 #' Perform Operations in a Specified Directory and Return to the Original Directory
@@ -265,7 +265,7 @@ available_ele <- function(data, col_name, subset) {
 #'   Defaults to 1.
 #' @param threshold An integer; the maximum Levenshtein distance to consider a
 #'   choice a "close" match. A lower value is stricter. Defaults to 2.
-#' @param ignore.case A logical value. If `TRUE`, matching is case-insensitive.
+#' @param ignore_case A logical value. If `TRUE`, matching is case-insensitive.
 #'   Defaults to `TRUE`.
 #' @param return_distance A logical value. If `TRUE`, the output is a data.frame
 #'   containing the suggestions and their calculated distance/score. Defaults to
@@ -317,7 +317,7 @@ suggest_best_match <- function(x,
                                choices,
                                n = 1,
                                threshold = 2,
-                               ignore.case = TRUE,
+                               ignore_case = TRUE,
                                return_distance = FALSE) {
   # --- 1. Input Validation and Normalization ---
   stopifnot(
@@ -330,8 +330,8 @@ suggest_best_match <- function(x,
   }
 
   # Normalize input and choices
-  input_norm <- if (ignore.case) tolower(trimws(x)) else trimws(x)
-  choices_norm <- if (ignore.case) tolower(trimws(choices)) else trimws(choices)
+  input_norm <- if (ignore_case) tolower(trimws(x)) else trimws(x)
+  choices_norm <- if (ignore_case) tolower(trimws(choices)) else trimws(choices)
 
   # --- 2. Exact Match ---
   exact_match_idx <- which(choices_norm == input_norm)
@@ -399,7 +399,7 @@ suggest_best_match <- function(x,
 #' @param ... Arguments passed on to [set_colnames()].
 #' @return See [set_colnames()].
 #' @export
-setcolnames <- function(...) {
+setcolnames <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "setcolnames()", "set_colnames()")
   set_colnames(...)
 }
@@ -415,7 +415,7 @@ setcolnames <- function(...) {
 #' @param ... Arguments passed on to [set_rownames()].
 #' @return See [set_rownames()].
 #' @export
-setrownames <- function(...) {
+setrownames <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "setrownames()", "set_rownames()")
   set_rownames(...)
 }
@@ -431,7 +431,7 @@ setrownames <- function(...) {
 #' @param ... Arguments passed on to [list_to_dt()].
 #' @return See [list_to_dt()].
 #' @export
-list2dt <- function(...) {
+list2dt <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "list2dt()", "list_to_dt()")
   list_to_dt(...)
 }
@@ -447,7 +447,7 @@ list2dt <- function(...) {
 #' @param ... Arguments passed on to [list_to_graph()].
 #' @return See [list_to_graph()].
 #' @export
-list2graph <- function(...) {
+list2graph <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "list2graph()", "list_to_graph()")
   list_to_graph(...)
 }
@@ -463,7 +463,7 @@ list2graph <- function(...) {
 #' @param ... Arguments passed on to [group_stat_i()].
 #' @return See [group_stat_i()].
 #' @export
-groupStatI <- function(...) {
+groupStatI <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "groupStatI()", "group_stat_i()")
   group_stat_i(...)
 }
@@ -479,7 +479,7 @@ groupStatI <- function(...) {
 #' @param ... Arguments passed on to [group_stat()].
 #' @return See [group_stat()].
 #' @export
-groupStat <- function(...) {
+groupStat <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "groupStat()", "group_stat()")
   group_stat(...)
 }
@@ -495,7 +495,7 @@ groupStat <- function(...) {
 #' @param ... Arguments passed on to [set_savedir()].
 #' @return See [set_savedir()].
 #' @export
-setSavedir <- function(...) {
+setSavedir <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "setSavedir()", "set_savedir()")
   set_savedir(...)
 }
@@ -511,7 +511,7 @@ setSavedir <- function(...) {
 #' @param ... Arguments passed on to [work_in()].
 #' @return See [work_in()].
 #' @export
-workIn <- function(...) {
+workIn <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "workIn()", "work_in()")
   work_in(...)
 }
