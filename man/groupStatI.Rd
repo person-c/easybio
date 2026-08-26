@@ -2,26 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{groupStatI}
 \alias{groupStatI}
-\title{Perform Summary Analysis by Group Using an column Index}
+\title{Summarize Data by Group Using an Index (Deprecated)}
 \usage{
-groupStatI(f, x, idx)
+groupStatI(...)
 }
 \arguments{
-\item{f}{A function that takes a single argument and returns a summary of the data.}
-
-\item{x}{A data frame or matrix containing the data to be summarized.}
-
-\item{idx}{A list of indices or group names that define the column groups.}
+\item{...}{Arguments passed on to \code{\link[=group_stat_i]{group_stat_i()}}.}
 }
 \value{
-A list containing the summary statistics for each group.
+See \code{\link[=group_stat_i]{group_stat_i()}}.
 }
 \description{
-This function applies a specified function to each group defined by an column index,
-and returns a summary of the results. It is useful for summarizing data by
-group when the groups are defined by an  column index.
-}
-\examples{
-library(easybio)
-groupStatI(f = \(x) x + 1, x = mtcars, idx = list(c(1, 10), 2))
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{groupStatI()} was renamed to \code{\link[=group_stat_i]{group_stat_i()}} to follow the snake_case
+naming style. It will be removed in the next version.
 }

@@ -2,22 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{workIn}
 \alias{workIn}
-\title{Perform Operations in a Specified Directory and Return to the Original Directory}
+\title{Perform Operations in a Directory (Deprecated)}
 \usage{
-workIn(dir, expr)
+workIn(...)
 }
 \arguments{
-\item{dir}{The directory path in which to operate. If the directory does not exist,
-it will be created recursively.}
-
-\item{expr}{An R expression to be evaluated within the specified directory.}
+\item{...}{Arguments passed on to \code{\link[=work_in]{work_in()}}.}
 }
 \value{
-The result of evaluating the expression within the specified directory.
+See \code{\link[=work_in]{work_in()}}.
 }
 \description{
-This function allows you to perform operations in a specified directory and then
-return to the original directory. It is useful when you need to work with files or
-directories that are located in a specific location, but you want to return to the
-original working directory after the operation is complete.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{workIn()} was renamed to \code{\link[=work_in]{work_in()}} to follow the snake_case naming
+style. It will be removed in the next version.
 }

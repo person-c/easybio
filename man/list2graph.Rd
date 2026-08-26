@@ -2,20 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{list2graph}
 \alias{list2graph}
-\title{Convert a Named List into a Graph Based on Overlap}
+\title{Convert a Named List into a Graph (Deprecated)}
 \usage{
-list2graph(nodes)
+list2graph(...)
 }
 \arguments{
-\item{nodes}{A named list where each element is a vector.}
+\item{...}{Arguments passed on to \code{\link[=list_to_graph]{list_to_graph()}}.}
 }
 \value{
-A data.table representing the graph, with columns for the node names
-(\code{node_1} and \code{node_2}) and the weight of the edge (\code{interWeight}).
+See \code{\link[=list_to_graph]{list_to_graph()}}.
 }
 \description{
-This function creates a graph from a named list, where the edges are determined
-by the overlap between the elements of the list. Each node in the graph represents
-an element of the list, and the weight of the edge between two nodes is the number
-of overlapping elements between the two corresponding lists.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{list2graph()} was renamed to \code{\link[=list_to_graph]{list_to_graph()}} to follow the snake_case
+naming style. It will be removed in the next version.
 }

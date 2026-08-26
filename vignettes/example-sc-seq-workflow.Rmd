@@ -162,9 +162,9 @@ print(custom_ref_list)
 ```
 
 **Step 2: Convert the list to the required data.frame format.**
-`easybio` provides the `list2dt` helper function for this.
+`easybio` provides the `list_to_dt` helper function for this.
 ```{r}
-custom_ref_df <- list2dt(custom_ref_list, col_names = c("cell_name", "marker"))
+custom_ref_df <- list_to_dt(custom_ref_list, col_names = c("cell_name", "marker"))
 head(custom_ref_df)
 ```
 

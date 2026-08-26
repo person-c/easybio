@@ -2,18 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{setSavedir}
 \alias{setSavedir}
-\title{Set a Directory for Saving Files}
+\title{Set a Directory for Saving Files (Deprecated)}
 \usage{
 setSavedir(...)
 }
 \arguments{
-\item{...}{Arguments to be passed to \code{file.path()} to construct the directory path.}
+\item{...}{Arguments passed on to \code{\link[=set_savedir]{set_savedir()}}.}
 }
 \value{
-The path to the newly created or existing directory.
+See \code{\link[=set_savedir]{set_savedir()}}.
 }
 \description{
-This function sets a directory path for saving files, creating the directory if it
-does not already exist. The directory path is created with the given arguments, which
-are passed directly to \code{file.path()}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{setSavedir()} was renamed to \code{\link[=set_savedir]{set_savedir()}} to follow the snake_case
+naming style. It will be removed in the next version.
 }

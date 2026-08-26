@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{setcolnames}
 \alias{setcolnames}
-\title{Rename Column Names of a Data Frame or Matrix}
+\title{Rename Column Names (Deprecated)}
 \usage{
-setcolnames(object, nm)
+setcolnames(...)
 }
 \arguments{
-\item{object}{A data frame or matrix whose column names will be renamed.}
-
-\item{nm}{A character vector containing the new names for the columns.}
+\item{...}{Arguments passed on to \code{\link[=set_colnames]{set_colnames()}}.}
 }
 \value{
-A data frame or matrix with the new column names.
+See \code{\link[=set_colnames]{set_colnames()}}.
 }
 \description{
-This function renames the column names of a data frame or matrix to the
-specified names.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{setcolnames()} was renamed to \code{\link[=set_colnames]{set_colnames()}} to follow the snake_case
+naming style. It will be removed in the next version.
 }
