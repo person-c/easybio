@@ -379,6 +379,7 @@ match_ref <- function(
 #' It will be removed in the next version.
 #'
 #' @inheritParams match_ref
+#' @param ... Arguments passed on to [match_ref()].
 #' @return See [match_ref()].
 #' @export
 matchCellMarker2 <- function(marker, n, ...) {

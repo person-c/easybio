@@ -13,6 +13,8 @@ matchCellMarker2(marker, n, ...)
 
 \item{n}{An integer specifying the number of top marker genes to use from each
 cluster for matching. Genes are ranked by \code{avg_log2FC} after filtering.}
+
+\item{...}{Arguments passed on to \code{\link[=match_ref]{match_ref()}}.}
 }
 \value{
 See \code{\link[=match_ref]{match_ref()}}.
