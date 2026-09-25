@@ -224,7 +224,8 @@ get_marker <- function(
 #'
 #' @param marker A `data.frame` or `data.table` of markers, usually the output of
 #'   `Seurat::FindAllMarkers`. It must contain columns for `cluster`, `gene`,
-#'   `avg_log2FC`, and `p_val_adj`.
+#'   `avg_log2FC`, and `p_val_adj`. If a `pct.1` column is present, the detection
+#'   rate of each matching marker is reported in the `pct_with` column of the result.
 #' @param n An integer specifying the number of top marker genes to use from each
 #'   cluster for matching. Genes are ranked by `avg_log2FC` after filtering.
 #' @param spc A character string specifying the species, either "Human" or "Mouse".
@@ -252,7 +253,9 @@ get_marker <- function(
 #' @return A `data.table` where each row represents a potential cell type match for a
 #'   cluster. The table is keyed by `cluster` and includes columns for `cluster`,
 #'   `cell_name`, `uniqueN` (number of unique matching markers), `N` (total matches),
-#'   `ordered_symbol` (matching genes, ordered by frequency), and `orderN` (their frequencies).
+#'   `ordered_symbol` (matching genes, ordered by frequency), `orderN` (their frequencies),
+#'   and `pct_with` (the `pct.1` detection rate of each matching gene, aligned with
+#'   `ordered_symbol`, `NA` when the input has no `pct.1` column).
 #'
 #'   Within each cluster, rows are ordered by decreasing `uniqueN`, then by decreasing
 #'   `N`, so the first row of a cluster is its top candidate.
@@ -323,6 +326,7 @@ match_ref <- function(
     ref = NULL) {
   . <- marker_with <- NULL
   species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL # nolint: object_name_linter.
+  ordered_symbol <- pct.1 <- pct_raw <- NULL # nolint: object_name_linter.
 
   marker <- copy(marker)
   setDT(marker)
@@ -345,7 +349,8 @@ match_ref <- function(
   }
 
   res <- marker[ref, on = "gene==marker", nomatch = NULL]
-  res <- res[, .(marker_with = .(gene), N = .N), by = .(cluster, cell_name)]
+  if (!"pct.1" %in% names(res)) res[, let(pct.1 = NA_real_)]
+  res <- res[, .(marker_with = .(gene), pct_raw = .(pct.1), N = .N), by = .(cluster, cell_name)]
   res[, let(uniqueN = vapply(marker_with, uniqueN, integer(1)))]
 
   # Candidates are ranked by the breadth of agreement (uniqueN) with N as the
@@ -355,8 +360,13 @@ match_ref <- function(
 
   res[, let(ordered_symbol = lapply(marker_with, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
   res[, let(orderN = lapply(marker_with, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
-  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "marker_with"))
+  # pct_with is the input's detection rate (pct.1) of each matched marker,
+  # aligned with ordered_symbol. It is reported for auditing only and never
+  # affects the ranking; it is NA when the input has no pct.1 column
+  res[, let(pct_with = Map(\(g, p, s) p[match(s, g)], marker_with, pct_raw, ordered_symbol))]
+  setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "pct_with"))
   res[["marker_with"]] <- NULL
+  res[["pct_raw"]] <- NULL
 
   setattr(res, "ref", ref)
   setattr(res, "is_custom_ref", is_custom_ref)

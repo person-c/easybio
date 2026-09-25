@@ -21,6 +21,26 @@ test_that("match_ref ranks candidates by uniqueN descending, then N, within each
   }
 })
 
+test_that("match_ref reports pct.1 aligned with ordered_symbol", {
+  res <- match_ref(pbmc.markers, n = 30, spc = "Human")
+
+  row <- res[cluster == 0][1]
+  expected_pct <- pbmc.markers$pct.1[match(
+    row$ordered_symbol[[1]],
+    pbmc.markers$gene[pbmc.markers$cluster == 0]
+  )]
+
+  expect_length(row$pct_with[[1]], length(row$ordered_symbol[[1]]))
+  expect_equal(row$pct_with[[1]], expected_pct)
+})
+
+test_that("match_ref reports NA pct_with when the input has no pct.1", {
+  no_pct <- pbmc.markers[, c("cluster", "gene", "avg_log2FC", "p_val_adj")]
+  res <- match_ref(no_pct, n = 30, spc = "Human")
+
+  expect_true(all(vapply(res$pct_with, function(x) all(is.na(x)), logical(1))))
+})
+
 test_that("match_ref stores ref, is_custom_ref, and filter_args as attributes", {
   res <- match_ref(pbmc.markers, n = 30, spc = "Human")
 

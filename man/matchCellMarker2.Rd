@@ -9,7 +9,8 @@ matchCellMarker2(marker, n, ...)
 \arguments{
 \item{marker}{A \code{data.frame} or \code{data.table} of markers, usually the output of
 \code{Seurat::FindAllMarkers}. It must contain columns for \code{cluster}, \code{gene},
-\code{avg_log2FC}, and \code{p_val_adj}.}
+\code{avg_log2FC}, and \code{p_val_adj}. If a \code{pct.1} column is present, the detection
+rate of each matching marker is reported in the \code{pct_with} column of the result.}
 
 \item{n}{An integer specifying the number of top marker genes to use from each
 cluster for matching. Genes are ranked by \code{avg_log2FC} after filtering.}

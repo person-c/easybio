@@ -13,6 +13,7 @@
 - `matchCellMarker2()` renamed to `match_ref()` because it also supports custom reference datasets. The old name is deprecated and will be removed in the next version.
 - the built-in annotation dataset is renamed from `cellMarker2` to `cellMarker3` (internal; reflects the CellMarker 3.0 source).
 - `match_ref()` ranks candidate cell types by `uniqueN` (breadth of matched markers) with `N` as tie-breaker instead of by `N` alone; a single heavily reported marker could otherwise outweigh a cell type matching on dozens of markers.
+- `match_ref()` reports the detection rate (`pct.1`) of each matching marker in the new `pct_with` column, aligned with `ordered_symbol` and `NA` when the input has no `pct.1`. It is provided for auditing and does not affect the ranking; filter the input table if you want detection rate to influence the annotation.
 
 # Version 1.2.3 Changes
 

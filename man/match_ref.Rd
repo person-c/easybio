@@ -18,7 +18,8 @@ match_ref(
 \arguments{
 \item{marker}{A \code{data.frame} or \code{data.table} of markers, usually the output of
 \code{Seurat::FindAllMarkers}. It must contain columns for \code{cluster}, \code{gene},
-\code{avg_log2FC}, and \code{p_val_adj}.}
+\code{avg_log2FC}, and \code{p_val_adj}. If a \code{pct.1} column is present, the detection
+rate of each matching marker is reported in the \code{pct_with} column of the result.}
 
 \item{n}{An integer specifying the number of top marker genes to use from each
 cluster for matching. Genes are ranked by \code{avg_log2FC} after filtering.}
@@ -54,7 +55,9 @@ but their original values are saved for provenance.}
 A \code{data.table} where each row represents a potential cell type match for a
 cluster. The table is keyed by \code{cluster} and includes columns for \code{cluster},
 \code{cell_name}, \code{uniqueN} (number of unique matching markers), \code{N} (total matches),
-\code{ordered_symbol} (matching genes, ordered by frequency), and \code{orderN} (their frequencies).
+\code{ordered_symbol} (matching genes, ordered by frequency), \code{orderN} (their frequencies),
+and \code{pct_with} (the \code{pct.1} detection rate of each matching gene, aligned with
+\code{ordered_symbol}, \code{NA} when the input has no \code{pct.1} column).
 
 Within each cluster, rows are ordered by decreasing \code{uniqueN}, then by decreasing
 \code{N}, so the first row of a cluster is its top candidate.
