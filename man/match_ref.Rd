@@ -56,6 +56,9 @@ cluster. The table is keyed by \code{cluster} and includes columns for \code{clu
 \code{cell_name}, \code{uniqueN} (number of unique matching markers), \code{N} (total matches),
 \code{ordered_symbol} (matching genes, ordered by frequency), and \code{orderN} (their frequencies).
 
+Within each cluster, rows are ordered by decreasing \code{uniqueN}, then by decreasing
+\code{N}, so the first row of a cluster is its top candidate.
+
 The returned object also contains important attributes for downstream analysis:
 \item{ref}{The reference data (either from \code{cellMarker3} or the custom \code{ref}) used for the annotation.}
 \item{is_custom_ref}{A logical flag indicating if a custom \code{ref} was used.}

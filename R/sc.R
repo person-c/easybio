@@ -254,6 +254,9 @@ get_marker <- function(
 #'   `cell_name`, `uniqueN` (number of unique matching markers), `N` (total matches),
 #'   `ordered_symbol` (matching genes, ordered by frequency), and `orderN` (their frequencies).
 #'
+#'   Within each cluster, rows are ordered by decreasing `uniqueN`, then by decreasing
+#'   `N`, so the first row of a cluster is its top candidate.
+#'
 #'   The returned object also contains important attributes for downstream analysis:
 #'   \item{ref}{The reference data (either from `cellMarker3` or the custom `ref`) used for the annotation.}
 #'   \item{is_custom_ref}{A logical flag indicating if a custom `ref` was used.}
@@ -343,10 +346,13 @@ match_ref <- function(
 
   res <- marker[ref, on = "gene==marker", nomatch = NULL]
   res <- res[, .(marker_with = .(gene), N = .N), by = .(cluster, cell_name)]
-  res <- res[N > 0, .SD[order(-N)], keyby = .(cluster)]
+  res[, let(uniqueN = vapply(marker_with, uniqueN, integer(1)))]
 
+  # Candidates are ranked by the breadth of agreement (uniqueN) with N as the
+  # tie-breaker: ranking by N alone lets a single heavily reported marker
+  # outweigh a cell type that matches on dozens of the cluster's markers
+  res <- res[N > 0, .SD[order(-uniqueN, -N)], keyby = .(cluster)]
 
-  res[, let(uniqueN = sapply(marker_with, FUN = \(x) uniqueN(x)))]
   res[, let(ordered_symbol = lapply(marker_with, FUN = \(x) names(sort(unclass(table(x)), TRUE))))]
   res[, let(orderN = lapply(marker_with, \(x) as.integer(sort(unclass(table(x)), TRUE))))]
   setcolorder(res, c("cluster", "cell_name", "uniqueN", "N", "ordered_symbol", "orderN", "marker_with"))

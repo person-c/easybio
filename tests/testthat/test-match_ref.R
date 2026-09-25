@@ -8,13 +8,15 @@ test_that("match_ref returns expected structure with default params", {
   expect_true(res[, is.ordered(cluster) || is.factor(cluster)])
 })
 
-test_that("match_ref results are ordered by N descending within each cluster", {
+test_that("match_ref ranks candidates by uniqueN descending, then N, within each cluster", {
   res <- match_ref(pbmc.markers, n = 30, spc = "Human")
 
   for (cl in unique(res$cluster)) {
     cluster_rows <- res[cluster == cl]
     if (nrow(cluster_rows) > 1) {
-      expect_true(all(diff(cluster_rows$N) <= 0))
+      expect_true(all(diff(cluster_rows$uniqueN) <= 0))
+      # ties on uniqueN are broken by N
+      expect_true(all(cluster_rows[, all(diff(N) <= 0), by = uniqueN][["V1"]]))
     }
   }
 })
