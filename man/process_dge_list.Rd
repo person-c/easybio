@@ -25,3 +25,7 @@ This function filters out low-expressed genes from a \code{DGEList} object and
 normalizes the count data. It also provides diagnostic plots for raw and
 filtered data.
 }
+\details{
+At most the first 10 samples are shown in the density plots, and each of them
+keeps its colour, so repeated runs give the same plots.
+}

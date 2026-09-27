@@ -37,6 +37,10 @@ dge_list <- function(count, sample_info, feature_info) {
 #' normalizes the count data. It also provides diagnostic plots for raw and
 #' filtered data.
 #'
+#' @details
+#' At most the first 10 samples are shown in the density plots, and each of them
+#' keeps its colour, so repeated runs give the same plots.
+#'
 #' @param x A `DGEList` object containing raw count data.
 #' @param group_column The name of the column in `x$samples` that contains the
 #'   grouping information for the samples.
@@ -57,25 +61,27 @@ process_dge_list <- function(x, group_column, min_count = 10) {
   keep_exprs <- edgeR::filterByExpr(x, group = x$samples[[group_column]], min.count = min_count)
   x <- x[keep_exprs, , keep.lib.sizes = FALSE]
 
-  nsamples <- ncol(x)
-  if (nsamples > 10) nsamples <- sample(ncol(x), 10)
+  # at most 10 samples, taken in order: both the subset and the line colours
+  # used to be drawn at random, so the diagnostic plots differed between runs
+  samples <- seq_len(min(ncol(x), 10L))
+  line_cols <- grDevices::rainbow(length(samples))
 
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
 
   par(mfrow = c(1, 2))
-  plot(density(lcpm[, nsamples[[1]]]), lwd = 2, ylim = c(0, 1), las = 2, main = "", xlab = "")
+  plot(density(lcpm[, samples[[1]]]), lwd = 2, ylim = c(0, 1), las = 2, main = "", xlab = "")
   title(main = "A. Raw data", xlab = "Log-cpm")
-  for (i in nsamples) {
-    den <- density(lcpm[, i])
-    lines(den$x, den$y, lwd = 2, col = sample(colors(), 1))
+  for (i in seq_along(samples)) {
+    den <- density(lcpm[, samples[[i]]])
+    lines(den$x, den$y, lwd = 2, col = line_cols[[i]])
   }
   lcpm <- edgeR::cpm(x, log = TRUE)
-  plot(density(lcpm[, nsamples[[1]]]), lwd = 2, ylim = c(0, 1), las = 2, main = "", xlab = "")
+  plot(density(lcpm[, samples[[1]]]), lwd = 2, ylim = c(0, 1), las = 2, main = "", xlab = "")
   title(main = "B. Filtered data", xlab = "Log-cpm")
-  for (i in nsamples) {
-    den <- density(lcpm[, i])
-    lines(den$x, den$y, lwd = 2, col = sample(colors(), 1))
+  for (i in seq_along(samples)) {
+    den <- density(lcpm[, samples[[i]]])
+    lines(den$x, den$y, lwd = 2, col = line_cols[[i]])
   }
 
 
