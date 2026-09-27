@@ -681,25 +681,90 @@ plot_marker_distribution <- function(mkr = character()) {
 
 #' Plot Possible Cell Distribution Based on match_ref() Results
 #'
-#' This function creates a dot plot to visualize the distribution of possible cell types
+#' This function creates a plot to visualize the distribution of possible cell types
 #' based on the results from the `match_ref()` function, utilizing data from the CellMarker 3.0 database.
 #'
 #' @param marker data.table, the result from the `match_ref()` function.
 #' @param min_unique_n integer, the minimum number of unique marker genes that
 #'   must be matched for a cell type to be included in the plot. Default is 2.
+#' @param value character, the measure shown for each candidate cell type:
+#'   \itemize{
+#'     \item `"N"` (the default) the total number of matched reference entries,
+#'     \item `"uniqueN"` the number of unique matching markers, i.e. the measure
+#'       `match_ref()` ranks the candidates by,
+#'     \item `"pct"` the share of the matching markers that are actually detected
+#'       in the cluster (see `min_pct`). This is the evidence check: a candidate
+#'       can match a dozen markers and still rest on only two of them being
+#'       expressed.
+#'   }
+#'   The first two are drawn as points sized and coloured by the measure; `"pct"`
+#'   is drawn as tiles filled by the share and labelled with `uniqueN`. The fill
+#'   is scaled to the shares in the plot, so the palest tiles are the candidates
+#'   resting on the fewest detected markers whatever the overall level is; the
+#'   legend reports the range, and the exact shares are in `pct_with`.
+#' @param min_pct numeric between 0 and 1, the detection rate a matching marker
+#'   has to reach to count as detected when `value = "pct"`. Defaults to `0.25`
+#'   and is ignored for the other values. Note that this reads the detection rate
+#'   recorded in the input of `match_ref()` (`pct.1` of `Seurat::FindAllMarkers()`),
+#'   not the one `Seurat::DotPlot()` computes from the Seurat object.
 #'
 #' @return A ggplot2 object representing the distribution of possible cell types.
 #' @import ggplot2
 #' @export
-plot_possible_cell <- function(marker, min_unique_n = 2) {
-  cluster <- cell_name <- N <- NULL # nolint: object_name_linter.
-  p <- ggplot(marker[uniqueN > min_unique_n], aes(x = cell_name, y = cluster)) +
-    geom_point(aes(size = N, color = N)) +
-    scale_x_discrete(guide = guide_axis(angle = 60)) +
-    scale_color_distiller(direction = 1) +
-    theme_publication()
+plot_possible_cell <- function(
+    marker, min_unique_n = 2,
+    value = c("N", "uniqueN", "pct"),
+    min_pct = 0.25) {
+  . <- cluster <- cell_name <- N <- uniqueN <- pct_with <- pct_supported <- NULL # nolint: object_name_linter.
+  value <- match.arg(value)
+  assert_number(min_pct, lower = 0, upper = 1)
 
-  p
+  # subsetting also breaks the reference to the caller's object, so the
+  # pct_supported column added below never modifies it in place
+  marker <- marker[uniqueN >= min_unique_n]
+
+  if (value == "pct") {
+    assert_subset("pct_with", choices = names(marker))
+    if (all(vapply(marker[["pct_with"]], \(x) all(is.na(x)), logical(1)))) {
+      stop(
+        "'marker' carries no detection rate ('pct_with' is all NA), so ",
+        "value = \"pct\" cannot be computed. This happens when the input of ",
+        "match_ref() has no 'pct.1' column. Use value = \"uniqueN\" instead.",
+        call. = FALSE
+      )
+    }
+    # build the plotting frame with a j-expression: adding a column by reference
+    # to a cellmarker_match object can silently lose it, and this also drops the
+    # list columns the plot does not need
+    marker <- marker[, .(
+      cluster, cell_name, uniqueN,
+      pct_supported = vapply(pct_with, \(x) mean(!is.na(x) & x >= min_pct), numeric(1))
+    )]
+
+    p <- ggplot(marker, aes(x = cell_name, y = cluster)) +
+      geom_tile(aes(fill = pct_supported), color = "white") +
+      geom_text(aes(label = uniqueN), size = 2.5) +
+      # scaled to the data rather than to a fixed 0-1 domain: shares are often
+      # low across the board, and a fixed domain would then collapse every tile
+      # into the palest end of the scale. The legend reports the actual range,
+      # so the colour is read relative to the candidates in this plot
+      scale_fill_distiller(
+        palette = "Blues", direction = 1,
+        name = sprintf("markers with pct >= %s", min_pct)
+      )
+  } else {
+    p <- ggplot(marker, aes(x = cell_name, y = cluster))
+    p <- if (value == "N") {
+      p + geom_point(aes(size = N, color = N))
+    } else {
+      p + geom_point(aes(size = uniqueN, color = uniqueN))
+    }
+    p <- p + scale_color_distiller(direction = 1)
+  }
+
+  p +
+    scale_x_discrete(guide = guide_axis(angle = 60)) +
+    theme_publication()
 }
 
 

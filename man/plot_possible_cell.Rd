@@ -4,18 +4,45 @@
 \alias{plot_possible_cell}
 \title{Plot Possible Cell Distribution Based on match_ref() Results}
 \usage{
-plot_possible_cell(marker, min_unique_n = 2)
+plot_possible_cell(
+  marker,
+  min_unique_n = 2,
+  value = c("N", "uniqueN", "pct"),
+  min_pct = 0.25
+)
 }
 \arguments{
 \item{marker}{data.table, the result from the \code{match_ref()} function.}
 
 \item{min_unique_n}{integer, the minimum number of unique marker genes that
 must be matched for a cell type to be included in the plot. Default is 2.}
+
+\item{value}{character, the measure shown for each candidate cell type:
+\itemize{
+\item \code{"N"} (the default) the total number of matched reference entries,
+\item \code{"uniqueN"} the number of unique matching markers, i.e. the measure
+\code{match_ref()} ranks the candidates by,
+\item \code{"pct"} the share of the matching markers that are actually detected
+in the cluster (see \code{min_pct}). This is the evidence check: a candidate
+can match a dozen markers and still rest on only two of them being
+expressed.
+}
+The first two are drawn as points sized and coloured by the measure; \code{"pct"}
+is drawn as tiles filled by the share and labelled with \code{uniqueN}. The fill
+is scaled to the shares in the plot, so the palest tiles are the candidates
+resting on the fewest detected markers whatever the overall level is; the
+legend reports the range, and the exact shares are in \code{pct_with}.}
+
+\item{min_pct}{numeric between 0 and 1, the detection rate a matching marker
+has to reach to count as detected when \code{value = "pct"}. Defaults to \code{0.25}
+and is ignored for the other values. Note that this reads the detection rate
+recorded in the input of \code{match_ref()} (\code{pct.1} of \code{Seurat::FindAllMarkers()}),
+not the one \code{Seurat::DotPlot()} computes from the Seurat object.}
 }
 \value{
 A ggplot2 object representing the distribution of possible cell types.
 }
 \description{
-This function creates a dot plot to visualize the distribution of possible cell types
+This function creates a plot to visualize the distribution of possible cell types
 based on the results from the \code{match_ref()} function, utilizing data from the CellMarker 3.0 database.
 }

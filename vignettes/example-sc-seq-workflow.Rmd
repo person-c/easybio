@@ -68,6 +68,13 @@ We can also get a global view of all possible annotations using `plot_possible_c
 plot_possible_cell(marker_matched[, head(.SD), by = .(cluster)], min_unique_n = 2)
 ```
 
+The same view can be coloured by how well the evidence is actually detected. With `value = "pct"` the fill shows the share of each candidate's matched markers whose detection rate reaches `min_pct`, which is the quickest way to spot annotations that rest on barely expressed genes.
+
+```{r}
+#| fig.width=10
+plot_possible_cell(marker_matched[, head(.SD), by = .(cluster)], min_unique_n = 2, value = "pct")
+```
+
 ## Step 2: Verification and Exploration
 
 This is the most critical step. Instead of blindly trusting the automated result, we use `easybio`'s tools to verify it.
