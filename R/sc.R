@@ -228,6 +228,15 @@ get_marker <- function(
 #'   change for a marker to be considered. Defaults to `0`.
 #' @param p_val_adj_threshold A numeric value setting the maximum adjusted p-value
 #'   for a marker to be considered. Defaults to `0.05`.
+#' @param min_pct An optional numeric value between 0 and 1. When given, markers
+#'   whose detection rate in the cluster they were found for (`pct.1`) is below
+#'   `min_pct` are dropped before matching, so that an annotation cannot rest on
+#'   genes that are barely detected. `NA` detection rates are dropped as well.
+#'   Defaults to `NULL` (no filtering), which keeps the behaviour of earlier
+#'   versions. It is ignored, with a message, if `marker` has no `pct.1` column.
+#'   Note that `Seurat::FindAllMarkers(min.pct = )` cannot replace this: it gates
+#'   which genes are tested in either population, so a gene detected in a few
+#'   cells of the cluster can still end up as a positive marker.
 #' @param tissue_class A character vector of tissue classes to include from the
 #'   `cellMarker3` database. Defaults to all available tissue classes for the
 #'   specified species. This parameter is ignored if a custom `ref` is provided.
@@ -313,6 +322,7 @@ match_ref <- function(
     marker, n,
     avg_log2fc_threshold = 0,
     p_val_adj_threshold = 0.05,
+    min_pct = NULL,
     spc,
     tissue_class = available_tissue_class(spc),
     tissue_type = available_tissue_type(spc),
@@ -321,8 +331,27 @@ match_ref <- function(
   species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL # nolint: object_name_linter.
   ordered_symbol <- pct.1 <- pct_raw <- NULL # nolint: object_name_linter.
 
+  assert_number(min_pct, lower = 0, upper = 1, null.ok = TRUE)
+
   marker <- copy(marker)
   setDT(marker)
+
+  # A marker that is barely detected in the cluster it was found for is weak
+  # evidence for an annotation, but Seurat's own min.pct cannot rule it out: it
+  # gates the tests on either population and the fold change is computed from
+  # average expression, so a gene detected in a handful of cells can still be a
+  # positive marker. Filtering here keeps the ranking honest instead of hiding
+  # the problem in the plots.
+  if (!is.null(min_pct)) {
+    if ("pct.1" %chin% names(marker)) {
+      marker <- marker[!is.na(pct.1) & pct.1 >= min_pct]
+    } else {
+      message(
+        "'marker' has no 'pct.1' column, so 'min_pct' is ignored. ",
+        "Filtering by detection rate needs the 'pct.1' column of Seurat::FindAllMarkers()."
+      )
+    }
+  }
 
   marker <- marker[
     avg_log2FC >= avg_log2fc_threshold & p_val_adj <= p_val_adj_threshold,
@@ -368,7 +397,8 @@ match_ref <- function(
     marker_filter = c(
       n = n,
       avg_log2fc_threshold = avg_log2fc_threshold,
-      p_val_adj_threshold = p_val_adj_threshold
+      p_val_adj_threshold = p_val_adj_threshold,
+      min_pct = min_pct # dropped by c() when NULL, i.e. when not applied
     ),
     cellmarker3_filter = list(
       spc = if (missing(spc)) NULL else spc,

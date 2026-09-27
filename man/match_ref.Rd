@@ -9,6 +9,7 @@ match_ref(
   n,
   avg_log2fc_threshold = 0,
   p_val_adj_threshold = 0.05,
+  min_pct = NULL,
   spc,
   tissue_class = available_tissue_class(spc),
   tissue_type = available_tissue_type(spc),
@@ -29,6 +30,16 @@ change for a marker to be considered. Defaults to \code{0}.}
 
 \item{p_val_adj_threshold}{A numeric value setting the maximum adjusted p-value
 for a marker to be considered. Defaults to \code{0.05}.}
+
+\item{min_pct}{An optional numeric value between 0 and 1. When given, markers
+whose detection rate in the cluster they were found for (\code{pct.1}) is below
+\code{min_pct} are dropped before matching, so that an annotation cannot rest on
+genes that are barely detected. \code{NA} detection rates are dropped as well.
+Defaults to \code{NULL} (no filtering), which keeps the behaviour of earlier
+versions. It is ignored, with a message, if \code{marker} has no \code{pct.1} column.
+Note that \code{Seurat::FindAllMarkers(min.pct = )} cannot replace this: it gates
+which genes are tested in either population, so a gene detected in a few
+cells of the cluster can still end up as a positive marker.}
 
 \item{spc}{A character string specifying the species, either "Human" or "Mouse".
 This is used to filter the \code{cellMarker3} database. This parameter is ignored

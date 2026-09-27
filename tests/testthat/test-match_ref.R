@@ -89,6 +89,43 @@ test_that("match_ref filters by p_val_adj threshold", {
   expect_true(nrow(res_strict) > 0)
 })
 
+test_that("match_ref drops markers below min_pct", {
+  loose <- match_ref(pbmc.markers, n = 50, spc = "Human")
+  strict <- match_ref(pbmc.markers, n = 50, spc = "Human", min_pct = 0.5)
+
+  # every marker kept as evidence is detected in at least half of the cluster
+  expect_true(all(vapply(strict$pct_with, \(x) all(is.na(x) | x >= 0.5), logical(1))))
+
+  # n is applied after the gate, so the markers used are not a subset: genes
+  # ranked below the cut move into the top n once the weak ones are gone
+  expect_false(identical(
+    sort(unique(unlist(loose$ordered_symbol))),
+    sort(unique(unlist(strict$ordered_symbol)))
+  ))
+
+  # min_pct = 0 keeps everything
+  expect_equal(match_ref(pbmc.markers, n = 50, spc = "Human", min_pct = 0)$uniqueN, loose$uniqueN)
+})
+
+test_that("match_ref records min_pct for provenance and validates it", {
+  res <- match_ref(pbmc.markers, n = 10, spc = "Human", min_pct = 0.25)
+  expect_equal(attr(res, "filter_args")$marker_filter[["min_pct"]], 0.25)
+
+  # not applied -> nothing recorded (c() drops the NULL, so the entry is absent)
+  plain <- match_ref(pbmc.markers, n = 10, spc = "Human")
+  expect_false("min_pct" %in% names(attr(plain, "filter_args")$marker_filter))
+
+  expect_error(match_ref(pbmc.markers, n = 10, spc = "Human", min_pct = 2), "min_pct")
+  expect_error(match_ref(pbmc.markers, n = 10, spc = "Human", min_pct = "0.5"), "min_pct")
+})
+
+test_that("match_ref ignores min_pct with a message when pct.1 is missing", {
+  no_pct <- pbmc.markers[, c("cluster", "gene", "avg_log2FC", "p_val_adj")]
+
+  expect_message(res <- match_ref(no_pct, n = 10, spc = "Human", min_pct = 0.5), "min_pct")
+  expect_equal(nrow(res), nrow(match_ref(no_pct, n = 10, spc = "Human")))
+})
+
 test_that("match_ref returns empty dt when no markers pass filter", {
   res <- match_ref(pbmc.markers,
     n = 10, spc = "Human",
