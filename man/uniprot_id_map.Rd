@@ -4,13 +4,20 @@
 \alias{uniprot_id_map}
 \title{Map UniProt IDs to Other Identifiers}
 \usage{
-uniprot_id_map(...)
+uniprot_id_map(..., timeout = 60, interval = 2)
 }
 \arguments{
 \item{...}{Parameters to be passed in the request body.}
+
+\item{timeout}{Numeric, how many seconds to wait for the mapping job to
+finish. Defaults to 60; large submissions can take considerably longer.}
+
+\item{interval}{Numeric, how many seconds to wait between status requests.
+Defaults to 2.}
 }
 \value{
-A \code{data.table} containing the mapped identifiers.
+A \code{data.table} containing the mapped identifiers. \code{NULL}, with a
+warning, if the job did not finish within \code{timeout}.
 }
 \description{
 This function maps UniProt IDs to other identifiers using UniProt's ID mapping service.
