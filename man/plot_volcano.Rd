@@ -9,7 +9,9 @@ plot_volcano(data, data_text, x, y, color, label)
 \arguments{
 \item{data}{A data frame containing the DEGs result.}
 
-\item{data_text}{A data frame containing labeled data for text annotation.}
+\item{data_text}{An optional data frame of genes to label. When given, the
+labels are added to the same plot; \code{x}, \code{y} and \code{label} are mapped for it
+as well, so the columns must be named like the ones in \code{data}.}
 
 \item{x}{variable representing the aesthetic for the x-axis.}
 

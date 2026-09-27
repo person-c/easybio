@@ -170,7 +170,9 @@ limma_fit <- function(x, group_column) {
 #' different aesthetic parameters.
 #'
 #' @param data A data frame containing the DEGs result.
-#' @param data_text A data frame containing labeled data for text annotation.
+#' @param data_text An optional data frame of genes to label. When given, the
+#'   labels are added to the same plot; `x`, `y` and `label` are mapped for it
+#'   as well, so the columns must be named like the ones in `data`.
 #' @param x variable representing the aesthetic for the x-axis.
 #' @param y variable representing the aesthetic for the y-axis.
 #' @param color variable representing the column name for the color aesthetic.
@@ -189,7 +191,9 @@ plot_volcano <- function(data, data_text, x, y, color, label) {
     )
 
   if (!missing(data_text)) {
-    p + ggrepel::geom_text_repel(
+    # the labels have to be assigned back, otherwise the plot is built and
+    # thrown away, and the caller gets the unlabelled plot
+    p <- p + ggrepel::geom_text_repel(
       data = data_text, aes(label = {{ label }}),
       arrow = arrow(length = unit(0.1, "cm")),
       max.overlaps = 20,
