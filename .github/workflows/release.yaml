@@ -1,0 +1,58 @@
+# Publishes a GitHub release whenever a version tag is pushed. `make release`
+# bumps the version, commits, and pushes such a tag, so the release is created
+# without needing anything but git on the machine doing the release.
+
+on:
+  push:
+    tags: ["v*"]
+
+name: release.yaml
+
+permissions:
+  contents: write # to create the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          needs: check
+
+      - name: Build the source tarball
+        run: R CMD build .
+
+      - name: Take the release notes from NEWS.md
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" \
+            '$0 ~ "^# Version " v " Changes" {found = 1; next}
+             found && /^# Version / {exit}
+             found {print}' NEWS.md > notes.md
+          echo "--- notes.md ---"
+          cat notes.md
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          if [ -s notes.md ]; then
+            gh release create "$tag" --title "$tag" --notes-file notes.md *.tar.gz
+          else
+            echo "no NEWS.md section for $tag, falling back to generated notes"
+            gh release create "$tag" --title "$tag" --generate-notes *.tar.gz
+          fi
