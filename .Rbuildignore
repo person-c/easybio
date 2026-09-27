@@ -13,3 +13,4 @@
 ^\.claude$
 ^\.vscode$
 ^codecov\.yml$
+^Makefile$

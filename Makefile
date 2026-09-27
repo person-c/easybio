@@ -1,7 +1,14 @@
 # easybio -- maintainer shortcuts
 #
 # Needs `make` on PATH. On Windows, Rtools ships one; if `make` is not found,
-# add its folder, e.g. C:/rtools45/usr/bin, to PATH.
+# add its folder, e.g. C:/rtools45/usr/bin, to PATH (append it, so that R's own
+# DLLs keep winning).
+#
+# Windows caveat: Rtools' make is an msys build and on some setups it cannot
+# launch R at all -- every R process it starts dies with a segmentation fault
+# on exit, even `R --version`, while the same command run directly is fine. If
+# a target reports "Segmentation fault" *after* printing its results, that is
+# this. A native make (ezwinports) does not have the problem.
 #
 # `make` on its own lists the targets below.
 
@@ -23,7 +30,7 @@ readme: ## knit README.Rmd into README.md with litedown
 	$(R) -e "litedown::fuse('README.Rmd')"
 
 test: ## run the testthat suite
-	$(R) -e "devtools::test()"
+	$(R) -e "testthat::test_local()"
 
 lint: ## lint the package; run `make install` first, lintr resolves imports against the installed package
 	$(R) -e "print(lintr::lint_package())"
