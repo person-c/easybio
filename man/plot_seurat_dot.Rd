@@ -44,7 +44,7 @@ counts <- matrix(
 rownames(counts) <- marker_genes
 colnames(counts) <- paste0("cell_", 1:50)
 
-srt <- Createseurat_object(counts = counts)
+srt <- Seurat::CreateSeuratObject(counts = counts)
 srt$seurat_clusters <- sample(0:3, 50, replace = TRUE)
 Idents(srt) <- "seurat_clusters"
 

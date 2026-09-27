@@ -592,7 +592,7 @@ check_marker <- function(
 #' rownames(counts) <- marker_genes
 #' colnames(counts) <- paste0("cell_", 1:50)
 #'
-#' srt <- Createseurat_object(counts = counts)
+#' srt <- Seurat::CreateSeuratObject(counts = counts)
 #' srt$seurat_clusters <- sample(0:3, 50, replace = TRUE)
 #' Idents(srt) <- "seurat_clusters"
 #'
@@ -616,8 +616,9 @@ plot_seurat_dot <- function(features, srt, split = FALSE, ...) {
           guide = guide_axis(
             angle = 60,
           )
-        )
-      xlab("")
+        ) +
+        # this used to be a statement of its own, so the label was never removed
+        xlab("")
     }
 
     res <- patchwork::plot_layout(
@@ -625,7 +626,6 @@ plot_seurat_dot <- function(features, srt, split = FALSE, ...) {
       guides = "collect"
     )
 
-    res
     return(res)
   }
 
