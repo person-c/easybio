@@ -14,10 +14,21 @@ the grouping information for the samples.}
 }
 \value{
 An \code{eBayes} object containing the fitted linear model and
-results of the differential expression analysis.
+results of the differential expression analysis. The design and contrast
+matrices are attached as the \code{design} and \code{contrast} attributes.
 }
 \description{
 This function fits a linear model to processed \code{DGEList} data using the
 \code{limma} package. It defines contrasts between groups and performs
 differential expression analysis.
+}
+\details{
+\code{limma::makeContrasts()} only accepts syntactically valid names, so the group
+labels are normalised with \code{\link[=make.names]{make.names()}} (the design's coefficient names
+with them). Labels that are not valid R names, such as the TCGA sample types
+\code{"Primary Tumor"} and \code{"Solid Tissue Normal"}, would otherwise fail: building
+the contrasts as expressions from those labels either does not parse or
+silently turns \code{"Non-tumor" - "Tumor"} into a subtraction of three symbols.
+The contrasts keep the original labels in their names, e.g.
+\code{"Primary TumorvsSolid Tissue Normal"}.
 }

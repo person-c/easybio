@@ -107,12 +107,23 @@ process_dge_list <- function(x, group_column, min_count = 10) {
 #' `limma` package. It defines contrasts between groups and performs
 #' differential expression analysis.
 #'
+#' @details
+#' `limma::makeContrasts()` only accepts syntactically valid names, so the group
+#' labels are normalised with [make.names()] (the design's coefficient names
+#' with them). Labels that are not valid R names, such as the TCGA sample types
+#' `"Primary Tumor"` and `"Solid Tissue Normal"`, would otherwise fail: building
+#' the contrasts as expressions from those labels either does not parse or
+#' silently turns `"Non-tumor" - "Tumor"` into a subtraction of three symbols.
+#' The contrasts keep the original labels in their names, e.g.
+#' `"Primary TumorvsSolid Tissue Normal"`.
+#'
 #' @param x A processed `DGEList` object containing normalized count data.
 #' @param group_column The name of the column in `x$samples` that contains
 #'   the grouping information for the samples.
 #'
 #' @return An `eBayes` object containing the fitted linear model and
-#'   results of the differential expression analysis.
+#'   results of the differential expression analysis. The design and contrast
+#'   matrices are attached as the `design` and `contrast` attributes.
 #' @export
 limma_fit <- function(x, group_column) {
   oldpar <- par(no.readonly = TRUE)
@@ -126,12 +137,17 @@ limma_fit <- function(x, group_column) {
   }
 
   design <- model.matrix(~ 0 + x$samples[[group_column]])
-  colnames(design) <- gsub(".*\\]\\]", "", colnames(design))
+  colnames(design) <- make.names(gsub(".*\\]\\]", "", colnames(design)))
 
-  all_vs <- utils::combn(unique(x$samples[[group_column]]), 2, simplify = TRUE)
-  all_vs2 <- str2expression(paste0(all_vs[1, ], "-", all_vs[2, ]))
-  all_vs2 <- setNames(as.list(all_vs2), paste0(all_vs[1, ], "vs", all_vs[2, ]))
-  contr_matrix <- do.call(limma::makeContrasts, c(all_vs2, levels = list(colnames(design))))
+  group_labels <- as.character(unique(x$samples[[group_column]]))
+  group_levels <- make.names(group_labels)
+  pairs <- utils::combn(seq_along(group_levels), 2)
+  contr_strings <- paste0(group_levels[pairs[1, ]], "-", group_levels[pairs[2, ]])
+
+  contr_matrix <- limma::makeContrasts(contrasts = contr_strings, levels = design)
+  # makeContrasts() names the columns after the contrast strings, so restore the
+  # "AvsB" names built from the original labels
+  colnames(contr_matrix) <- paste0(group_labels[pairs[1, ]], "vs", group_labels[pairs[2, ]])
 
   par(mfrow = c(1, 2))
   v <- limma::voom(x, design, plot = TRUE)
