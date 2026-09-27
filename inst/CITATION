@@ -1,11 +1,29 @@
+citHeader("To cite easybio in publications use:")
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "easybio: Comprehensive Single-Cell Annotation and Transcriptomic Analysis Toolkit",
+  author   = person(
+    given = "Wei", family = "Cui",
+    email = "m2c.w@outlook.com", role = c("aut", "cre")
+  ),
+  year     = 2026,
+  note     = paste("R package version", meta$Version),
+  url      = "https://github.com/person-c/easybio"
+)
+
 bibentry(
   bibtype  = "Article",
   title    = "easybio: an R Package for Single-Cell Annotation with CellMarker2.0",
-  author   =  person("Wei Cui"),
+  author   = person(given = "Wei", family = "Cui"),
   journal  = "bioRxiv",
   year     = 2024,
-  volume   = "",
-  number   = "",
-  pages    = "",
   doi      = "10.1101/2024.09.14.609619"
+)
+
+citFooter(
+  "The preprint above describes the workflow as it was built on CellMarker 2.0.",
+  "Since version 1.3.0 the package annotates against CellMarker 3.0, and the",
+  "citation for the annotation database is available from",
+  "https://bio-bigdata.hrbmu.edu.cn/CellMarker/."
 )
