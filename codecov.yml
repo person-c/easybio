@@ -1,0 +1,21 @@
+# Codecov configuration -- https://docs.codecov.com/docs/codecov-yaml
+#
+# The report is meant to be read, not to gate every pull request: the statuses
+# below allow a small drop before they turn red, and nothing here is required
+# by branch protection.
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto # compare against the base commit
+        threshold: 2%
+    patch:
+      default:
+        target: auto
+        threshold: 5%
+
+comment:
+  # report what the pull request touches and how much of it is covered
+  layout: "reach, diff, files"
+  require_changes: false

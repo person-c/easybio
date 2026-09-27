@@ -56,5 +56,9 @@ jobs:
 
       - name: Test coverage
         if: success() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
-        run: covr::codecov(token = if (Sys.getenv("CODECOV_TOKEN") == "") "" else Sys.getenv("CODECOV_TOKEN"))
+        # the upload is informative only: a codecov outage must not fail the build
+        continue-on-error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: covr::codecov()
         shell: Rscript {0}

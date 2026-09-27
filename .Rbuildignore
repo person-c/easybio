@@ -12,3 +12,4 @@
 ^data-raw$
 ^\.claude$
 ^\.vscode$
+^codecov\.yml$
