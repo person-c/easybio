@@ -3,11 +3,6 @@ data("pbmc.markers", package = "easybio")
 test_that("deprecated utils aliases warn and work", {
   expect_warning(setcolnames(mtcars, paste0("c", seq_len(ncol(mtcars)))), "deprecated")
   expect_warning(setrownames(mtcars, rownames(mtcars)), "deprecated")
-  expect_warning(list2dt(list(a = 1, b = 2)), "deprecated")
-  expect_warning(
-    list2graph(list(a = c("x", "y"), b = c("y", "z"))),
-    "deprecated"
-  )
   expect_warning(groupStatI(f = \(x) x, x = mtcars, idx = list(1, 2)), "deprecated")
   expect_warning(groupStat(f = \(x) x, x = mtcars, patterns = list("mp")), "deprecated")
   expect_warning(setSavedir(tempfile("easybio-dir-")), "deprecated")

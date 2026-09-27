@@ -48,8 +48,8 @@ set_rownames <- function(object, nm) {
 #' @export
 #' @examples
 #' library(easybio)
-#' list_to_dt(list(a = c(1, 1), b = c(2, 2)))
-list_to_dt <- function(x, col_names = c("name", "value")) {
+#' list2dt(list(a = c(1, 1), b = c(2, 2)))
+list2dt <- function(x, col_names = c("name", "value")) { # nolint: object_name_linter.
   res <- data.table(name = rep(names(x), sapply(x, length)), value = unlist(x))
   setnames(res, new = col_names)
   res
@@ -111,7 +111,7 @@ get_attr <- function(x, attr_name) {
 #' @return A data.table representing the graph, with columns for the node names
 #'   (`node_1` and `node_2`) and the weight of the edge (`interWeight`).
 #' @export
-list_to_graph <- function(nodes) {
+list2graph <- function(nodes) { # nolint: object_name_linter.
   comb2 <- combn(names(nodes), m = 2, simplify = FALSE)
   inter <- lapply(comb2, \(x) length(intersect(nodes[[x[[1]]]], nodes[[x[[2]]]])))
 
@@ -437,38 +437,6 @@ setcolnames <- function(...) { # nolint: object_name_linter.
 setrownames <- function(...) { # nolint: object_name_linter.
   lifecycle::deprecate_warn("1.2.4", "setrownames()", "set_rownames()")
   set_rownames(...)
-}
-
-#' Convert a List to a Long Data.table (Deprecated)
-#'
-#' @description
-#' `r lifecycle::badge("deprecated")`
-#'
-#' `list2dt()` was renamed to [list_to_dt()] to follow the snake_case
-#' naming style. It will be removed in the next version.
-#'
-#' @param ... Arguments passed on to [list_to_dt()].
-#' @return See [list_to_dt()].
-#' @export
-list2dt <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "list2dt()", "list_to_dt()")
-  list_to_dt(...)
-}
-
-#' Convert a Named List into a Graph (Deprecated)
-#'
-#' @description
-#' `r lifecycle::badge("deprecated")`
-#'
-#' `list2graph()` was renamed to [list_to_graph()] to follow the snake_case
-#' naming style. It will be removed in the next version.
-#'
-#' @param ... Arguments passed on to [list_to_graph()].
-#' @return See [list_to_graph()].
-#' @export
-list2graph <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "list2graph()", "list_to_graph()")
-  list_to_graph(...)
 }
 
 #' Summarize Data by Group Using an Index (Deprecated)

@@ -2,19 +2,25 @@
 % Please edit documentation in R/utils.R
 \name{list2dt}
 \alias{list2dt}
-\title{Convert a List to a Long Data.table (Deprecated)}
+\title{Convert a List with Vector Values to a Long Data.table}
 \usage{
-list2dt(...)
+list2dt(x, col_names = c("name", "value"))
 }
 \arguments{
-\item{...}{Arguments passed on to \code{\link[=list_to_dt]{list_to_dt()}}.}
+\item{x}{A named list where each element contains a vector of values.}
+
+\item{col_names}{The colnames of the returned result.}
 }
 \value{
-See \code{\link[=list_to_dt]{list_to_dt()}}.
+A long data.table with two columns: 'name' and 'value'.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-
-\code{list2dt()} was renamed to \code{\link[=list_to_dt]{list_to_dt()}} to follow the snake_case
-naming style. It will be removed in the next version.
+This function converts a named list with vector values in each element to a
+long data.table. The list is first flattened into a single vector, and then
+the data.table is created with two columns: one for the name of the original
+list element and another for the value.
+}
+\examples{
+library(easybio)
+list2dt(list(a = c(1, 1), b = c(2, 2)))
 }
