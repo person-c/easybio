@@ -16,5 +16,5 @@ See \code{\link[=plot_gsea]{plot_gsea()}}.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{plotGSEA()} was renamed to \code{\link[=plot_gsea]{plot_gsea()}} to follow the snake_case naming
-style. It will be removed in the next version.
+style. It will be removed in version 1.4.0.
 }

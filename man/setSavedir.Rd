@@ -16,5 +16,5 @@ See \code{\link[=set_savedir]{set_savedir()}}.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{setSavedir()} was renamed to \code{\link[=set_savedir]{set_savedir()}} to follow the snake_case
-naming style. It will be removed in the next version.
+naming style. It will be removed in version 1.4.0.
 }

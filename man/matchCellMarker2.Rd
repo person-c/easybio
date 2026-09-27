@@ -25,5 +25,5 @@ See \code{\link[=match_ref]{match_ref()}}.
 
 \code{matchCellMarker2()} was renamed to \code{\link[=match_ref]{match_ref()}} because it supports
 custom reference datasets as well as the built-in CellMarker 3.0 database.
-It will be removed in the next version.
+It will be removed in version 1.4.0.
 }

@@ -390,14 +390,14 @@ match_ref <- function(
 #'
 #' `matchCellMarker2()` was renamed to [match_ref()] because it supports
 #' custom reference datasets as well as the built-in CellMarker 3.0 database.
-#' It will be removed in the next version.
+#' It will be removed in version 1.4.0.
 #'
 #' @inheritParams match_ref
 #' @param ... Arguments passed on to [match_ref()].
 #' @return See [match_ref()].
 #' @export
 matchCellMarker2 <- function(marker, n, ...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "matchCellMarker2()", "match_ref()")
+  lifecycle::deprecate_warn("1.3.0", "matchCellMarker2()", "match_ref()")
   match_ref(marker = marker, n = n, ...)
 }
 
@@ -757,13 +757,13 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotMarkerDistribution()` was renamed to [plot_marker_distribution()] to
-#' follow the snake_case naming style. It will be removed in the next version.
+#' follow the snake_case naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_marker_distribution()].
 #' @return See [plot_marker_distribution()].
 #' @export
 plotMarkerDistribution <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotMarkerDistribution()", "plot_marker_distribution()")
+  lifecycle::deprecate_warn("1.3.0", "plotMarkerDistribution()", "plot_marker_distribution()")
   plot_marker_distribution(...)
 }
 
@@ -773,13 +773,13 @@ plotMarkerDistribution <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotPossibleCell()` was renamed to [plot_possible_cell()] to follow the
-#' snake_case naming style. It will be removed in the next version.
+#' snake_case naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_possible_cell()].
 #' @return See [plot_possible_cell()].
 #' @export
 plotPossibleCell <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotPossibleCell()", "plot_possible_cell()")
+  lifecycle::deprecate_warn("1.3.0", "plotPossibleCell()", "plot_possible_cell()")
   plot_possible_cell(...)
 }
 
@@ -789,13 +789,13 @@ plotPossibleCell <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotSeuratDot()` was renamed to [plot_seurat_dot()] to follow the
-#' snake_case naming style. It will be removed in the next version.
+#' snake_case naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_seurat_dot()].
 #' @return See [plot_seurat_dot()].
 #' @export
 plotSeuratDot <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotSeuratDot()", "plot_seurat_dot()")
+  lifecycle::deprecate_warn("1.3.0", "plotSeuratDot()", "plot_seurat_dot()")
   plot_seurat_dot(...)
 }
 
@@ -805,12 +805,12 @@ plotSeuratDot <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `tuneParameters()` was renamed to [tune_parameters()] to follow the
-#' snake_case naming style. It will be removed in the next version.
+#' snake_case naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [tune_parameters()].
 #' @return See [tune_parameters()].
 #' @export
 tuneParameters <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "tuneParameters()", "tune_parameters()")
+  lifecycle::deprecate_warn("1.3.0", "tuneParameters()", "tune_parameters()")
   tune_parameters(...)
 }

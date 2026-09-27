@@ -16,5 +16,5 @@ See \code{\link[=plot_seurat_dot]{plot_seurat_dot()}}.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{plotSeuratDot()} was renamed to \code{\link[=plot_seurat_dot]{plot_seurat_dot()}} to follow the
-snake_case naming style. It will be removed in the next version.
+snake_case naming style. It will be removed in version 1.4.0.
 }

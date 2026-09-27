@@ -164,13 +164,13 @@ plot_ora <- function(data, x, y, size, fill, flip = FALSE) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotEnrichment2()` was renamed to [plot_enrichment()] to follow the
-#' snake_case naming style. It will be removed in the next version.
+#' snake_case naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_enrichment()].
 #' @return See [plot_enrichment()].
 #' @export
 plotEnrichment2 <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotEnrichment2()", "plot_enrichment()")
+  lifecycle::deprecate_warn("1.3.0", "plotEnrichment2()", "plot_enrichment()")
   plot_enrichment(...)
 }
 
@@ -180,13 +180,13 @@ plotEnrichment2 <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotRank()` was renamed to [plot_rank()] to follow the snake_case naming
-#' style. It will be removed in the next version.
+#' style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_rank()].
 #' @return See [plot_rank()].
 #' @export
 plotRank <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotRank()", "plot_rank()")
+  lifecycle::deprecate_warn("1.3.0", "plotRank()", "plot_rank()")
   plot_rank(...)
 }
 
@@ -196,13 +196,13 @@ plotRank <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotGSEA()` was renamed to [plot_gsea()] to follow the snake_case naming
-#' style. It will be removed in the next version.
+#' style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_gsea()].
 #' @return See [plot_gsea()].
 #' @export
 plotGSEA <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotGSEA()", "plot_gsea()")
+  lifecycle::deprecate_warn("1.3.0", "plotGSEA()", "plot_gsea()")
   plot_gsea(...)
 }
 
@@ -212,12 +212,12 @@ plotGSEA <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotORA()` was renamed to [plot_ora()] to follow the snake_case naming
-#' style. It will be removed in the next version.
+#' style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_ora()].
 #' @return See [plot_ora()].
 #' @export
 plotORA <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotORA()", "plot_ora()")
+  lifecycle::deprecate_warn("1.3.0", "plotORA()", "plot_ora()")
   plot_ora(...)
 }

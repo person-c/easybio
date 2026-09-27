@@ -197,13 +197,13 @@ plot_volcano <- function(data, data_text, x, y, color, label) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `dgeList()` was renamed to [dge_list()] to follow the snake_case naming
-#' style. It will be removed in the next version.
+#' style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [dge_list()].
 #' @return See [dge_list()].
 #' @export
 dgeList <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "dgeList()", "dge_list()")
+  lifecycle::deprecate_warn("1.3.0", "dgeList()", "dge_list()")
   dge_list(...)
 }
 
@@ -213,13 +213,13 @@ dgeList <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `dprocess_dgeList()` was renamed to [process_dge_list()] to follow the
-#' snake_case naming style. It will be removed in the next version.
+#' snake_case naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [process_dge_list()].
 #' @return See [process_dge_list()].
 #' @export
 dprocess_dgeList <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "dprocess_dgeList()", "process_dge_list()")
+  lifecycle::deprecate_warn("1.3.0", "dprocess_dgeList()", "process_dge_list()")
   process_dge_list(...)
 }
 
@@ -229,13 +229,13 @@ dprocess_dgeList <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `limmaFit()` was renamed to [limma_fit()] to follow the snake_case naming
-#' style. It will be removed in the next version.
+#' style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [limma_fit()].
 #' @return See [limma_fit()].
 #' @export
 limmaFit <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "limmaFit()", "limma_fit()")
+  lifecycle::deprecate_warn("1.3.0", "limmaFit()", "limma_fit()")
   limma_fit(...)
 }
 
@@ -245,12 +245,12 @@ limmaFit <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `plotVolcano()` was renamed to [plot_volcano()] to follow the snake_case
-#' naming style. It will be removed in the next version.
+#' naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [plot_volcano()].
 #' @return See [plot_volcano()].
 #' @export
 plotVolcano <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "plotVolcano()", "plot_volcano()")
+  lifecycle::deprecate_warn("1.3.0", "plotVolcano()", "plot_volcano()")
   plot_volcano(...)
 }

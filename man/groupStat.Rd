@@ -16,5 +16,5 @@ See \code{\link[=group_stat]{group_stat()}}.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{groupStat()} was renamed to \code{\link[=group_stat]{group_stat()}} to follow the snake_case
-naming style. It will be removed in the next version.
+naming style. It will be removed in version 1.4.0.
 }

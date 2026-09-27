@@ -413,13 +413,13 @@ suggest_best_match <- function(x,
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `setcolnames()` was renamed to [set_colnames()] to follow the snake_case
-#' naming style. It will be removed in the next version.
+#' naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [set_colnames()].
 #' @return See [set_colnames()].
 #' @export
 setcolnames <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "setcolnames()", "set_colnames()")
+  lifecycle::deprecate_warn("1.3.0", "setcolnames()", "set_colnames()")
   set_colnames(...)
 }
 
@@ -429,13 +429,13 @@ setcolnames <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `setrownames()` was renamed to [set_rownames()] to follow the snake_case
-#' naming style. It will be removed in the next version.
+#' naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [set_rownames()].
 #' @return See [set_rownames()].
 #' @export
 setrownames <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "setrownames()", "set_rownames()")
+  lifecycle::deprecate_warn("1.3.0", "setrownames()", "set_rownames()")
   set_rownames(...)
 }
 
@@ -445,13 +445,13 @@ setrownames <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `groupStatI()` was renamed to [group_stat_i()] to follow the snake_case
-#' naming style. It will be removed in the next version.
+#' naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [group_stat_i()].
 #' @return See [group_stat_i()].
 #' @export
 groupStatI <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "groupStatI()", "group_stat_i()")
+  lifecycle::deprecate_warn("1.3.0", "groupStatI()", "group_stat_i()")
   group_stat_i(...)
 }
 
@@ -461,13 +461,13 @@ groupStatI <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `groupStat()` was renamed to [group_stat()] to follow the snake_case
-#' naming style. It will be removed in the next version.
+#' naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [group_stat()].
 #' @return See [group_stat()].
 #' @export
 groupStat <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "groupStat()", "group_stat()")
+  lifecycle::deprecate_warn("1.3.0", "groupStat()", "group_stat()")
   group_stat(...)
 }
 
@@ -477,13 +477,13 @@ groupStat <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `setSavedir()` was renamed to [set_savedir()] to follow the snake_case
-#' naming style. It will be removed in the next version.
+#' naming style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [set_savedir()].
 #' @return See [set_savedir()].
 #' @export
 setSavedir <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "setSavedir()", "set_savedir()")
+  lifecycle::deprecate_warn("1.3.0", "setSavedir()", "set_savedir()")
   set_savedir(...)
 }
 
@@ -493,12 +493,12 @@ setSavedir <- function(...) { # nolint: object_name_linter.
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `workIn()` was renamed to [work_in()] to follow the snake_case naming
-#' style. It will be removed in the next version.
+#' style. It will be removed in version 1.4.0.
 #'
 #' @param ... Arguments passed on to [work_in()].
 #' @return See [work_in()].
 #' @export
 workIn <- function(...) { # nolint: object_name_linter.
-  lifecycle::deprecate_warn("1.2.4", "workIn()", "work_in()")
+  lifecycle::deprecate_warn("1.3.0", "workIn()", "work_in()")
   work_in(...)
 }

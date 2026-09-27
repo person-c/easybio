@@ -16,5 +16,5 @@ See \code{\link[=process_dge_list]{process_dge_list()}}.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{dprocess_dgeList()} was renamed to \code{\link[=process_dge_list]{process_dge_list()}} to follow the
-snake_case naming style. It will be removed in the next version.
+snake_case naming style. It will be removed in version 1.4.0.
 }
