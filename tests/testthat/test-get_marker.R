@@ -21,6 +21,17 @@ test_that("get_marker suggests corrections for typos", {
   )
 })
 
+test_that("get_marker bounds the number of suggestions", {
+  # "t" is a substring of hundreds of cell names; suggestions should stay short
+  msgs <- capture_messages(get_marker(spc = "Human", cell = "t"))
+  suggestion_line <- grep("did you mean", msgs, value = TRUE)
+  expect_length(suggestion_line, 1)
+
+  suggested <- strsplit(sub(".*did you mean: ", "", suggestion_line), " or ")[[1]]
+  expect_length(suggested, 3)
+  expect_false(anyNA(suggested))
+})
+
 test_that("get_marker returns only valid cells when mix of valid and invalid", {
   res <- get_marker(spc = "Human", cell = c("Monocyte", "NonExistentCellXYZ"))
   expect_type(res, "list")

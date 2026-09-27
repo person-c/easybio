@@ -113,6 +113,11 @@ available_tissue_type <- function(spc) {
 #' `cellMarker3` dataset. It allows filtering by species, cell type, the number
 #' of markers to retrieve, and a minimum count threshold for marker occurrences.
 #'
+#' @details
+#' Cell types absent from the database are skipped. For unknown names, up to
+#' three alternative cell types are suggested via \code{\link{suggest_best_match}},
+#' covering typos (fuzzy matching) as well as partial names.
+#'
 #' @param spc A character string specifying the species, which can be either
 #'   'Human' or 'Mouse'.
 #' @param cell A character vector of cell types for which to retrieve markers.
@@ -125,6 +130,9 @@ available_tissue_type <- function(spc) {
 #'
 #' @return A named list where each name corresponds to a cell type and each
 #'   element is a vector of marker names.
+#'
+#' @seealso \code{\link{suggest_best_match}}, \code{\link{match_ref}}
+#'
 #' @export
 #'
 #' @examples
@@ -149,32 +157,17 @@ get_marker <- function(
 
   not_found_cells <- cell[!is_exists]
   if (length(not_found_cells) > 0) {
-    suggestions <- vapply(not_found_cells, FUN.VALUE = "character", FUN = function(x) {
-      # 1. Fuzzy match with adist for typos
-      distances <- adist(x, all_cell_names, ignore.case = TRUE, partial = FALSE)
-      min_dist <- min(distances)
-
-      # Heuristic for a "good" match (e.g., distance <= 2)
-      if (min_dist <= 2) {
-        possible_matches <- all_cell_names[which(distances == min_dist)]
-        return(paste(possible_matches, collapse = " or "))
-      }
-
-      # 2. Fallback to grep for partial/substring matches
-      grep_idx <- grep(x, all_cell_names, ignore.case = TRUE)
-      if (length(grep_idx) > 0) {
-        return(paste(all_cell_names[grep_idx], collapse = " or "))
-      }
-
-      "" # No suggestion found
+    suggestions <- vapply(not_found_cells, FUN.VALUE = character(1), FUN = function(x) {
+      matches <- suggest_best_match(x, all_cell_names, n = 3)
+      paste(matches[!is.na(matches)], collapse = " or ")
     })
 
     # Format and print message for cells with suggestions
-    has_suggestion <- nchar(suggestions) > 0
+    has_suggestion <- nzchar(suggestions)
     if (any(has_suggestion)) {
       msg_lines <- sprintf(
         "- For '%s', did you mean: %s?",
-        names(suggestions[has_suggestion]),
+        not_found_cells[has_suggestion],
         suggestions[has_suggestion]
       )
       message("Some cell types not found. Suggestions:\n", paste(msg_lines, collapse = "\n"))
@@ -184,7 +177,7 @@ get_marker <- function(
     if (any(!has_suggestion)) {
       message(
         "Could not find any matches for: ",
-        paste(names(suggestions[!has_suggestion]), collapse = ", ")
+        paste(not_found_cells[!has_suggestion], collapse = ", ")
       )
     }
   }

@@ -38,6 +38,11 @@ This function extracts a list of markers for one or more cell types from the
 \code{cellMarker3} dataset. It allows filtering by species, cell type, the number
 of markers to retrieve, and a minimum count threshold for marker occurrences.
 }
+\details{
+Cell types absent from the database are skipped. For unknown names, up to
+three alternative cell types are suggested via \code{\link{suggest_best_match}},
+covering typos (fuzzy matching) as well as partial names.
+}
 \examples{
 # Example usage:
 # Retrieve the top 5 markers for 'Macrophage' and 'Monocyte' cell types in humans,
@@ -47,4 +52,7 @@ markers <- get_marker(spc = "Human", cell = c("Macrophage", "Monocyte"))
 print(markers)
 # Example with a typo in cell name
 markers_typo <- get_marker(spc = "Human", cell = c("Macrophae", "Monocyte"))
+}
+\seealso{
+\code{\link{suggest_best_match}}, \code{\link{match_ref}}
 }
