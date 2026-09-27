@@ -42,6 +42,25 @@ test_that("returns multiple suggestions when n > 1", {
   expect_true("T cell" %in% res)
 })
 
+test_that("substring matches are ranked by prefix and length", {
+  # "T cell" must win over the longer names merely containing "t"
+  choices <- c("Lymphocyte", "Neural progenitor cell", "T cell", "Oocyte")
+  expect_equal(suggest_best_match("t", choices, n = 2), c("T cell", "Oocyte"))
+
+  # among matches that are not a prefix, the shortest name wins
+  choices <- c("Cytotoxic NK cell", "LrNK cell")
+  expect_equal(suggest_best_match("nk", choices), "LrNK cell")
+
+  # a substring match outranks a fuzzy match
+  expect_equal(suggest_best_match("t cel", c("B cell", "T cell"), n = 2), c("T cell", "B cell"))
+})
+
+test_that("fuzzy matches are ranked by increasing distance", {
+  res <- suggest_best_match("Monocyle", c("Monocytes", "Monocyte"), n = 2, return_distance = TRUE)
+  expect_equal(res$suggestion, c("Monocyte", "Monocytes"))
+  expect_equal(res$distance, c(1, 2))
+})
+
 test_that("returns NA when no match found", {
   choices <- c("B cell", "T cell")
   expect_true(is.na(suggest_best_match("Erythrocyte", choices)))

@@ -257,7 +257,11 @@ available_ele <- function(data, col_name, subset) {
 #' 3.  If no exact match, it uses a combination of fuzzy string matching
 #'     (Levenshtein distance via `adist`) to catch typos and partial/substring
 #'     matching (`grep`) to handle incomplete input.
-#' 4.  Ranks the potential matches and returns the best suggestion(s).
+#' 4.  Ranks the potential matches and returns the best suggestion(s). Substring
+#'     matches are ranked above fuzzy matches, and among themselves choices
+#'     starting with the input come first, followed by the shortest choices.
+#'     Fuzzy matches are ranked by increasing distance. Remaining ties keep the
+#'     order of `choices`.
 #'
 #' @param x A single character string; the user input to find matches for.
 #' @param choices A character vector of available, valid options.
@@ -275,7 +279,9 @@ available_ele <- function(data, col_name, subset) {
 #' By default (`return_distance = FALSE`), returns a character vector of the
 #' best `n` suggestions. If no suitable match is found, returns `NA`.
 #' If `return_distance = TRUE`, returns a `data.frame` with columns
-#' `suggestion` and `distance`, or `NULL` if no match is found.
+#' `suggestion` and `distance`, or `NULL` if no match is found. The `distance`
+#' column holds the Levenshtein distance of a fuzzy match or the fixed score
+#' `0.5` of a substring match.
 #'
 #' @export
 #'
@@ -301,18 +307,17 @@ available_ele <- function(data, col_name, subset) {
 #'
 #' # 4. Requesting multiple suggestions
 #' suggest_best_match("t", cell_types, n = 3)
-#' #> [1] "T cell" "Neutrophil" "Natural Killer T-cell"
+#' #> [1] "T cell"   "Monocyte" "Neutrophil"
 #'
 #' # 5. No good match found
 #' suggest_best_match("Erythrocyte", cell_types)
 #' #> [1] NA
 #'
 #' # 6. Returning suggestions with their distance score
-#' suggest_best_match("t ce", cell_types, n = 3, return_distance = TRUE)
-#' #>              suggestion distance
-#' #> 1                T cell        1
-#' #> 2        Dendritic cell        2
-#' #> 3 Natural Killer T-cell        2
+#' suggest_best_match("t cel", cell_types, n = 3, return_distance = TRUE)
+#' #>   suggestion distance
+#' #> 1     T cell      0.5
+#' #> 2     B cell      2.0
 suggest_best_match <- function(x,
                                choices,
                                n = 1,
@@ -348,14 +353,27 @@ suggest_best_match <- function(x,
   distances <- adist(input_norm, choices_norm, ignore.case = FALSE)
   fuzzy_idx <- which(distances <= threshold)
 
-  # Partial matching (grep) for substrings
+  # Partial matching (grep) for substrings. Every partial match shares the same
+  # score, so order them by match quality instead: choices starting with the
+  # input first, then the shortest ones, so that "t" suggests "T cell" rather
+  # than whichever long name happens to come first in `choices`
   partial_idx <- grep(input_norm, choices_norm, ignore.case = FALSE)
+  partial_idx <- partial_idx[order(
+    !startsWith(choices_norm[partial_idx], input_norm),
+    abs(nchar(choices_norm[partial_idx]) - nchar(input_norm))
+  )]
 
   # Combine candidates into a data.frame with their scores
   # We give partial matches a low, fixed score (e.g., 0.5) to rank them highly.
+  # `tiebreak` orders candidates sharing a score, `idx` breaks any remaining tie
+  # by keeping the order of `choices`.
   candidates <- rbind(
-    if (length(fuzzy_idx) > 0) data.frame(idx = fuzzy_idx, score = distances[fuzzy_idx]),
-    if (length(partial_idx) > 0) data.frame(idx = partial_idx, score = 0.5)
+    if (length(fuzzy_idx) > 0) {
+      data.frame(idx = fuzzy_idx, score = distances[fuzzy_idx], tiebreak = seq_along(fuzzy_idx))
+    },
+    if (length(partial_idx) > 0) {
+      data.frame(idx = partial_idx, score = 0.5, tiebreak = seq_along(partial_idx))
+    }
   )
 
   if (is.null(candidates) || nrow(candidates) == 0) {
@@ -363,8 +381,9 @@ suggest_best_match <- function(x,
   }
 
   # --- 4. Rank and Select Best Matches ---
-  # Order by score (lower is better), then remove duplicates, keeping the best score
-  candidates <- candidates[order(candidates$score), ]
+  # Order by score (lower is better), then by match quality, and remove
+  # duplicates, keeping the best entry of each choice
+  candidates <- candidates[order(candidates$score, candidates$tiebreak), ]
   best_candidates <- candidates[!duplicated(candidates$idx), ]
 
   # Get the top N results

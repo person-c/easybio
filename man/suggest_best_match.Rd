@@ -35,7 +35,9 @@ containing the suggestions and their calculated distance/score. Defaults to
 By default (\code{return_distance = FALSE}), returns a character vector of the
 best \code{n} suggestions. If no suitable match is found, returns \code{NA}.
 If \code{return_distance = TRUE}, returns a \code{data.frame} with columns
-\code{suggestion} and \code{distance}, or \code{NULL} if no match is found.
+\code{suggestion} and \code{distance}, or \code{NULL} if no match is found. The \code{distance}
+column holds the Levenshtein distance of a fuzzy match or the fixed score
+\code{0.5} of a substring match.
 }
 \description{
 This function provides intelligent suggestions for a user's input string by
@@ -47,7 +49,11 @@ multi-layered approach:
 \item If no exact match, it uses a combination of fuzzy string matching
 (Levenshtein distance via \code{adist}) to catch typos and partial/substring
 matching (\code{grep}) to handle incomplete input.
-\item Ranks the potential matches and returns the best suggestion(s).
+\item Ranks the potential matches and returns the best suggestion(s). Substring
+matches are ranked above fuzzy matches, and among themselves choices
+starting with the input come first, followed by the shortest choices.
+Fuzzy matches are ranked by increasing distance. Remaining ties keep the
+order of \code{choices}.
 }
 }
 \examples{
@@ -72,16 +78,15 @@ suggest_best_match("Mono", cell_types)
 
 # 4. Requesting multiple suggestions
 suggest_best_match("t", cell_types, n = 3)
-#> [1] "T cell" "Neutrophil" "Natural Killer T-cell"
+#> [1] "T cell"   "Monocyte" "Neutrophil"
 
 # 5. No good match found
 suggest_best_match("Erythrocyte", cell_types)
 #> [1] NA
 
 # 6. Returning suggestions with their distance score
-suggest_best_match("t ce", cell_types, n = 3, return_distance = TRUE)
-#>              suggestion distance
-#> 1                T cell        1
-#> 2        Dendritic cell        2
-#> 3 Natural Killer T-cell        2
+suggest_best_match("t cel", cell_types, n = 3, return_distance = TRUE)
+#>   suggestion distance
+#> 1     T cell      0.5
+#> 2     B cell      2.0
 }
