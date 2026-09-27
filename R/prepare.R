@@ -86,7 +86,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
     ))
   }
 
-  gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = ".")
+  gpl <- GEOquery::getGEO(eset[[1]]@annotation, destdir = dir)
   gpl <- GEOquery::Table(gpl)
   setDT(gpl)
   if (!is.character(gpl[["ID"]])) {
