@@ -109,6 +109,18 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
     gpl2[["symbol"]] <- gpl[[which(colnames(gpl) %ilike% "symbol|genename")]]
   }
 
+  # without this the next line fails inside data.table with a message about
+  # ..symbol that says nothing about the annotation being the problem
+  if (!"symbol" %chin% colnames(gpl2)) {
+    stop(
+      "The GPL annotation of ", geo, " has neither a 'gene_assignment' nor a ",
+      "'symbol'/'geneName' column, so its probes cannot be mapped to gene ",
+      "symbols. Use combine = FALSE to get the annotation and the expression ",
+      "matrix as they are.",
+      call. = FALSE
+    )
+  }
+
   exp2 <- as.data.table(exp)
   exp2[, symbol := gpl2[, symbol]]
   exp2 <- exp2[symbol != ""]
