@@ -1,14 +1,13 @@
 # easybio -- maintainer shortcuts
 #
-# Needs `make` on PATH. On Windows, Rtools ships one; if `make` is not found,
-# add its folder, e.g. C:/rtools45/usr/bin, to PATH (append it, so that R's own
-# DLLs keep winning).
+# Needs `make` on PATH. On Windows, prefer the native build over the one in
+# Rtools: that one is an msys build which cannot launch R here, so every target
+# below would report "Segmentation fault" *after* printing its results (even
+# `R --version` dies under it, while the same command run directly is fine).
 #
-# Windows caveat: Rtools' make is an msys build and on some setups it cannot
-# launch R at all -- every R process it starts dies with a segmentation fault
-# on exit, even `R --version`, while the same command run directly is fine. If
-# a target reports "Segmentation fault" *after* printing its results, that is
-# this. A native make (ezwinports) does not have the problem.
+#   winget install ezwinports.make
+#
+# and keep its folder ahead of C:/rtools45/usr/bin in PATH.
 #
 # `make` on its own lists the targets below.
 
