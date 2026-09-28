@@ -69,7 +69,12 @@ jobs:
         shell: Rscript {0}
 
       - name: Test coverage
-        if: success() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
+        # always(), not success(): the lint step runs first and is allowed to
+        # fail the job, and a failing step makes success() false for everything
+        # after it -- so a lint error silently skipped the coverage upload.
+        # The step is continue-on-error, so this only decides whether the
+        # report is produced, never whether the build passes.
+        if: always() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
         # the upload is informative only: a codecov outage must not fail the build
         continue-on-error: true
         env:
