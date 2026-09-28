@@ -9,6 +9,12 @@ name: R-CMD-check.yaml
 
 permissions: read-all
 
+# A push that supersedes another leaves the older run checking a commit nobody
+# is waiting for any more; the four-platform matrix is not cheap to finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -29,7 +35,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: r-lib/actions/setup-pandoc@v2
 
