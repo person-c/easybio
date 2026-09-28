@@ -1,4 +1,8 @@
 linters: linters_with_defaults(
+    # linters_with_defaults() follows the *installed* lintr, so CI (which
+    # installs the latest) can be stricter than a stale local library -- that is
+    # how 3.4.0's indentation_linter came to fail a build that passed locally on
+    # 3.2.0. Run install.packages("lintr") before believing `make lint` is green.
     assignment_linter = NULL, # do not force using <- for assignments
     line_length_linter(120),
     commented_code_linter = NULL,

@@ -137,7 +137,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   gpl2 <- gpl2[.(rownames(exp2)), on = .(symbol), mult = "first"]
   gpl2 <- setDF(gpl2, gpl2$symbol)
   gpl2$symbol <- NULL
-  return(list(data = exp2, sample = pd, feature = gpl2, status = "expression_matrix"))
+  list(data = exp2, sample = pd, feature = gpl2, status = "expression_matrix")
 }
 
 #' Prepare TCGA Data for Analysis

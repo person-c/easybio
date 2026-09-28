@@ -39,13 +39,13 @@
 #' finsert(mapping_expr, len = 10, na = "Unassigned")
 #'
 finsert <- function(
-    x = list(
-      c(0, 1, 3) ~ "Neutrophil",
-      c(2, 4, 8) ~ "Macrophage"
-    ),
-    len = integer(),
-    setname = TRUE,
-    na = "Unknown") {
+  x = list(
+    c(0, 1, 3) ~ "Neutrophil",
+    c(2, 4, 8) ~ "Macrophage"
+  ),
+  len = integer(),
+  setname = TRUE,
+  na = "Unknown") {
   x <- if (is.expression(x)) lapply(x, .exprs_to_formula) else x
 
   max_len <- max(unlist(sapply(x, \(.x) eval(.x[[2]]), simplify = FALSE)))
@@ -56,7 +56,7 @@ finsert <- function(
 
   if (setname) names(v) <- as.character(0:(length(v) - 1))
 
-  return(v)
+  v
 }
 
 #' Retrieve Available Tissue Classes for a Given Species
@@ -145,10 +145,10 @@ available_tissue_type <- function(spc) {
 #' # Example with a typo in cell name
 #' markers_typo <- get_marker(spc = "Human", cell = c("Macrophae", "Monocyte"))
 get_marker <- function(
-    spc, cell = character(),
-    tissue_class = available_tissue_class(spc),
-    tissue_type = available_tissue_type(spc),
-    number = 5, min_count = 1) {
+  spc, cell = character(),
+  tissue_class = available_tissue_class(spc),
+  tissue_type = available_tissue_type(spc),
+  number = 5, min_count = 1) {
   . <- NULL
   species <- cell_name <- N <- marker <- NULL # nolint: object_name_linter.
 
@@ -319,14 +319,14 @@ get_marker <- function(
 #' print(matched_custom)
 #' }
 match_ref <- function(
-    marker, n,
-    avg_log2fc_threshold = 0,
-    p_val_adj_threshold = 0.05,
-    min_pct = NULL,
-    spc,
-    tissue_class = available_tissue_class(spc),
-    tissue_type = available_tissue_type(spc),
-    ref = NULL) {
+  marker, n,
+  avg_log2fc_threshold = 0,
+  p_val_adj_threshold = 0.05,
+  min_pct = NULL,
+  spc,
+  tissue_class = available_tissue_class(spc),
+  tissue_type = available_tissue_type(spc),
+  ref = NULL) {
   . <- marker_with <- NULL
   species <- avg_log2FC <- p_val_adj <- cluster <- gene <- cell_name <- N <- NULL # nolint: object_name_linter.
   ordered_symbol <- pct.1 <- pct_raw <- NULL # nolint: object_name_linter.
@@ -513,7 +513,7 @@ matchCellMarker2 <- function(marker, n, ...) { # nolint: object_name_linter.
 #' print(local_markers)
 #' }
 check_marker <- function(
-    marker, cl = c(), top_cell_n = 2, cis = FALSE) {
+  marker, cl = c(), top_cell_n = 2, cis = FALSE) {
   if (!inherits(marker, "cellmarker_match")) {
     stop(
       "'marker' must be the result of 'match_ref()'. ",
@@ -712,9 +712,9 @@ plot_marker_distribution <- function(mkr = character()) {
 #' @import ggplot2
 #' @export
 plot_possible_cell <- function(
-    marker, min_unique_n = 2,
-    value = c("N", "uniqueN", "pct"),
-    min_pct = 0.25) {
+  marker, min_unique_n = 2,
+  value = c("N", "uniqueN", "pct"),
+  min_pct = 0.25) {
   . <- cluster <- cell_name <- N <- uniqueN <- pct_with <- pct_supported <- NULL # nolint: object_name_linter.
   value <- match.arg(value)
   assert_number(min_pct, lower = 0, upper = 1)
