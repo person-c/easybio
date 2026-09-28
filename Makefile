@@ -35,8 +35,8 @@ readme: ## knit README.Rmd into README.md with litedown
 test: ## run the testthat suite
 	$(R) -e "testthat::test_local()"
 
-lint: ## lint the package; run `make install` first, lintr resolves imports against the installed package
-	$(R) -e "print(lintr::lint_package())"
+lint: ## lint the package and fail on any lint; run `make install` first, lintr resolves imports against the installed package
+	$(R) -e "lints <- lintr::lint_package(); print(lints); if (length(lints)) quit(status = 1)"
 
 install: ## install the package into the local library
 	$(R) -e "devtools::install(upgrade = 'never', quiet = TRUE)"

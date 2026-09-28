@@ -1,4 +1,4 @@
-expectValue <- c(
+expected_value <- c(
   "Uncertain",
   "Uncertain",
   "Monocyte",
@@ -10,7 +10,7 @@ expectValue <- c(
   "Macrophage",
   "Uncertain"
 )
-expectValue <- setNames(expectValue, as.character(0:9))
+expected_value <- setNames(expected_value, as.character(0:9))
 
 test_that("finsert works with expression format (legacy)", {
   expect_equal(
@@ -22,7 +22,7 @@ test_that("finsert works with expression format (legacy)", {
       len = 10,
       na = "Uncertain"
     ),
-    expectValue
+    expected_value
   )
 })
 
@@ -35,7 +35,7 @@ test_that("finsert works with formula list format", {
     len = 10,
     na = "Uncertain"
   )
-  expect_equal(res, expectValue)
+  expect_equal(res, expected_value)
 })
 
 test_that("finsert auto-extends when len not specified", {

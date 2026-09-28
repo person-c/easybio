@@ -138,14 +138,14 @@ data(exampleRanks)
 Run the GSEA analysis:
 
 ```{r,fig.width=4, fig.height=2.7, echo=TRUE}
-fgseaRes <- fgsea(
+fgsea_res <- fgsea(
   pathways = examplePathways,
   stats = exampleRanks,
   minSize = 15,
   maxSize = 500
 )
 plot_gsea(
-  fgseaRes,
+  fgsea_res,
   pathways = examplePathways,
   pwayname = "5991130_Programmed_Cell_Death",
   stats = exampleRanks,

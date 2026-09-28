@@ -41,7 +41,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::covr, any::lintr
+          # local::. installs easybio itself, which the lint step needs: lintr
+          # resolves a package's imports against the installed package, the
+          # same reason `make lint` asks for `make install` first.
+          extra-packages: any::rcmdcheck, any::covr, any::lintr, local::.
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
@@ -51,7 +54,12 @@ jobs:
 
       - name: Lint
         if: always() && matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
-        run: lintr::lint_package()
+        # lintr::lint_package() prints its lints and returns them; on its own it
+        # exits 0, so the step could never fail the build.
+        run: |
+          lints <- lintr::lint_package()
+          print(lints)
+          if (length(lints)) quit(status = 1)
         shell: Rscript {0}
 
       - name: Test coverage

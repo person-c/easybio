@@ -4,3 +4,12 @@ linters: linters_with_defaults(
     commented_code_linter = NULL,
     object_name_linter(styles = c("snake_case", "symbols"), regexes = character())
   )
+exclusions: list(
+    # Not package code. The example scripts are written against Seurat's own
+    # naming (pbmc.markers, all.genes) so that they can be pasted into a user's
+    # session unchanged, and data-raw/ is the one-off preparation of the
+    # datasets in data/ and R/sysdata.rda. Both are excluded rather than
+    # renamed; R/, tests/ and vignettes/ are linted in full.
+    "inst/",
+    "data-raw/"
+  )
