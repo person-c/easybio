@@ -3,6 +3,17 @@ inst/doc
 /doc/
 /Meta/
 /.vscode/
+/.claude/
+
+# Inputs the data-raw/ scripts download and unpack themselves. Together they
+# are ~41 MB, and pbmc.markers.R deletes the first two again when it finishes,
+# so committing them only makes every clone pay for a second copy of something
+# the script fetches on demand.
 /data-raw/GDCdata/
 /data-raw/single_cell_marker/
-/.claude/
+/data-raw/filtered_gene_bc_matrices/
+/data-raw/pbmc.tar.gz
+/data-raw/Cell_marker_Seq.xlsx
+
+# left behind by any plot in a non-interactive session; `make clean` removes it
+Rplots.pdf
