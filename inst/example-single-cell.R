@@ -13,7 +13,7 @@
 #
 # To run this example, ensure the data is downloaded and unzipped in your working directory.
 # You can see the raw code of this example by running:
-# fs::file_show(system.file(package = "easybio", "example-single-cell.R"))
+# file.show(system.file(package = "easybio", "example-single-cell.R"))
 # ------------------------------------------------------------------------------
 
 
@@ -57,6 +57,11 @@ tmp <- DimPlot(pbmc, reduction = "umap", label = TRUE)
 print(tmp)
 
 # Find marker genes for each cluster. This is the crucial input for match_ref.
+# Keep Seurat's default min.pct here: it gates which genes are *tested* in either
+# population, so a gene detected in only a handful of cells of the cluster can
+# still come out as a positive marker. The detection rate of every marker is
+# carried in the `pct.1` column instead, and match_ref() can gate on that from
+# its own `min_pct` argument.
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 
 
@@ -68,7 +73,11 @@ pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 # of potential cell types for each cluster.
 
 marker <- match_ref(marker = pbmc.markers, n = 50, spc = "Human")
-# Let's look at the top results. The table is ranked by the number of matching markers.
+# Let's look at the top results. Within each cluster the candidates are ranked by
+# `uniqueN` (how many of our marker genes they matched), with `N` (the total
+# number of matching database entries) as the tie-breaker. `pct_with` reports the
+# detection rate of each matched gene, aligned with `ordered_symbol`, so you can
+# see how much of the evidence is actually expressed.
 marker |> head()
 
 # For a quick first look, you can extract the top matched cell type for each cluster.
@@ -77,6 +86,21 @@ cl2cell <- marker[, head(.SD, 1), by = .(cluster)][, .(cluster, cell_name)]
 cl2cell <- setNames(cl2cell[["cell_name"]], cl2cell[["cluster"]])
 print("Initial automated annotation based on top hits:")
 cl2cell
+
+# For a global view of every candidate, use `plot_possible_cell()`: one point per
+# cluster and candidate, sized and coloured by the strength of the evidence.
+tmp <- plot_possible_cell(marker[, head(.SD), by = .(cluster)], min_unique_n = 2)
+print(tmp)
+
+# The same view can be coloured by how well the evidence is actually detected.
+# With `value = "pct"` the fill shows the share of a candidate's matched markers
+# whose detection rate reaches `min_pct`, which is the quickest way to spot an
+# annotation that rests on barely expressed genes.
+tmp <- plot_possible_cell(
+  marker[, head(.SD), by = .(cluster)],
+  min_unique_n = 2, value = "pct"
+)
+print(tmp)
 
 
 # ---
