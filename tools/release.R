@@ -8,8 +8,12 @@
 #   Rscript tools/release.R --skip-bump             # tag the version already there
 #   Rscript tools/release.R --bump=patch --no-push  # leave the tag local
 #
+# `make release` wraps this and passes --dry-run unless PUBLISH=1, so the
+# interactive path shows the plan first. Calling the script directly publishes.
+#
 # Everything that leaves the machine happens after the checks below: a clean
-# tree, the main branch, and no commits on origin that are not local.
+# tree, the main branch, no commits on origin that are not local, and a test
+# suite that passes.
 
 args <- commandArgs(trailingOnly = TRUE)
 arg_value <- function(name, default = NULL) {
@@ -76,10 +80,17 @@ next_version <- function(version, bump) {
   paste(parts, collapse = ".")
 }
 
+# Edit the line rather than round-tripping through read.dcf()/write.dcf():
+# write.dcf() re-wraps Title, Description and Authors@R, so a one-line version
+# bump turned into a whole-file diff that hid what had actually changed.
 write_version <- function(version) {
-  desc <- read.dcf("DESCRIPTION")
-  desc[1, "Version"] <- version
-  write.dcf(desc, "DESCRIPTION")
+  lines <- readLines("DESCRIPTION")
+  at <- grep("^Version:", lines)
+  if (length(at) != 1L) {
+    stop("DESCRIPTION must have exactly one line starting with 'Version:'", call. = FALSE)
+  }
+  lines[[at]] <- paste0("Version: ", version)
+  writeLines(lines, "DESCRIPTION")
 }
 
 # NEWS.md keeps one "# Version x.y.z Changes" section per release; open the new
@@ -140,6 +151,25 @@ if (length(git("tag", "--list", tag)) > 0L) {
   stop("tag ", tag, " already exists", call. = FALSE)
 }
 
+# The tag is what publishes the release, and undoing one means another release,
+# so refuse to create one the tests do not back. This runs before anything is
+# written, so a failure leaves no bump commit behind either. It is the test
+# suite and not R CMD check on purpose: whether the manual and the vignettes
+# rebuild belongs to the check job, not to the decision to tag.
+if (dry_run) {
+  cat("[dry-run] would run the test suite before tagging\n")
+} else if (!requireNamespace("testthat", quietly = TRUE)) {
+  stop("testthat is not installed, so the suite cannot be run before tagging", call. = FALSE)
+} else {
+  cat("running the test suite...\n")
+  results <- as.data.frame(testthat::test_local(reporter = "silent"))
+  bad <- sum(results$failed, results$error, na.rm = TRUE)
+  if (bad > 0L) {
+    stop(bad, " test(s) failed; refusing to tag ", tag, call. = FALSE)
+  }
+  cat("  ", sum(results$passed), " assertions passed\n", sep = "")
+}
+
 # --- bump, commit, tag, push -------------------------------------------------
 
 if (!skip_bump) {
@@ -171,10 +201,12 @@ if (no_push) {
 } else {
   git_write("push", "origin", "main")
   git_write("push", "origin", tag)
-  cat(
-    "\nPushed main and ", tag, ".\n",
-    "The release workflow will publish https://github.com/person-c/easybio/releases/tag/", tag,
-    "\nwith the NEWS.md section for ", target, " as its notes.\n",
-    sep = ""
-  )
+  if (!dry_run) {
+    cat(
+      "\nPushed main and ", tag, ".\n",
+      "The release workflow will publish https://github.com/person-c/easybio/releases/tag/", tag,
+      "\nwith the NEWS.md section for ", target, " as its notes.\n",
+      sep = ""
+    )
+  }
 }
