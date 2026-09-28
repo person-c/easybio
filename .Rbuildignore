@@ -14,3 +14,4 @@
 ^\.vscode$
 ^codecov\.yml$
 ^Makefile$
+^tools$
