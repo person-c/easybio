@@ -13,8 +13,12 @@
 
 R        := Rscript
 BUMP     ?= patch
-DRY      ?=
-DRY_FLAG := $(if $(DRY),--dry-run,)
+PUBLISH  ?=
+
+# Committing, tagging and pushing is opt-in: the release targets only print
+# what they would do unless PUBLISH=1 is passed, so the irreversible step is
+# never one forgotten variable away.
+DRY_FLAG := $(if $(PUBLISH),,--dry-run)
 
 .PHONY: help document readme test lint install check build bump tag release clean
 
@@ -43,13 +47,13 @@ check: ## R CMD check the package, without the manual, rebuilding vignettes
 build: ## build the source tarball in this directory
 	R CMD build .
 
-bump: ## bump the version in DESCRIPTION and open a NEWS.md section (BUMP=patch|minor|major, DRY=1)
-	$(R) tools/release.R --bump=$(BUMP) --bump-only $(DRY_FLAG)
+bump: ## bump the version in DESCRIPTION and open a NEWS.md section, no commit (BUMP=patch|minor|major)
+	$(R) tools/release.R --bump=$(BUMP) --bump-only
 
-tag: ## tag the current version and push it, which triggers the release workflow (DRY=1)
+tag: ## tag the current version and push it, which triggers the release workflow (PUBLISH=1 to do it)
 	$(R) tools/release.R --skip-bump $(DRY_FLAG)
 
-release: ## bump, commit, tag and push a release (BUMP=patch|minor|major, DRY=1 to preview)
+release: ## bump, commit, tag and push a release (BUMP=patch|minor|major, PUBLISH=1 to do it)
 	$(R) tools/release.R --bump=$(BUMP) $(DRY_FLAG)
 
 clean: ## remove build leftovers (*.tar.gz, *.Rcheck, Rplots.pdf)
