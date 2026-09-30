@@ -1,4 +1,4 @@
-#' @title Visualization Artist for Custom Plots
+#' Visualization Artist for Custom Plots
 #'
 #' @description
 #' The `Artist` class offers a suite of methods designed to create a variety of plots using `ggplot2` for

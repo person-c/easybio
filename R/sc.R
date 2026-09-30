@@ -157,7 +157,7 @@ get_marker <- function(
 
   not_found_cells <- cell[!is_exists]
   if (length(not_found_cells) > 0) {
-    suggestions <- vapply(not_found_cells, FUN.VALUE = character(1), FUN = function(x) {
+    suggestions <- vapply(not_found_cells, FUN.VALUE = character(1), FUN = \(x) {
       matches <- suggest_best_match(x, all_cell_names, n = 3)
       paste(matches[!is.na(matches)], collapse = " or ")
     })
@@ -359,7 +359,6 @@ match_ref <- function(
     keyby = .(cluster)
   ]
 
-
   is_custom_ref <- TRUE
   if (is.null(ref)) {
     ref <- cellMarker3[.(spc), .SD, on = .(species), nomatch = NULL]
@@ -551,7 +550,6 @@ check_marker <- function(
 
   topmarker
 }
-
 
 #' Create a Dot Plot to Visualize Marker Gene Expression
 #'
@@ -764,8 +762,6 @@ plot_possible_cell <- function(
     theme_publication()
 }
 
-
-
 .tune_parameters <- function(srt, resolution, n, spc) {
   cluster <- NULL
   srt <- suppressMessages(Seurat::FindClusters(srt, resolution = resolution))
@@ -809,7 +805,7 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
   parameters <- CJ(resolution = resolution, n = n)
 
   parameter_plot <- Map(
-    f = function(x, y) .tune_parameters(srt, x, y, spc),
+    f = \(x, y) .tune_parameters(srt, x, y, spc),
     x = parameters[["resolution"]],
     y = parameters[["n"]]
   )
@@ -831,7 +827,7 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
 
 # Find markers for similar clusters
 .find_markers <- function(seurat_object, cls = list()) {
-  lapply(cls, function(x) {
+  lapply(cls, \(x) {
     Seurat::FindMarkers(seurat_object, ident.1 = x, group.by = "seurat_clusters")
   })
 }
@@ -840,7 +836,7 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
   formula(paste(deparse(expr[[2]]), "~", deparse(expr[[3]])))
 }
 
-# Deprecated aliases ----------------------------------------------------------
+# --- Deprecated aliases ---
 
 #' Plot Distribution of a Marker (Deprecated)
 #'

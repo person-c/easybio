@@ -78,7 +78,7 @@ split_matrix <- function(matrix, chunk_size, column = TRUE) {
   num_chunks <- length(starts)
   message(sprintf("Matrix was divided into %d chunks", num_chunks))
 
-  lapply(seq_len(num_chunks), function(i) {
+  lapply(seq_len(num_chunks), \(i) {
     s <- starts[i]
     e <- ends[i]
     if (column) matrix[, s:e, drop = FALSE] else matrix[s:e, , drop = FALSE]
@@ -97,7 +97,6 @@ split_matrix <- function(matrix, chunk_size, column = TRUE) {
 get_attr <- function(x, attr_name) {
   attributes(x)[[attr_name]]
 }
-
 
 #' Convert a Named List into a Graph Based on Overlap
 #'
@@ -121,7 +120,6 @@ list2graph <- function(nodes) { # nolint: object_name_linter.
     interWeight = as.integer(inter)
   )
 }
-
 
 #' Perform Summary Analysis by Group Using an column Index
 #'
@@ -162,7 +160,6 @@ group_stat <- function(f, x, xname = colnames(x), patterns) {
   idx <- lapply(patterns, \(.x) which(xname %like% .x))
   group_stat_i(f, x, idx)
 }
-
 
 #' Set a Directory for Saving Files
 #'
@@ -245,7 +242,6 @@ available_ele <- function(data, col_name, subset) {
   values <- data[[col_name]]
   unique(na.omit(values))
 }
-
 
 #' Suggest Best Matches for a String from a Vector of Choices
 #'
@@ -403,7 +399,7 @@ suggest_best_match <- function(x,
   }
 }
 
-# Deprecated aliases ----------------------------------------------------------
+# --- Deprecated aliases ---
 
 #' Rename Column Names (Deprecated)
 #'

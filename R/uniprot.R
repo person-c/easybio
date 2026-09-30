@@ -28,7 +28,6 @@
   }
 }
 
-
 #' Map UniProt IDs to Other Identifiers
 #'
 #' This function maps UniProt IDs to other identifiers using UniProt's ID mapping service.

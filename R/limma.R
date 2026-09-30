@@ -31,7 +31,6 @@ dge_list <- function(count, sample_info, feature_info) {
   x
 }
 
-
 #' Filter Low-Expressed Genes and Normalize DGEList Data
 #'
 #' This function filters out low-expressed genes from a `DGEList` object and
@@ -81,7 +80,6 @@ process_dge_list <- function(x, group_column, min_count = 10) {
     lines(den$x, den$y, lwd = 2, col = line_cols[[i]])
   }
 
-
   # Normalize the data
   x <- edgeR::calcNormFactors(x)
   lcpm <- edgeR::cpm(x, log = TRUE)
@@ -103,7 +101,6 @@ process_dge_list <- function(x, group_column, min_count = 10) {
 
   x
 }
-
 
 #' Fit a Linear Model for RNA-seq data using limma
 #'
@@ -167,7 +164,6 @@ limma_fit <- function(x, group_column) {
   efit
 }
 
-
 #' Plot Volcano Plot for Differentially Expressed Genes
 #'
 #' This function generates a volcano plot for differentially expressed genes
@@ -213,7 +209,7 @@ plot_volcano <- function(data, data_text, x, y, color, label) {
   p
 }
 
-# Deprecated aliases ----------------------------------------------------------
+# --- Deprecated aliases ---
 
 #' Construct a DGEList Object (Deprecated)
 #'

@@ -51,7 +51,7 @@ plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_siz
     )
 }
 
-#' @title Visualization of GSEA Rank Statistics
+#' Visualization of GSEA Rank Statistics
 #'
 #' @description
 #' The `plot_rank` function visualizes the ranked statistics of a GSEA (Gene Set Enrichment Analysis) analysis.
@@ -73,8 +73,7 @@ plot_rank <- function(stats) {
     labs(x = "Rank", y = "Ranked List Metric")
 }
 
-
-#' @title Visualization of GSEA Result from [fgsea::fgsea()]
+#' Visualization of GSEA Result from [fgsea::fgsea()]
 #'
 #' @description
 #' The `plot_gsea` function visualizes the results of a GSEA (Gene Set Enrichment Analysis) using data from
@@ -110,7 +109,7 @@ plot_gsea <- function(fgsea_res, pathways, pwayname, stats, save = FALSE) {
   p3
 }
 
-#' @title Visualization of ORA Test Results
+#' Visualization of ORA Test Results
 #'
 #' @description
 #' The `plot_ora` function visualizes the results of an ORA (Over-Representation Analysis) test.
@@ -153,7 +152,7 @@ plot_ora <- function(data, x, y, size, fill, flip = FALSE) {
   p
 }
 
-# Deprecated aliases ----------------------------------------------------------
+# --- Deprecated aliases ---
 
 #' Plot Enrichment for a Pathway (Deprecated)
 #'

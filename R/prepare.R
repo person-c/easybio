@@ -1,4 +1,4 @@
-#' @title Download and Process GEO Data
+#' Download and Process GEO Data
 #'
 #' @description
 #' This function downloads gene expression data from the Gene Expression
@@ -41,7 +41,6 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   if (length(eset) > 1) warning("There are more than one geo dataset;only the first one will be extracted")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)
   pd <- eset[[1]]@phenoData@data
-
 
   if (nrow(exp) == 0L) {
     warning("No expression data is retrieved in series matrix; try to check the supplementary file")
@@ -129,7 +128,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
     exp2 <- exp2[, .SD[which.max(rowMeans(.SD, na.rm = TRUE))], by = symbol, .SDcols = is.numeric]
   }
   if (method == "mean") {
-    exp2 <- exp2[, lapply(.SD, function(x) sum(x) / length(x)), by = symbol, .SDcols = is.numeric]
+    exp2 <- exp2[, lapply(.SD, \(x) sum(x) / length(x)), by = symbol, .SDcols = is.numeric]
   }
 
   exp2 <- setDF(exp2, exp2$symbol)
