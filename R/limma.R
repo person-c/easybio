@@ -16,8 +16,8 @@
 #'   count data, sample information, and feature information.
 #' @export
 dge_list <- function(count, sample_info, feature_info) {
-  stopifnot(rownames(count) == rownames(feature_info))
-  stopifnot(colnames(count) == rownames(sample_info))
+  assert_names(rownames(count), identical.to = rownames(feature_info))
+  assert_names(colnames(count), identical.to = rownames(sample_info))
 
   if (!requireNamespace("edgeR", quietly = TRUE)) {
     stop(

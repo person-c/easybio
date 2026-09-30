@@ -7,7 +7,7 @@
 # The following block is used by usethis to automatically manage
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
-#' @importFrom checkmate assert_data_frame assert_number assert_string assert_subset
+#' @importFrom checkmate assert_character assert_data_frame assert_names assert_number assert_string assert_subset
 ## usethis namespace: end
 NULL
 

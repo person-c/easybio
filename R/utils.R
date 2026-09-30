@@ -325,10 +325,8 @@ suggest_best_match <- function(x,
                                ignore_case = TRUE,
                                return_distance = FALSE) {
   # --- 1. Input Validation and Normalization ---
-  stopifnot(
-    is.character(x), length(x) == 1,
-    is.character(choices)
-  )
+  assert_string(x)
+  assert_character(choices)
 
   if (length(choices) == 0) {
     return(if (return_distance) NULL else NA_character_)
