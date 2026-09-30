@@ -10,7 +10,6 @@
 #'
 #' All methods return `invisible(self)`, enabling fluent method chaining.
 #'
-#' @import ggplot2 R6 data.table
 #' @return The `R6` class [Artist].
 #' @export
 #'

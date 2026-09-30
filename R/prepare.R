@@ -25,7 +25,6 @@
 #' \item{supplementary}{Only present when `status` is `"supplementary_files"`.
 #'   A named list of `data.table` objects parsed from supplementary files.}
 #'
-#' @importFrom utils download.file
 #' @export
 prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   . <- ID <- symbol <- gene_assignment <- NULL # nolint: object_name_linter.

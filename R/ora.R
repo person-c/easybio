@@ -11,7 +11,6 @@
 #' @param ticks_size The size of the tick marks. Default is 0.2.
 #'
 #' @return A ggplot object representing the enrichment plot.
-#' @import ggplot2
 #' @export
 plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_size = 0.2) {
   if (!requireNamespace("fgsea", quietly = TRUE)) {
@@ -61,7 +60,6 @@ plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_siz
 #'
 #' @param stats A numeric vector containing the ranked statistics from a GSEA analysis.
 #'
-#' @import ggplot2
 #' @return ggplot2 object
 #' @export
 plot_rank <- function(stats) {
@@ -88,7 +86,6 @@ plot_rank <- function(stats) {
 #' @param stats A numeric vector representing the ranked statistics.
 #' @param save A logical value indicating whether to save the plot as a PDF file. Default is `FALSE`.
 #'
-#' @import ggplot2
 #' @return ggplot2 object.
 #' @export
 plot_gsea <- function(fgsea_res, pathways, pwayname, stats, save = FALSE) {
@@ -127,7 +124,6 @@ plot_gsea <- function(fgsea_res, pathways, pwayname, stats, save = FALSE) {
 #'        Use a constant value for a single category.
 #' @param flip A logical value indicating whether to flip the axes of the plot. Default is `FALSE`.
 #'
-#' @import ggplot2
 #' @return ggplot2 object.
 #' @export
 plot_ora <- function(data, x, y, size, fill, flip = FALSE) {

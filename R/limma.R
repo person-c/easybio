@@ -51,10 +51,6 @@ dge_list <- function(count, sample_info, feature_info) {
 #'
 #' @return The function returns a `DGEList` object with low-expressed genes
 #'   filtered out and normalization factors calculated.
-#' @import grDevices
-#' @import graphics
-#' @import stats
-#' @import utils
 #' @export
 process_dge_list <- function(x, group_column, min_count = 10) {
   lcpm <- edgeR::cpm(x, log = TRUE, prior.count = 2)
@@ -65,7 +61,7 @@ process_dge_list <- function(x, group_column, min_count = 10) {
   # at most 10 samples, taken in order: both the subset and the line colours
   # used to be drawn at random, so the diagnostic plots differed between runs
   samples <- seq_len(min(ncol(x), 10L))
-  line_cols <- grDevices::rainbow(length(samples))
+  line_cols <- rainbow(length(samples))
 
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
@@ -150,7 +146,7 @@ limma_fit <- function(x, group_column) {
 
   group_labels <- as.character(unique(x$samples[[group_column]]))
   group_levels <- make.names(group_labels)
-  pairs <- utils::combn(seq_along(group_levels), 2)
+  pairs <- combn(seq_along(group_levels), 2)
   contr_strings <- paste0(group_levels[pairs[1, ]], "-", group_levels[pairs[2, ]])
 
   contr_matrix <- limma::makeContrasts(contrasts = contr_strings, levels = design)
@@ -188,7 +184,6 @@ limma_fit <- function(x, group_column) {
 #' @param label variable representing the column name for the text label aesthetic.
 #'
 #' @return A `ggplot` object representing the volcano plot.
-#' @import ggplot2
 #' @export
 plot_volcano <- function(data, data_text, x, y, color, label) {
   p <- ggplot(data, aes(x = {{ x }}, y = {{ y }})) +

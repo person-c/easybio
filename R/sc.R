@@ -571,7 +571,6 @@ check_marker <- function(
 #'
 #' @seealso \code{\link{check_marker}} to generate the `features` list.
 #'
-#' @import ggplot2
 #' @export
 #'
 #' @examples
@@ -658,7 +657,6 @@ plot_seurat_dot <- function(features, srt, split = FALSE, ...) {
 #' @param mkr character, the name of the marker to be plotted.
 #'
 #' @return A ggplot2 object representing the distribution of the marker.
-#' @import ggplot2
 #'
 #' @export
 #' @examples
@@ -709,7 +707,6 @@ plot_marker_distribution <- function(mkr = character()) {
 #'   not the one `Seurat::DotPlot()` computes from the Seurat object.
 #'
 #' @return A ggplot2 object representing the distribution of possible cell types.
-#' @import ggplot2
 #' @export
 plot_possible_cell <- function(
   marker, min_unique_n = 2,
@@ -807,7 +804,6 @@ plot_possible_cell <- function(
 #'
 #' @return A list of ggplot2 objects, each representing a UMAP plot generated
 #'   with a different combination of resolution and n parameters.
-#' @import ggplot2
 #' @export
 tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
   parameters <- CJ(resolution = resolution, n = n)
