@@ -14,10 +14,10 @@ data <- GDCprepare(query = query)
 
 # data
 lt <- prepare_tcga(data)
-lt$all$sampleInfo[["group"]] <- fifelse(lt$all$sampleInfo$sample_type %ilike% "Tumor", "Tumor", "Normal")
+lt$all$sample_info[["group"]] <- fifelse(lt$all$sample_info$sample_type %ilike% "Tumor", "Tumor", "Normal")
 
 # limma-voom workflow
-x <- dge_list(lt$all$exprCount, lt$all$sampleInfo, lt$all$featuresInfo)
+x <- dge_list(lt$all$exprCount, lt$all$sample_info, lt$all$features_info)
 x <- process_dge_list(x, "group", 10)
 efit <- limma_fit(x, "group")
 
