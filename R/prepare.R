@@ -159,7 +159,7 @@ prepare_tcga <- function(data) {
   expr <- as.data.frame(data@assays@data$unstranded, row.names = rownames(features_info))
   colnames(expr) <- rownames(sample_info)
 
-  # tumor smaple data
+  # tumor sample data
   tumor_idx <- sample_info[["sample_type"]] %ilike% "Tumor"
 
   expr2 <- as.data.frame(data@assays@data$fpkm_unstrand, row.names = rownames(features_info))

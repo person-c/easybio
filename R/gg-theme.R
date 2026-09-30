@@ -10,7 +10,6 @@
 #' @param base_family character, the base font family. Default is "sans".
 #'
 #' @return A ggplot2 theme object that can be applied to ggplot2 plots.
-#' @return ggplot2 theme.
 #' @export
 #'
 #' @examples
