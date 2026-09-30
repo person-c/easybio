@@ -153,6 +153,7 @@ plot_ora <- function(data, x, y, size, fill, flip = FALSE) {
 }
 
 # --- Deprecated aliases ---
+# nolint start: object_name_linter
 
 #' Plot Enrichment for a Pathway (Deprecated)
 #'
@@ -165,7 +166,7 @@ plot_ora <- function(data, x, y, size, fill, flip = FALSE) {
 #' @param ... Arguments passed on to [plot_enrichment()].
 #' @return See [plot_enrichment()].
 #' @export
-plotEnrichment2 <- function(...) { # nolint: object_name_linter.
+plotEnrichment2 <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotEnrichment2()", "plot_enrichment()")
   plot_enrichment(...)
 }
@@ -181,7 +182,7 @@ plotEnrichment2 <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [plot_rank()].
 #' @return See [plot_rank()].
 #' @export
-plotRank <- function(...) { # nolint: object_name_linter.
+plotRank <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotRank()", "plot_rank()")
   plot_rank(...)
 }
@@ -197,7 +198,7 @@ plotRank <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [plot_gsea()].
 #' @return See [plot_gsea()].
 #' @export
-plotGSEA <- function(...) { # nolint: object_name_linter.
+plotGSEA <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotGSEA()", "plot_gsea()")
   plot_gsea(...)
 }
@@ -213,7 +214,8 @@ plotGSEA <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [plot_ora()].
 #' @return See [plot_ora()].
 #' @export
-plotORA <- function(...) { # nolint: object_name_linter.
+plotORA <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotORA()", "plot_ora()")
   plot_ora(...)
 }
+# nolint end

@@ -210,6 +210,7 @@ plot_volcano <- function(data, data_text, x, y, color, label) {
 }
 
 # --- Deprecated aliases ---
+# nolint start: object_name_linter
 
 #' Construct a DGEList Object (Deprecated)
 #'
@@ -222,7 +223,7 @@ plot_volcano <- function(data, data_text, x, y, color, label) {
 #' @param ... Arguments passed on to [dge_list()].
 #' @return See [dge_list()].
 #' @export
-dgeList <- function(...) { # nolint: object_name_linter.
+dgeList <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "dgeList()", "dge_list()")
   dge_list(...)
 }
@@ -238,7 +239,7 @@ dgeList <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [process_dge_list()].
 #' @return See [process_dge_list()].
 #' @export
-dprocess_dgeList <- function(...) { # nolint: object_name_linter.
+dprocess_dgeList <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "dprocess_dgeList()", "process_dge_list()")
   process_dge_list(...)
 }
@@ -254,7 +255,7 @@ dprocess_dgeList <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [limma_fit()].
 #' @return See [limma_fit()].
 #' @export
-limmaFit <- function(...) { # nolint: object_name_linter.
+limmaFit <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "limmaFit()", "limma_fit()")
   limma_fit(...)
 }
@@ -270,7 +271,8 @@ limmaFit <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [plot_volcano()].
 #' @return See [plot_volcano()].
 #' @export
-plotVolcano <- function(...) { # nolint: object_name_linter.
+plotVolcano <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotVolcano()", "plot_volcano()")
   plot_volcano(...)
 }
+# nolint end

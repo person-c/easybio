@@ -837,6 +837,7 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
 }
 
 # --- Deprecated aliases ---
+# nolint start: object_name_linter
 
 #' Plot Distribution of a Marker (Deprecated)
 #'
@@ -849,7 +850,7 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
 #' @param ... Arguments passed on to [plot_marker_distribution()].
 #' @return See [plot_marker_distribution()].
 #' @export
-plotMarkerDistribution <- function(...) { # nolint: object_name_linter.
+plotMarkerDistribution <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotMarkerDistribution()", "plot_marker_distribution()")
   plot_marker_distribution(...)
 }
@@ -865,7 +866,7 @@ plotMarkerDistribution <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [plot_possible_cell()].
 #' @return See [plot_possible_cell()].
 #' @export
-plotPossibleCell <- function(...) { # nolint: object_name_linter.
+plotPossibleCell <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotPossibleCell()", "plot_possible_cell()")
   plot_possible_cell(...)
 }
@@ -881,7 +882,7 @@ plotPossibleCell <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [plot_seurat_dot()].
 #' @return See [plot_seurat_dot()].
 #' @export
-plotSeuratDot <- function(...) { # nolint: object_name_linter.
+plotSeuratDot <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "plotSeuratDot()", "plot_seurat_dot()")
   plot_seurat_dot(...)
 }
@@ -897,7 +898,8 @@ plotSeuratDot <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [tune_parameters()].
 #' @return See [tune_parameters()].
 #' @export
-tuneParameters <- function(...) { # nolint: object_name_linter.
+tuneParameters <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "tuneParameters()", "tune_parameters()")
   tune_parameters(...)
 }
+# nolint end

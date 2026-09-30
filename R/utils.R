@@ -400,6 +400,7 @@ suggest_best_match <- function(x,
 }
 
 # --- Deprecated aliases ---
+# nolint start: object_name_linter
 
 #' Rename Column Names (Deprecated)
 #'
@@ -412,7 +413,7 @@ suggest_best_match <- function(x,
 #' @param ... Arguments passed on to [set_colnames()].
 #' @return See [set_colnames()].
 #' @export
-setcolnames <- function(...) { # nolint: object_name_linter.
+setcolnames <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "setcolnames()", "set_colnames()")
   set_colnames(...)
 }
@@ -428,7 +429,7 @@ setcolnames <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [set_rownames()].
 #' @return See [set_rownames()].
 #' @export
-setrownames <- function(...) { # nolint: object_name_linter.
+setrownames <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "setrownames()", "set_rownames()")
   set_rownames(...)
 }
@@ -444,7 +445,7 @@ setrownames <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [group_stat_i()].
 #' @return See [group_stat_i()].
 #' @export
-groupStatI <- function(...) { # nolint: object_name_linter.
+groupStatI <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "groupStatI()", "group_stat_i()")
   group_stat_i(...)
 }
@@ -460,7 +461,7 @@ groupStatI <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [group_stat()].
 #' @return See [group_stat()].
 #' @export
-groupStat <- function(...) { # nolint: object_name_linter.
+groupStat <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "groupStat()", "group_stat()")
   group_stat(...)
 }
@@ -476,7 +477,7 @@ groupStat <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [set_savedir()].
 #' @return See [set_savedir()].
 #' @export
-setSavedir <- function(...) { # nolint: object_name_linter.
+setSavedir <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "setSavedir()", "set_savedir()")
   set_savedir(...)
 }
@@ -492,7 +493,8 @@ setSavedir <- function(...) { # nolint: object_name_linter.
 #' @param ... Arguments passed on to [work_in()].
 #' @return See [work_in()].
 #' @export
-workIn <- function(...) { # nolint: object_name_linter.
+workIn <- function(...) {
   lifecycle::deprecate_warn("1.3.0", "workIn()", "work_in()")
   work_in(...)
 }
+# nolint end
