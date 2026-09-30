@@ -21,7 +21,7 @@
     # no results yet, so the job is queued or running ("jobStatus" is "NEW" or
     # "RUNNING"): keep asking until the deadline
     if (Sys.time() >= deadline) {
-      message("Job is still running after ", timeout, " seconds; giving up.")
+      message("Job is still running after ", timeout, " seconds; giving up")
       return(FALSE)
     }
     Sys.sleep(interval)
@@ -70,7 +70,7 @@ uniprot_id_map <- function(..., timeout = 60, interval = 2) {
 
   if (!.is_job_ready(job_id, timeout = timeout, interval = interval)) {
     warning(
-      "The ID mapping job did not finish within ", timeout, " seconds.",
+      "The ID mapping job did not finish within ", timeout, " seconds",
       call. = FALSE
     )
     return(NULL)

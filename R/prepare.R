@@ -32,13 +32,13 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   if (!requireNamespace("GEOquery", quietly = TRUE)) {
     stop(
       "To get GEO datasets, prepare_geo() requires 'GEOquery' package which ",
-      "cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'.",
+      "cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'",
       call. = FALSE
     )
   }
 
   eset <- GEOquery::getGEO(GEO = geo, destdir = dir, getGPL = FALSE)
-  if (length(eset) > 1) warning("There are more than one geo dataset;only the first one will be extracted")
+  if (length(eset) > 1) warning("There is more than one GEO dataset; only the first one will be extracted")
   exp <- as.data.frame(eset[[1]]@assayData$exprs)
   pd <- eset[[1]]@phenoData@data
 
@@ -63,7 +63,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
     f_idx <- grep(pattern = "(count)|(fpkm)|(tpm)", x = fnames, ignore.case = TRUE)
 
     if (inherits(fnames, "try-error") || length(f_idx) == 0L) {
-      message(sprintf("No potential expression data is detected in supplementary files"))
+      message("No potential expression data is detected in supplementary files")
       message("Check URL manually if in doubt")
       message(url)
 
@@ -73,8 +73,8 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
       ))
     }
 
-    message("detect potential expression data: \n", paste0(fnames[f_idx], "\n"))
-    message("read potential expression data in supplementary files...")
+    message("Detect potential expression data:\n", paste0(fnames[f_idx], collapse = "\n"))
+    message("Read potential expression data in supplementary files...")
     res <- lapply(f_idx, \(idx) fread(paste0(url, fnames[[idx]])))
     names(res) <- make.names(fnames[[f_idx]])
 
@@ -89,7 +89,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   gpl <- GEOquery::Table(gpl)
   setDT(gpl)
   if (!is.character(gpl[["ID"]])) {
-    warning("The gpl annotation data's ID column is not character; Please check the gpl data carefully!")
+    warning("The gpl annotation data's ID column is not character; please check the gpl data carefully")
     gpl[, let(ID = as.character(ID))]
   }
   gpl <- gpl[.(rownames(exp)), on = .(ID)]
@@ -115,7 +115,7 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
       "The GPL annotation of ", geo, " has neither a 'gene_assignment' nor a ",
       "'symbol'/'geneName' column, so its probes cannot be mapped to gene ",
       "symbols. Use combine = FALSE to get the annotation and the expression ",
-      "matrix as they are.",
+      "matrix as they are",
       call. = FALSE
     )
   }

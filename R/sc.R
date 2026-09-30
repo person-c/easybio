@@ -183,7 +183,7 @@ get_marker <- function(
   }
 
   if (all(!is_exists)) {
-    message("No valid cell types provided to fetch markers. Returning NULL.")
+    message("No valid cell types provided to fetch markers. Returning NULL")
     return(NULL)
   }
 
@@ -348,7 +348,7 @@ match_ref <- function(
     } else {
       message(
         "'marker' has no 'pct.1' column, so 'min_pct' is ignored. ",
-        "Filtering by detection rate needs the 'pct.1' column of Seurat::FindAllMarkers()."
+        "Filtering by detection rate needs the 'pct.1' column of Seurat::FindAllMarkers()"
       )
     }
   }
@@ -516,7 +516,7 @@ check_marker <- function(
   if (!inherits(marker, "cellmarker_match")) {
     stop(
       "'marker' must be the result of 'match_ref()'. ",
-      "Please use 'match_ref()' to annotate your data first.",
+      "Please use 'match_ref()' to annotate your data first",
       call. = FALSE
     )
   }
@@ -530,10 +530,10 @@ check_marker <- function(
     topmarker <- setNames(topmarker[["ordered_symbol"]], topmarker[["cell_name"]])
   } else {
     if (is.null(filter_args$cellmarker3_filter$spc)) {
-      stop("
-      Can't find the species information from the 'marker' input. This usually happens when \n
-      1. You didn't set the 'spc' arguments when using `match_ref`; or \n
-      2. The attributes of the 'marker' input are lost if you have done any operations on it.",
+      stop(
+        "Can't find the species information from the 'marker' input. This usually happens when:\n",
+        "1. You didn't set the 'spc' argument when using `match_ref()`; or\n",
+        "2. The attributes of the 'marker' input are lost if you have done any operations on it",
         call. = FALSE
       )
     }
@@ -628,7 +628,7 @@ plot_seurat_dot <- function(features, srt, split = FALSE, ...) {
 
   if (anyDuplicated(unlist(features)) > 0) {
     features <- unique(list2dt(features), by = "value")
-    warning("Duplicated markers are removed! if you want to keep them, please set `split = TRUE`.")
+    warning("Duplicated markers are removed; set `split = TRUE` to keep them")
 
     features <- split(features[["value"]], features[["name"]])
   }
@@ -724,7 +724,7 @@ plot_possible_cell <- function(
       stop(
         "'marker' carries no detection rate ('pct_with' is all NA), so ",
         "value = \"pct\" cannot be computed. This happens when the input of ",
-        "match_ref() has no 'pct.1' column. Use value = \"uniqueN\" instead.",
+        "match_ref() has no 'pct.1' column. Use value = \"uniqueN\" instead",
         call. = FALSE
       )
     }
