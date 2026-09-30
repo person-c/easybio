@@ -22,7 +22,7 @@
 #' cying$test_wilcox(formula = Ozone ~ Month)
 #' cying$plot_scatter(x = Wind, y = Temp)
 #'
-Artist <- R6::R6Class("Artist", # nolint: object_name_linter.
+Artist <- R6Class("Artist", # nolint: object_name_linter.
   public = list(
     #' @field data Stores the dataset used for plotting.
     data = NULL,
