@@ -4,10 +4,14 @@
 \alias{available_tissue_type}
 \title{Retrieve Available Tissue Types for a Given Species}
 \usage{
-available_tissue_type(spc)
+available_tissue_type(spc, tissue_class = available_tissue_class(spc))
 }
 \arguments{
 \item{spc}{A character string specifying the species (e.g., "Human" or "Mouse").}
+
+\item{tissue_class}{A character vector of tissue classes to look in, default
+\code{available_tissue_class(spc)}, i.e. every class the species has. A class
+the species does not have is an error rather than an empty result.}
 }
 \value{
 A character vector of unique tissue types available for the given species.
@@ -15,13 +19,24 @@ If no tissue types are found, an empty vector is returned.
 }
 \description{
 This function extracts and returns a unique list of available tissue types
-from the CellMarker 3.0 database for a specified species.
+from the CellMarker 3.0 database for a specified species, optionally
+restricted to some tissue classes.
+}
+\details{
+\code{tissue_class} and \code{tissue_type} are two labels recorded for each database
+entry, not a hierarchy: one tissue type can be listed under several classes.
+\code{match_ref()} combines the two with AND, so a pair that never co-occurs
+selects nothing; this is how to see what a class actually has before passing
+both.
 }
 \examples{
 # Get all tissue types for Human
 available_tissue_type("Human")
 
+# The tissue types recorded under one class
+available_tissue_type("Human", tissue_class = "Blood")
+
 }
 \seealso{
-\code{\link{available_tissue_class}}, \code{\link{get_marker}}
+\code{\link{available_tissue_class}}, \code{\link{match_ref}}
 }

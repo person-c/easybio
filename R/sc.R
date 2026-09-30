@@ -86,25 +86,47 @@ available_tissue_class <- function(spc) {
 #' Retrieve Available Tissue Types for a Given Species
 #'
 #' This function extracts and returns a unique list of available tissue types
-#' from the CellMarker 3.0 database for a specified species.
+#' from the CellMarker 3.0 database for a specified species, optionally
+#' restricted to some tissue classes.
 #'
 #' @param spc A character string specifying the species (e.g., "Human" or "Mouse").
+#' @param tissue_class A character vector of tissue classes to look in, default
+#'   `available_tissue_class(spc)`, i.e. every class the species has. A class
+#'   the species does not have is an error rather than an empty result.
+#'
+#' @details
+#' `tissue_class` and `tissue_type` are two labels recorded for each database
+#' entry, not a hierarchy: one tissue type can be listed under several classes.
+#' `match_ref()` combines the two with AND, so a pair that never co-occurs
+#' selects nothing; this is how to see what a class actually has before passing
+#' both.
 #'
 #' @return A character vector of unique tissue types available for the given species.
 #' If no tissue types are found, an empty vector is returned.
 #'
-#' @seealso \code{\link{available_tissue_class}}, \code{\link{get_marker}}
+#' @seealso \code{\link{available_tissue_class}}, \code{\link{match_ref}}
 #'
 #' @examples
 #' # Get all tissue types for Human
 #' available_tissue_type("Human")
 #'
+#' # The tissue types recorded under one class
+#' available_tissue_type("Human", tissue_class = "Blood")
+#'
 #' @export
-available_tissue_type <- function(spc) {
+available_tissue_type <- function(spc, tissue_class = available_tissue_class(spc)) {
   assert_subset(spc, c("Human", "Mouse"), empty.ok = FALSE)
+  assert_subset(tissue_class, choices = available_tissue_class(spc))
 
-  species <- NULL
-  available_ele(cellMarker3, "tissue_type", subset = species == spc)
+  species <- NULL # nolint: object_name_linter.
+  # the database column of the same name shadows the argument inside the subset
+  # expression, so the argument is read into a `_filter` name first, as in
+  # get_marker() and match_ref()
+  tissue_class_filter <- tissue_class
+  available_ele(
+    cellMarker3, "tissue_type",
+    subset = species == spc & tissue_class %chin% tissue_class_filter
+  )
 }
 
 #' Retrieve Markers for Specific Cells from cellMarker3
