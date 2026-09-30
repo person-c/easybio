@@ -237,6 +237,13 @@ get_marker <- function(
 #' marker genes for each cluster based on specified thresholds and then compares
 #' them to the reference database to find the most likely cell type annotations.
 #'
+#' @details
+#' `tissue_class` and `tissue_type` are the two labels the database records for
+#' the sample each entry comes from, and they are combined with AND. A class
+#' and a type that never occur together therefore select no reference entry,
+#' which warns and returns no candidate; [available_tissue_type()] lists the
+#' types a class actually has.
+#'
 #' @param marker A `data.frame` or `data.table` of markers, usually the output of
 #'   `Seurat::FindAllMarkers`. It must contain columns for `cluster`, `gene`,
 #'   `avg_log2FC`, and `p_val_adj`. If a `pct.1` column is present, the detection
@@ -387,6 +394,20 @@ match_ref <- function(
     tissue_class_filter <- tissue_class
     tissue_type_filter <- tissue_type
     ref <- ref[tissue_class %chin% tissue_class_filter & tissue_type %chin% tissue_type_filter]
+
+    # the two filters are ANDed labels, not a hierarchy, so a plausible-looking
+    # class/type pair can select nothing at all; every candidate would then be
+    # dropped without a word about why
+    if (nrow(ref) == 0L) {
+      warning(
+        "No reference entry has both a 'tissue_class' in {",
+        .abbrev_values(tissue_class_filter), "} and a 'tissue_type' in {",
+        .abbrev_values(tissue_type_filter),
+        "}, so no cell type can be matched. The two are ANDed labels rather than ",
+        "a hierarchy; available_tissue_type() lists the types a class has",
+        call. = FALSE
+      )
+    }
 
     is_custom_ref <- FALSE
   }
@@ -856,6 +877,12 @@ tune_parameters <- function(srt, resolution = numeric(), n = integer(), spc) {
 
 .exprs_to_formula <- function(expr) {
   formula(paste(deparse(expr[[2]]), "~", deparse(expr[[3]])))
+}
+
+# the tissue filters default to every value of the species, so a filter can hold
+# hundreds of names; a message should not print them all
+.abbrev_values <- function(x, n = 5L) {
+  if (length(x) > n) paste0(length(x), " values") else paste(x, collapse = ", ")
 }
 
 # --- Deprecated aliases ---

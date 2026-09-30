@@ -86,6 +86,13 @@ against a reference database. It first filters and selects the top \code{n}
 marker genes for each cluster based on specified thresholds and then compares
 them to the reference database to find the most likely cell type annotations.
 }
+\details{
+\code{tissue_class} and \code{tissue_type} are the two labels the database records for
+the sample each entry comes from, and they are combined with AND. A class
+and a type that never occur together therefore select no reference entry,
+which warns and returns no candidate; \code{\link[=available_tissue_type]{available_tissue_type()}} lists the
+types a class actually has.
+}
 \examples{
 \dontrun{
 library(easybio)

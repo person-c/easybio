@@ -144,6 +144,38 @@ test_that("match_ref respects tissue_class filter", {
   expect_true(nrow(res_blood) <= nrow(res_all))
 })
 
+test_that("match_ref warns when the tissue filters select no reference entry", {
+  # "Bone marrow" is a tissue_class, not a tissue_type recorded under Blood,
+  # and the two filters are ANDed, so this plausible pair matches nothing
+  expect_warning(
+    res <- match_ref(pbmc.markers,
+      n = 10, spc = "Human",
+      tissue_class = "Blood", tissue_type = "Bone marrow"
+    ),
+    "No reference entry has both"
+  )
+  expect_equal(nrow(res), 0)
+})
+
+test_that("match_ref summarises a long tissue filter instead of printing it", {
+  # tissue_type defaults to every type of the species, which must not be
+  # spelled out in the message
+  expect_warning(
+    match_ref(pbmc.markers, n = 10, spc = "Human", tissue_class = "NoSuchTissue"),
+    "[0-9]+ values"
+  )
+})
+
+test_that("match_ref does not warn about the tissue filters when they select entries", {
+  expect_no_warning(
+    match_ref(pbmc.markers, n = 10, spc = "Human", tissue_class = c("Blood", "Bone marrow"))
+  )
+  # a custom reference does not go through the tissue filters at all
+  expect_no_warning(
+    match_ref(pbmc.markers, n = 10, ref = data.frame(cell_name = "T-cell", marker = "CD3D"))
+  )
+})
+
 test_that("match_ref handles n larger than available markers per cluster", {
   # n = 10000 is larger than any cluster has markers
   res <- match_ref(pbmc.markers, n = 10000, spc = "Human")
