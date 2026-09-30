@@ -146,9 +146,18 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
 #' It extracts and processes the necessary information from the TCGA data
 #' object, separating tumor and non-tumor samples.
 #'
+#' @details
+#' The two expression tables used to be called `exprCount` and `exprFpkm`
+#' while the fields next to them were already `sample_info` and
+#' `features_info`. They are now `expr_count` and `expr_fpkm`; reading or
+#' assigning an old name still works but warns, and will stop working in 1.4.0.
+#'
 #' @param data A `SummarizedExperiment` object containing TCGA data, typically obtained from R package `TCGABiolinks`.
 #'
-#' @return A list.
+#' @return A list of two tables, `all` (every sample) and `tumor` (the tumor
+#'   samples), each holding the expression matrix (`expr_count`, or
+#'   `expr_fpkm` for the tumor samples), the `features_info` and the
+#'   `sample_info`.
 #' @export
 prepare_tcga <- function(data) {
   sample_info <- as.data.frame(data@colData)
@@ -169,15 +178,80 @@ prepare_tcga <- function(data) {
   sample_info2 <- sample_info[tumor_idx, ]
 
   structure(list(
-    all = list(
-      exprCount = expr,
+    all = .tcga_table(
+      expr_count = expr,
       features_info = features_info,
       sample_info = sample_info
     ),
-    tumor = list(
-      exprFpkm = expr2,
+    tumor = .tcga_table(
+      expr_fpkm = expr2,
       features_info = features_info,
       sample_info = sample_info2
     )
   ))
+}
+
+# --- Deprecated field names ---
+
+# lifecycle deprecates functions, and rejects anything that is not a call of
+# exactly one argument, so a renamed list field needs its own warning. The
+# tables carry a class whose accessors translate the old names; a plain list
+# cannot warn about a name it no longer has, it just returns NULL.
+.tcga_renamed <- c(exprCount = "expr_count", exprFpkm = "expr_fpkm")
+.tcga_renamed_warned <- new.env(parent = emptyenv())
+
+.tcga_field <- function(name) {
+  if (!is.character(name)) {
+    return(name)
+  }
+  new <- .tcga_renamed[name]
+  if (is.na(new)) {
+    return(name)
+  }
+  # once per session: the same field is often read in a loop
+  if (is.null(.tcga_renamed_warned[[name]])) {
+    .tcga_renamed_warned[[name]] <- TRUE
+    warning(
+      "'", name, "' was renamed to '", new, "' in easybio 1.3.0; ",
+      "the old name will stop working in 1.4.0",
+      call. = FALSE
+    )
+  }
+  unname(new)
+}
+
+.tcga_table <- function(...) {
+  structure(list(...), class = c("tcga_table", "list"))
+}
+
+#' @export
+`$.tcga_table` <- function(x, name) {
+  .subset2(x, .tcga_field(name))
+}
+
+#' @export
+`[[.tcga_table` <- function(x, name) {
+  name <- .tcga_field(name)
+  # .subset2() returns NULL for a name that is not there, where [[ on a list
+  # errors; the class should not change that
+  if (is.character(name) && !name %chin% names(x)) {
+    stop("subscript out of bounds", call. = FALSE)
+  }
+  .subset2(x, name)
+}
+
+#' @export
+`$<-.tcga_table` <- function(x, name, value) {
+  `[[<-.tcga_table`(x, name, value)
+}
+
+#' @export
+`[[<-.tcga_table` <- function(x, name, value) {
+  name <- .tcga_field(name)
+  structure(`[[<-`(unclass(x), name, value), class = c("tcga_table", "list"))
+}
+
+#' @export
+print.tcga_table <- function(x, ...) {
+  print(unclass(x), ...)
 }

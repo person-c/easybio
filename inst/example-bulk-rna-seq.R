@@ -17,7 +17,7 @@ lt <- prepare_tcga(data)
 lt$all$sample_info[["group"]] <- fifelse(lt$all$sample_info$sample_type %ilike% "Tumor", "Tumor", "Normal")
 
 # limma-voom workflow
-x <- dge_list(lt$all$exprCount, lt$all$sample_info, lt$all$features_info)
+x <- dge_list(lt$all$expr_count, lt$all$sample_info, lt$all$features_info)
 x <- process_dge_list(x, "group", 10)
 efit <- limma_fit(x, "group")
 

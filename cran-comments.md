@@ -39,6 +39,10 @@ uses are kept).
   warning and are scheduled for removal in 1.4.0 — nothing was dropped, so
   existing code keeps working. `matchCellMarker2()` became `match_ref()`, because it also
   accepts a user-supplied reference and the old name implied otherwise.
+  For the same reason the two tables returned by `prepare_tcga()` report
+  `expr_count` and `expr_fpkm`: a list field cannot be aliased the way a
+  function can, so the old `exprCount`/`exprFpkm` names still resolve but
+  warn, and they too go in 1.4.0.
 * `match_ref()` now ranks candidate cell types by `uniqueN` (the number of
   distinct matching markers), with `N` as the tie-breaker, where it
   previously ranked by `N` alone: a single heavily reported marker could

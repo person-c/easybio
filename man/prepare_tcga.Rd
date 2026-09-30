@@ -10,11 +10,20 @@ prepare_tcga(data)
 \item{data}{A \code{SummarizedExperiment} object containing TCGA data, typically obtained from R package \code{TCGABiolinks}.}
 }
 \value{
-A list.
+A list of two tables, \code{all} (every sample) and \code{tumor} (the tumor
+samples), each holding the expression matrix (\code{expr_count}, or
+\code{expr_fpkm} for the tumor samples), the \code{features_info} and the
+\code{sample_info}.
 }
 \description{
 This function prepares TCGA data for downstream analyses such as
 differential expression analysis with \code{limma} or survival analysis.
 It extracts and processes the necessary information from the TCGA data
 object, separating tumor and non-tumor samples.
+}
+\details{
+The two expression tables used to be called \code{exprCount} and \code{exprFpkm}
+while the fields next to them were already \code{sample_info} and
+\code{features_info}. They are now \code{expr_count} and \code{expr_fpkm}; reading or
+assigning an old name still works but warns, and will stop working in 1.4.0.
 }
