@@ -34,6 +34,13 @@ uses are kept).
 
 ### Changes users will notice
 
+* `available_tissue_type()` takes the tissue class to look in, and
+  `match_ref()` warns when its two tissue filters select no reference entry
+  at all. `tissue_class` and `tissue_type` read like a hierarchy but are two
+  labels recorded per entry and combined with AND, so a class and a type
+  that never occur together used to return no candidate without saying so.
+  The single-cell vignette and example script now bound the search for the
+  PBMC example (`tissue_class = c("Blood", "Bone marrow")`) and explain why.
 * Every exported function and argument now uses `snake_case`. The previous
   camelCase names are kept as deprecated aliases that emit a lifecycle
   warning and are scheduled for removal in 1.4.0 — nothing was dropped, so

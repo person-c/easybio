@@ -72,7 +72,18 @@ pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 # found in the previous step to query the CellMarker 3.0 database and get a list
 # of potential cell types for each cluster.
 
-marker <- match_ref(marker = pbmc.markers, n = 50, spc = "Human")
+# The search is bounded to the tissues this sample could have come from. Every
+# database entry carries a tissue_class (the organ or system) and a tissue_type
+# (the sample the original study described), and match_ref() ANDs the two.
+# Bounding the class is what matters here: the default searches every organ, and
+# bounding the type as well removes evidence rather than correcting for
+# anything. PBMC are peripheral blood mononuclear cells, so blood plus the bone
+# marrow they are made in. available_tissue_type("Human", tissue_class = "Blood")
+# lists what a class actually holds.
+marker <- match_ref(
+  marker = pbmc.markers, n = 50, spc = "Human",
+  tissue_class = c("Blood", "Bone marrow")
+)
 # Let's look at the top results. Within each cluster the candidates are ranked by
 # `uniqueN` (how many of our marker genes they matched), with `N` (the total
 # number of matching database entries) as the tie-breaker. `pct_with` reports the

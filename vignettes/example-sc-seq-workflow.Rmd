@@ -43,8 +43,26 @@ head(pbmc.markers)
 
 We begin by feeding the cluster markers (from `Seurat::FindAllMarkers`) into `match_ref()`. This function compares our markers against the CellMarker 3.0 database and returns a ranked list of potential cell types for each cluster.
 
+### Bounding the search to the right tissue
+
+By default `match_ref()` searches the whole database, which mixes every organ: for PBMC data that puts hepatocytes and alveolar cells in the same candidate list as monocytes. Each database entry carries two labels that can narrow it:
+
+* `tissue_class`, the organ or system the entry came from (`Blood`, `Bone marrow`, `Lung`, ...), and
+* `tissue_type`, the sample the original study described (`Peripheral blood`, `Peripheral blood mononuclear cell`, `Whole blood`, ...).
+
+They are two labels on an entry rather than a hierarchy — one `tissue_type` can be listed under several classes — and `match_ref()` combines them with AND. Bounding `tissue_class` is the useful move here; bounding `tissue_type` as well removes evidence instead of correcting for anything: restricted to `"Peripheral blood"` alone, cluster 8's platelet markers keep only a fraction of their support and it comes out as a dendritic cell instead. Our sample is peripheral blood mononuclear cells, so blood and bone marrow, where the monocytes and dendritic cells circulating in it are made, is the natural bound:
+
 ```{r}
-marker_matched <- match_ref(marker = pbmc.markers, n = 50, spc = "Human")
+# the organ-level classes, and what one of them actually holds
+length(available_tissue_class("Human"))
+available_tissue_type("Human", tissue_class = "Blood")
+```
+
+```{r}
+marker_matched <- match_ref(
+  marker = pbmc.markers, n = 50, spc = "Human",
+  tissue_class = c("Blood", "Bone marrow")
+)
 
 # Let's look at the top 2 potential cell types for each cluster
 marker_matched[, head(.SD, 2), by = cluster]
