@@ -22,7 +22,8 @@ dge_list <- function(count, sample_info, feature_info) {
   if (!requireNamespace("edgeR", quietly = TRUE)) {
     stop(
       "To construct DGEList object, dge_list() requires 'edgeR' package which ",
-      "cannot be found. Please install 'edgeR' using 'BiocManager::install('edgeR')'."
+      "cannot be found. Please install 'edgeR' using 'BiocManager::install('edgeR')'.",
+      call. = FALSE
     )
   }
   x <- edgeR::DGEList(count, samples = sample_info, genes = feature_info)
@@ -94,7 +95,8 @@ process_dge_list <- function(x, group_column, min_count = 10) {
   if (!requireNamespace("limma", quietly = TRUE)) {
     stop(
       "To plot MDS plot, 'plotMDS' requires 'limma' package which cannot be ",
-      "found. Please install 'limma' using 'BiocManager::install('limma')'."
+      "found. Please install 'limma' using 'BiocManager::install('limma')'.",
+      call. = FALSE
     )
   }
   limma::plotMDS(lcpm,
@@ -138,7 +140,8 @@ limma_fit <- function(x, group_column) {
   if (!requireNamespace("limma", quietly = TRUE)) {
     stop(
       "To fit linear model, 'limma_fit' requires 'limma' package which cannot ",
-      "be found. Please install 'limma' using 'BiocManager::install('limma')'."
+      "be found. Please install 'limma' using 'BiocManager::install('limma')'.",
+      call. = FALSE
     )
   }
 

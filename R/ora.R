@@ -17,7 +17,8 @@ plot_enrichment <- function(pathways, pwayname, stats, gsea_param = 1, ticks_siz
   if (!requireNamespace("fgsea", quietly = TRUE)) {
     stop(
       "To get plot data, plot_enrichment() requires 'fgsea' package which ",
-      "cannot be found. Please install 'fgsea' using 'BiocManager::install('fgsea')'."
+      "cannot be found. Please install 'fgsea' using 'BiocManager::install('fgsea')'.",
+      call. = FALSE
     )
   }
   pd <- fgsea::plotEnrichmentData(

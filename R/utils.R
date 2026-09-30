@@ -10,7 +10,7 @@
 #' @export
 set_colnames <- function(object, nm) {
   if (length(nm) != ncol(object)) {
-    stop("Length of 'nm' must equal the number of columns of 'object'")
+    stop("Length of 'nm' must equal the number of columns of 'object'", call. = FALSE)
   }
   colnames(object) <- nm
   object
@@ -28,7 +28,7 @@ set_colnames <- function(object, nm) {
 #' @export
 set_rownames <- function(object, nm) {
   if (length(nm) != nrow(object)) {
-    stop("Length of 'nm' must equal the number of rows of 'object'")
+    stop("Length of 'nm' must equal the number of rows of 'object'", call. = FALSE)
   }
   rownames(object) <- nm
   object

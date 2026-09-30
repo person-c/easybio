@@ -33,7 +33,8 @@ prepare_geo <- function(geo, dir = ".", combine = TRUE, method = "max") {
   if (!requireNamespace("GEOquery", quietly = TRUE)) {
     stop(
       "To get GEO datasets, prepare_geo() requires 'GEOquery' package which ",
-      "cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'."
+      "cannot be found. Please install 'GEOquery' using 'BiocManager::install('GEOquery')'.",
+      call. = FALSE
     )
   }
 
