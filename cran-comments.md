@@ -27,7 +27,7 @@ service. It does not appear on machines that can reach one.
 
 ## Submission summary
 
-This is a minor release, 1.2.2 to 1.3.0. The headline change is the
+This is a minor release, 1.2.3 to 1.3.0. The headline change is the
 annotation database: the built-in reference moves from CellMarker 2.0 to
 CellMarker 3.0 (418,139 entries, of which the five columns the package
 uses are kept).
@@ -59,14 +59,20 @@ uses are kept).
   of each matched marker in the new `pct_with` column.
 * `plot_possible_cell()` gains `value = "pct"`, which shows how much of a
   candidate's evidence is actually detected rather than how much matched.
+* The startup message is rewritten. The one in 1.2.3 announced "significant
+  breaking changes in single-cell annotation workflow" without naming any of
+  them, and was printed at every attach, non-interactive ones included. The new
+  text names the two changes a user will actually meet — the database moving to
+  CellMarker 3.0, which happened underneath the same function names and the
+  same arguments, and the snake_case renames — and is printed only in an
+  interactive session, so `R CMD check`, CI and `Rscript` stay quiet. It is a
+  `packageStartupMessage()`, so `suppressPackageStartupMessages()` silences it.
 
 ### Package-level
 
 * The internal database is now stored xz-compressed, 1.24 MB against
   1.62 MB. It is decompressed once at install time, so this costs nothing
   at run time.
-* The startup message announcing the 1.3.0 changes was removed. It had no
-  version check, so it also fired for users who installed 1.3.0 fresh.
 * No new hard dependency; `BiocParallel` joins `Suggests` because a
   vignette now passes it to `fgsea()` explicitly (see below).
 

@@ -22,6 +22,7 @@
 - `match_ref()` warns when the tissue filters leave an empty reference set, instead of silently returning a table with no candidate in it. A class and a type that never occur together on a database entry select nothing, which is easy to write by accident because the two fields look like a hierarchy; `available_tissue_type()` above is how to check.
 - the single-cell vignette and the example script it mirrors bound the annotation search to `tissue_class = c("Blood", "Bone marrow")`, with the reasoning: the default searches every organ, and bounding the class is what makes the candidate list readable, while bounding `tissue_type` as well removes evidence rather than correcting for anything.
 - the deprecated aliases report "deprecated as of 1.3.0" when called and are scheduled for removal in 1.4.0.
+- the startup message now names the two changes above — the CellMarker 3.0 database, which changed underneath the same function names and arguments, and the snake_case names — instead of announcing unnamed "significant breaking changes", and it is printed only in an interactive session, so `R CMD check`, CI and `Rscript` stay quiet.
 
 # Version 1.2.3 Changes
 
