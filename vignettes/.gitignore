@@ -1,2 +1,5 @@
 *.html
 *.R
+# the plot assets litedown writes next to the document it knits, where
+# rmarkdown would use _files/
+*__files/
