@@ -73,7 +73,9 @@ NULL
   '* The workflow: vignette("example-sc-seq-workflow", package = "easybio")'
 )
 
-.onAttach <- function(libname, pkgname) {
+# Kept apart from .onAttach() so the version logic can be exercised directly;
+# there is no console to test for in here.
+.easybio_announce <- function(pkgname) {
   current <- as.character(utils::packageVersion(pkgname))
   stamp <- .easybio_notice_file()
   announced <- tryCatch(
@@ -93,4 +95,18 @@ NULL
   # recorded whether or not the user suppresses startup messages, so that the
   # notice is not shown to them again on every session
   tryCatch(.easybio_record_version(current), error = \(e) NULL)
+}
+
+.onAttach <- function(libname, pkgname) {
+  # The notice is for a person at the console. R CMD check, CI and Rscript
+  # attach the package too, and whichever of them gets there first would
+  # otherwise spend the notice on a log nobody reads: a check run of this very
+  # hook is what kept the 1.3.0 notice from being seen. Staying quiet in a
+  # non-interactive session also leaves the version unrecorded, so the user
+  # still gets it the first time they attach it themselves.
+  if (!interactive()) {
+    return(invisible())
+  }
+
+  .easybio_announce(pkgname)
 }
