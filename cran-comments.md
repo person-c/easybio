@@ -1,29 +1,15 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 0 notes
 
-Both notes are explained below. Neither is a defect in the package.
+### The note in the pretest
 
-### 1. "Found the following (possibly) invalid URLs ... Status: 403"
-
-The CellMarker URL is correct, and the host refuses requests that do not
-look like a browser:
-
-```
-$ curl -s -o /dev/null -w '%{http_code}' https://bio-bigdata.hrbmu.edu.cn/CellMarker/
-403
-$ curl -s -o /dev/null -w '%{http_code}' -A 'Mozilla/5.0' https://bio-bigdata.hrbmu.edu.cn/CellMarker/
-200
-```
-
-The link opens normally in a browser; only the automated checker is turned
-away. The same URL is cited from `DESCRIPTION` and `man/easybio-package.Rd`,
-which is where the note points.
-
-### 2. "unable to verify current time"
-
-Local to the machine this check ran on, which has no route to a time
-service. It does not appear on machines that can reach one.
+The pretest reported one note, a possibly invalid URL in `README.md`: the
+codecov badge's link target, `https://codecov.io/gh/person-c/easybio`, now
+answers 301 and points at `https://app.codecov.io/gh/person-c/easybio`.
+`README.md` links to the new URL. The badge image is left alone because it
+is not affected: `codecov.io` still serves `/graph/badge.svg` directly,
+with no redirect to follow.
 
 ## Submission summary
 

@@ -9,7 +9,7 @@ output: markdown
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/easybio)](https://CRAN.R-project.org/package=easybio)
 [![R-CMD-check](https://github.com/person-c/easybio/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/person-c/easybio/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/person-c/easybio/graph/badge.svg)](https://codecov.io/gh/person-c/easybio)
+[![codecov](https://codecov.io/gh/person-c/easybio/graph/badge.svg)](https://app.codecov.io/gh/person-c/easybio)
 <!-- badges: end -->
 
 
