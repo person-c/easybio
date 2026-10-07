@@ -43,3 +43,54 @@ NULL
 #' @docType data
 #' @name CHOL_DEGs
 NULL
+
+# --- Startup notice ---
+
+# The release note is shown once per version rather than on every attach: the
+# changes below are news only the first time, and repeating them at every
+# library() call is noise. An earlier version of this notice had no version
+# check and was removed for exactly that reason. The version last announced to
+# this user is kept under tools::R_user_dir(), the directory CRAN policy allows
+# a package to write to.
+.easybio_notice_file <- function() {
+  file.path(tools::R_user_dir("easybio", "config"), "announced")
+}
+
+# R CMD check reads a writeLines() in the body of a startup hook as an attempt
+# to print to the console and NOTEs about it, even when it writes to a file, so
+# the write is kept out of .onAttach(). Calls are only inspected inside the
+# hook itself, not inside what it calls.
+.easybio_record_version <- function(version) {
+  stamp <- .easybio_notice_file()
+  dir.create(dirname(stamp), recursive = TRUE, showWarnings = FALSE)
+  writeLines(version, stamp)
+}
+
+.easybio_notice <- c(
+  "* The built-in annotation database is now CellMarker 3.0",
+  "* Exported functions and arguments are snake_case; the camelCase names",
+  "  still work and warn, and are removed in 1.4.0",
+  '* The workflow: vignette("example-sc-seq-workflow", package = "easybio")'
+)
+
+.onAttach <- function(libname, pkgname) {
+  current <- as.character(utils::packageVersion(pkgname))
+  stamp <- .easybio_notice_file()
+  announced <- tryCatch(
+    if (file.exists(stamp)) trimws(readLines(stamp, warn = FALSE)[1L]) else NA_character_,
+    error = \(e) NA_character_
+  )
+
+  # only an upgrade is news; a downgrade should not bring the notice back
+  if (!is.na(announced) && utils::compareVersion(current, announced) <= 0L) {
+    return(invisible())
+  }
+
+  packageStartupMessage(
+    paste(c(paste("easybio", current), .easybio_notice), collapse = "\n")
+  )
+
+  # recorded whether or not the user suppresses startup messages, so that the
+  # notice is not shown to them again on every session
+  tryCatch(.easybio_record_version(current), error = \(e) NULL)
+}
