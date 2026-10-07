@@ -16,8 +16,6 @@
 # file.show(system.file(package = "easybio", "example-single-cell.R"))
 # ------------------------------------------------------------------------------
 
-
-
 # Load necessary libraries
 library(Seurat)
 library(easybio)
@@ -34,14 +32,26 @@ setwd("data-raw")
 x <- Read10X(data.dir = "filtered_gene_bc_matrices/hg19/")
 
 # Create the Seurat object with initial filtering
-pbmc <- CreateSeuratObject(counts = x, project = "pbmc3k", min.cells = 3, min.features = 200)
+pbmc <- CreateSeuratObject(
+  counts = x,
+  project = "pbmc3k",
+  min.cells = 3,
+  min.features = 200
+)
 
 # Quality control: calculate mitochondrial DNA percentage and filter out low-quality cells
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
-pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 5)
+pbmc <- subset(
+  pbmc,
+  subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 5
+)
 
 # Normalize and scale the data, and find variable features
-pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 1e4)
+pbmc <- NormalizeData(
+  pbmc,
+  normalization.method = "LogNormalize",
+  scale.factor = 1e4
+)
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
 all.genes <- rownames(pbmc)
 pbmc <- ScaleData(pbmc, features = all.genes)
@@ -81,7 +91,9 @@ pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE)
 # marrow they are made in. available_tissue_type("Human", tissue_class = "Blood")
 # lists what a class actually holds.
 marker <- match_ref(
-  marker = pbmc.markers, n = 50, spc = "Human",
+  marker = pbmc.markers,
+  n = 50,
+  spc = "Human",
   tissue_class = c("Blood", "Bone marrow")
 )
 # Let's look at the top results. Within each cluster the candidates are ranked by
@@ -98,9 +110,21 @@ cl2cell <- setNames(cl2cell[["cell_name"]], cl2cell[["cluster"]])
 print("Initial automated annotation based on top hits:")
 cl2cell
 
+pbmc@meta.data[["anno_initial"]] <- cl2cell[as.character(Idents(pbmc))]
+tmp <- DimPlot(
+  pbmc,
+  reduction = "umap",
+  label = TRUE,
+  group.by = "anno_initial"
+)
+print(tmp)
+
 # For a global view of every candidate, use `plot_possible_cell()`: one point per
 # cluster and candidate, sized and coloured by the strength of the evidence.
-tmp <- plot_possible_cell(marker[, head(.SD), by = .(cluster)], min_unique_n = 2)
+tmp <- plot_possible_cell(
+  marker[, head(.SD), by = .(cluster)],
+  min_unique_n = 2
+)
 print(tmp)
 
 # The same view can be coloured by how well the evidence is actually detected.
@@ -109,7 +133,8 @@ print(tmp)
 # annotation that rests on barely expressed genes.
 tmp <- plot_possible_cell(
   marker[, head(.SD), by = .(cluster)],
-  min_unique_n = 2, value = "pct"
+  min_unique_n = 2,
+  value = "pct"
 )
 print(tmp)
 
@@ -199,7 +224,12 @@ print(tmp)
 # The package also includes functions for direct queries.
 
 # `get_marker`: Retrieve canonical markers for specific cell types directly.
-get_marker(spc = "Human", cell = c("Monocyte", "Neutrophil"), number = 5, min_count = 1)
+get_marker(
+  spc = "Human",
+  cell = c("Monocyte", "Neutrophil"),
+  number = 5,
+  min_count = 1
+)
 
 # `plot_marker_distribution`: Visualize how a single marker is distributed across
 # all cell types and tissues in the CellMarker 3.0 database.
