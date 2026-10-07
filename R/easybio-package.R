@@ -46,26 +46,17 @@ NULL
 
 # --- Startup notice ---
 
-# The release note is shown once per version rather than on every attach: the
-# changes below are news only the first time, and repeating them at every
-# library() call is noise. An earlier version of this notice had no version
-# check and was removed for exactly that reason. The version last announced to
-# this user is kept under tools::R_user_dir(), the directory CRAN policy allows
-# a package to write to.
-.easybio_notice_file <- function() {
-  file.path(tools::R_user_dir("easybio", "config"), "announced")
-}
-
-# R CMD check reads a writeLines() in the body of a startup hook as an attempt
-# to print to the console and NOTEs about it, even when it writes to a file, so
-# the write is kept out of .onAttach(). Calls are only inspected inside the
-# hook itself, not inside what it calls.
-.easybio_record_version <- function(version) {
-  stamp <- .easybio_notice_file()
-  dir.create(dirname(stamp), recursive = TRUE, showWarnings = FALSE)
-  writeLines(version, stamp)
-}
-
+# The notice is shown at every attach, not once: a message that appears a
+# single time is easy to scroll past, and the one change here that has no other
+# way of announcing itself is the database, which changed underneath the same
+# function names and the same arguments. The camelCase names do warn at the
+# point of use, but only for someone who is still calling them.
+#
+# The console test is what keeps R CMD check, CI and Rscript quiet -- they
+# attach the package as well, and there is nobody there to read a notice.
+#
+# The text names the release it describes, so 1.4.0 has to rewrite or drop it
+# along with the aliases it mentions.
 .easybio_notice <- c(
   "* The built-in annotation database is now CellMarker 3.0",
   "* Exported functions and arguments are snake_case; the camelCase names",
@@ -73,40 +64,11 @@ NULL
   '* The workflow: vignette("example-sc-seq-workflow", package = "easybio")'
 )
 
-# Kept apart from .onAttach() so the version logic can be exercised directly;
-# there is no console to test for in here.
-.easybio_announce <- function(pkgname) {
-  current <- as.character(utils::packageVersion(pkgname))
-  stamp <- .easybio_notice_file()
-  announced <- tryCatch(
-    if (file.exists(stamp)) trimws(readLines(stamp, warn = FALSE)[1L]) else NA_character_,
-    error = \(e) NA_character_
-  )
-
-  # only an upgrade is news; a downgrade should not bring the notice back
-  if (!is.na(announced) && utils::compareVersion(current, announced) <= 0L) {
-    return(invisible())
-  }
-
-  packageStartupMessage(
-    paste(c(paste("easybio", current), .easybio_notice), collapse = "\n")
-  )
-
-  # recorded whether or not the user suppresses startup messages, so that the
-  # notice is not shown to them again on every session
-  tryCatch(.easybio_record_version(current), error = \(e) NULL)
-}
-
 .onAttach <- function(libname, pkgname) {
-  # The notice is for a person at the console. R CMD check, CI and Rscript
-  # attach the package too, and whichever of them gets there first would
-  # otherwise spend the notice on a log nobody reads: a check run of this very
-  # hook is what kept the 1.3.0 notice from being seen. Staying quiet in a
-  # non-interactive session also leaves the version unrecorded, so the user
-  # still gets it the first time they attach it themselves.
   if (!interactive()) {
     return(invisible())
   }
 
-  .easybio_announce(pkgname)
+  header <- paste("easybio", as.character(utils::packageVersion(pkgname)))
+  packageStartupMessage(paste(c(header, .easybio_notice), collapse = "\n"))
 }
